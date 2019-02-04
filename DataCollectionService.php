@@ -47,8 +47,6 @@ function getUsers($username, $password){
     return $return;
 }
 
-
-
 function getUsersAndEmails($username, $email){
     $return = "";
     $conn = getConnection();
@@ -96,6 +94,27 @@ function getUsersAndEmails($username, $email){
     
 }
 
+function getVerificationNo($email, $verify){
+     //connect to db
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+    $sql = "SELECT verifyNo FROM table WHERE email = '$username'"; 
+    $query = mysqli_query($conn, $sql);
+    $row = $query->fetch_assoc();
+        if ($verify === $row['verifiedNumber']){
+            $result = 1;
+        }else{
+            $result = 0;
+        }
+    }
+    mysqli_close($conn);
+    return $result;    
+}
 
 
 ?>

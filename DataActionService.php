@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 require_once 'dbConnection.php';
 
-function registerUser($emailAddress){
+function registerUser($email, $first_name, $last_name, $department, password){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -34,5 +34,27 @@ function registerUser($emailAddress){
     mysqli_close($conn);
     return $result;
 }
+
+function setVerified(email, $verification){
+    //connect to db
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        $sql = "UPDATE table SET verified = 'y' WHERE email = '$email' AND verifiedNumber = '$verification'";
+        if (mysqli_query($conn, $sql)){
+            $result = 1;
+            
+        }else{
+            $result = "error: " . "<br>" . mysqli_errno($conn);
+        }
+    }
+    mysqli_close($conn);
+    return $result;
+}
+
 
 ?>
