@@ -11,6 +11,7 @@ if (isset($_POST['agree'])){
             if ($captchabox == $_SESSION['random_code']){
                 $result = registerUser($email, $first_name, $last_name, $department, password);
                 if($result == 1062){
+                    //https response code actually needs to be set see how i have done it in the login controller
                     $errorReturn = array("errorCode"=>400,
                        "errorMessage"=>"Duplicate User");
                         echo json_encode($errorReturn);

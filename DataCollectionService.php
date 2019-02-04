@@ -14,7 +14,7 @@ function getUsers($username, $password){
                    'reason'=> $conn['reason'],
                    'code' => 500);
    }else{
-        $query = "SELECT username, user_password FROM SITEUSER WHERE username = '$username' AND user_password = md5('$password')";
+        $query = "SELECT username, user_password FROM SITEUSER WHERE username = '$username' AND user_password = md5('$password') and verified = 1";
         //echo "query = $query <br>";
         $result = mysqli_query($conn, htmlspecialchars($query));
        // mysqli_store_result($conn);

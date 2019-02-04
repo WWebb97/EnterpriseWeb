@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 require_once 'dbConnection.php';
 
-function registerUser($email, $first_name, $last_name, $department, password){
+function registerUser($email, $first_name, $last_name, $department, $password){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -18,7 +18,7 @@ function registerUser($email, $first_name, $last_name, $department, password){
         
         //SQL query to be created after db creation
         $query = "INSERT INTO user () VALUES ";
-        
+        // needs to be in another file whether it be in the controller or another class doesnt matter but it cant be in here the only thing in this class is things that change the database.
         if(mysqli_query($conn, $query)){
             $result = 1;
             ini_set();
