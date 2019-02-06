@@ -63,7 +63,7 @@ function getUsers ($username, $password){
             mysqli_stmt_bind_param($stmt, "ss", $usernameIn, $passwordIn);
             $usernameIn = $username;
             $passwordIn = md5($password);
-            var_dump($stmt);
+            //var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
                 $users = array();
                 mysqli_stmt_bind_result($stmt, $usernameOut, $user_passwordOut, $verified);
@@ -73,7 +73,7 @@ function getUsers ($username, $password){
                                  "verified"=>$verified);
                     array_push($users, $user);
                 }
-                var_dump($users);
+              //  var_dump($users);
                 if (count($users) === 0){
                     $return = 0;
                 }else{
@@ -89,7 +89,7 @@ function getUsers ($username, $password){
     return $return;
 }
 
-function getUsersAndEmails($username, $email){
+function getCategories(){
     $return = "";
     $conn = getConnection();
     if(is_array($conn)){
@@ -97,37 +97,23 @@ function getUsersAndEmails($username, $email){
                    'reason'=> $conn['reason'],
                    'valid' => false);
    }else{
-        $query = "SELECT username FROM SITEUSER WHERE username = '$username'";
+        $query = "SELECT * FROM category";
         //echo "query = $query <br>";
         $result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
         if(!$result){
-          /* echo "query failure <br>";
-           echo "connection error: ". mysqli_connect_error($conn);
-           echo "<br>";
-           echo "query error: ". mysqli_error($conn);
-           echo "<br>";*/
            $return  = "error";
         }
        if(mysqli_num_rows($result) > 0){
-            //echo "number of rows returned: ". mysqli_num_rows($result). "<br>";
-            //$row = mysqli_fetch_assoc($result);
-            //echo "Row from sql query <br>";
-            $users = array(); 
+            //var_dump($result);
+            $categories = array(); 
             while($row = mysqli_fetch_assoc($result)){
-/*                var_dump($row);
-                echo "<br>";*/
-                array_push($users, $row);
+                array_push($categories, $row);
             }
-           // var_dump($users);
-            $return = $users;  
+            $return = $categories;  
         }else{
-           /* echo "0 results found option <br>";
-            echo mysqli_error($conn);
-            echo "<br>";*/
-            $return = "No Results";
+            $return = 0;
         }
-       // mysqli_free_result($conn);
     }
     
     mysqli_close($conn);
