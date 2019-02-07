@@ -28,23 +28,17 @@ if(isset($user["error"])){
                          "errorMessage"=> $user["reason"]);
     
 } else if($user == 0){
-    $return = array("login"=>false,
-                    "verified"=>false);
-}else if ($user === "error"){
-    http_response_code(500);
-    $return = array("errorCode" => 500,
-                   "errorMessage"=> "Unable to perform database query");    
+    $return = array("login"=>false);
 }else {
-    if($user["verified"] == 1){
-        $return = array("login"=>true,
-                        "verified"=>true);
-    }else{
-        $return = array("login"=>true,
-                       "verified"=>false);
-    }
-    
+    $return = array("login"=> true);
 }
 echo json_encode($return);
 die();
+
+//$user = array("username"=> $username, "password"=>$password);
+//echo json_encode($user);   
+
+
+
 
 ?>
