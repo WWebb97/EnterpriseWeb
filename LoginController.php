@@ -1,11 +1,8 @@
 <?php
 require "DataCollectionService.php";
-
 header('Content-Type: application/json');
-
 $errorCode = null;
 $errorMessage = null;
-
 if(!(isset($_POST["username"])) || !(isset($_POST["password"]))){
    http_response_code (400); 
    $errorReturn = array("errorCode"=>400,
@@ -13,10 +10,8 @@ if(!(isset($_POST["username"])) || !(isset($_POST["password"]))){
     echo json_encode($errorReturn);
     die();
 }
-
 $username = $_POST["username"];
 $password = $_POST["password"];
-
 unset($_POST["username"]);
 unset($_POST["password"]);
    
@@ -28,17 +23,22 @@ if(isset($user["error"])){
                          "errorMessage"=> $user["reason"]);
     
 } else if($user == 0){
-    $return = array("login"=>false);
+    $return = array("login"=>false,
+                    "verified"=>false);
+}else if ($user === "error"){
+    http_response_code(500);
+    $return = array("errorCode" => 500,
+                   "errorMessage"=> "Unable to perform database query");    
 }else {
-    $return = array("login"=> true);
+    if($user["verified"] == 1){
+        $return = array("login"=>true,
+                        "verified"=>true);
+    }else{
+        $return = array("login"=>true,
+                       "verified"=>false);
+    }
+    
 }
 echo json_encode($return);
 die();
-
-//$user = array("username"=> $username, "password"=>$password);
-//echo json_encode($user);   
-
-
-
-
 ?>
