@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>URL TESTING</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>URL TESTING</h1>
+        <h2>form TEST:</h2>
+        <div id="testingSpace"> </div>
+        <script>
+            $( document ).ready(function() {
+                $('form').on('submit', function(e){
+                    $.ajax({ 
+                        url: 'RegisterController.php',
+                        data: $('form').serialize(),
+                        type: 'post',
+                        success: function(output){
+                    }
+                 }); 
+                    
+                });
+                    
+            });
+
+        </script>
+        
+        <form>
+            <input type="text" name="username" value="email"/> @gre.ac.uk
+            <br />
+            <input type="text" name="password" value="password"/>
+            <br />
+            <input type="text" name="first_name" value="First Name"/>
+            <br />
+            <input type="text" name="last_name" value="Last Name"/>
+            <br />
+            <select name="department">
+                        <option>Architecture</option>
+                        <option>Computing</option>
+                        <option>Humanities</option>
+                        <option>Business</option>
+                        <option>Education</option>
+                        <option>Health</option>
+                        <option>Engineering</option>
+                        <option>Science</option>
+                    </select>
+            
+    
+                    <img src="captcha.php" alt="CAPTCA image">
+                                <label for="captchabox">Type Captcha here: </label> <input type="text" maxlength="5" name="captchabox" value="">
+                  
+                <input class="form-check-input" type="checkbox" id="agree" name="agree"><label for="agree">Terms and conditions</label>
+                
+                
+                <button type="submit" class="btn btn-info" name="submit">Sign Up</button> 
+        
+        </form>
+        
+    </body>
+</html>
