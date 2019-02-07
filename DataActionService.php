@@ -18,7 +18,7 @@ function registerUser($email, $first_name, $last_name, $department, $password, $
         $hash = md5($password);
         
         //SQL query to be created after db creation
-        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code) VALUES ('$first_name, $last_name','$hash', $department, '$username', '$username@gre.ac.uk', $verino)";
+        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code) VALUES ('$first_name, $last_name','$hash', $department, '$username', '$email', $verino)";
         
         // needs to be in another file whether it be in the controller or another class doesnt matter but it cant be in here the only thing in this class is things that change the database. will be done in a later release
      

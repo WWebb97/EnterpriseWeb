@@ -75,17 +75,17 @@ function GetDepartmentID($department){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
-        $return = array('error' => $conn['error'],
+        $result = array('error' => $conn['error'],
                        'reason' => $conn['reason'],
                        'code' => 500);
     }else{
     $sql = "SELECT department_id FROM department WHERE name = '$department'"; 
     $query = mysqli_query($conn, $sql);
     $row = $query->fetch_assoc();
-       
+    $result = $row['department_id'];   
     }
     mysqli_close($conn);
-    return $row['department_id'];    
+    return $result;
 }
 
 function getCategories(){
