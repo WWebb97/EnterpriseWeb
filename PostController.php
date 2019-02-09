@@ -44,6 +44,8 @@ function categories(){
     }
     echo json_encode($return);
 }
+
+
 function addPost(){
     // name, description, anon, postdate, cat, userid, points;
     $postDate = time();

@@ -104,7 +104,7 @@ function getCategories(){
            $return  = "error";
         }
        if(mysqli_num_rows($result) > 0){
-            //var_dump($result);
+            var_dump($result);
             $categories = array(); 
             while($row = mysqli_fetch_assoc($result)){
                 array_push($categories, $row);
