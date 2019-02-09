@@ -5,6 +5,7 @@ error_reporting(E_ERROR);
 require_once 'dbConnection.php';
 
 function registerUser($email, $first_name, $last_name, $department_id, $password, $username){
+    
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -17,28 +18,31 @@ function registerUser($email, $first_name, $last_name, $department_id, $password
         //hash password
         $hash = md5($password);
         
-        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code) VALUES ('$first_name', '$last_name', '$hash', $department_id, '$username', '$email', $veriNo)";
+        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code, role_id) VALUES ('$first_name', '$last_name', '$hash', $department_id, '$username', '$email', $veriNo, 1)";
+        
+    
         
         // needs to be in another file whether it be in the controller or another class doesnt matter but it cant be in here the only thing in this class is things that change the database. will be done in a later release
-     
+        
+        
         if(mysqli_query($conn, $query)){
             $result = 1;
-            ini_set();
-            error_reporting();
+            
             $subject = "Your verification code";
             $message= "Here is your verification code: " . $veriNo;
             $from = "From: db1238b@gre.ac.uk";
             mail($email, $subject, $message, $from);
+            
         }else{
             $result = mysqli_errno($conn);
+
         }
     }
     mysqli_close($conn);
     return $result;
 }
 
-function setVerified(email, $verification){
-    //connect to db
+function setVerified ($username, $verificationNo){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -46,7 +50,7 @@ function setVerified(email, $verification){
                        'reason' => $conn['reason'],
                        'code' => 500);
     }else{
-        $sql = "UPDATE table SET verified = 'y' WHERE email = '$email' AND verifiedNumber = '$verification'";
+    $sql = "UPDATE member SET verified = 1 WHERE username = '$username' AND verification_code = $verificationNo";
         if (mysqli_query($conn, $sql)){
             $result = 1;
             
@@ -56,7 +60,9 @@ function setVerified(email, $verification){
     }
     mysqli_close($conn);
     return $result;
+    
 }
+
 
 function createPost($name, $description, $anon, $categoryId, $userId, $postDate){
     $result = null;
@@ -78,7 +84,7 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
             $pd = $postDate;
             //var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
-                $return = true
+                $return = true;
             }else{
                 $return = false;
             }
