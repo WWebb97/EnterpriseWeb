@@ -1,45 +1,41 @@
 <?php
 require "DataActionService.php";
-require "DataCollectionService.php";
-
 header('Content-Type: application/json');
-extract($_POST);
+
 $errorCode = null;
 $errorMessage = null;
+$return = array();
 
-if (isset($_POST['agree'])){
-            if ($captchabox == $_SESSION['random_code']){
-                $departmentID = GetDepartmentID($department)
-                if($departmentID < 1){
-                    $result = registerUser($email, $first_name, $last_name, $, password);
-                    if($result == 1062){
-                        //https response code actually needs to be set see how i have done it in the login controller
-                        $errorReturn = array("errorCode"=>400,
-                                   "errorMessage"=>"Duplicate User");
-                                    echo json_encode($errorReturn);
-                                    die();
-                    }else{
-                        setcookie('username', $username, time()+3600);
-                        header("location:");
-                    }
+$email = $_POST['email'];
+$first_name = $_POST['first_name'];
+$last_name = $_POST['last_name'];
+$password = $_POST['password'];
+$username = $_POST['username'];
+$department = $_POST['department'];
 
-                }else{
-                     $errorReturn = array("errorCode"=>400,
-                                   "errorMessage"=>"Non existant Department");
-                                    echo json_encode($errorReturn);
-                                    die();   
-                }
-                        
-            }else{
-                 $errorReturn = array("errorCode"=>400,
-                       "errorMessage"=>"Incorrect Captcha");
-                        echo json_encode($errorReturn);
-                        die();
-            }
-        }else{
-            $errorReturn = array("errorCode"=>400,
-                       "errorMessage"=>"Terms and Conditions not agreed");
-                        echo json_encode($errorReturn);
-                        die();
-        }
+
+unset($_POST['email']);
+unset($_POST['first_name']);
+unset($_POST['last_name']);
+unset($_POST['department']);
+unset($_POST['password']);
+unset($_POST['username']);
+
+
+
+$departmentID = 3;
+$result = registerUser($email, $first_name, $last_name, $departmentID, $password, $username);
+if($result === 1062){
+    //https response code actually needs to be set see how i have done it in the login controller
+    $return = array("errorCode" => 400,
+                   "errorMessage" => "Duplicate User");
+}else if($result === 1){
+    $return = array("register"=>true);
+}else{
+    $return = array("errorCode" => 400,
+                   "errorMessage" => "error");
+}
+
+echo json_encode($return);
+die();
 ?>

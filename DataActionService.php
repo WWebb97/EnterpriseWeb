@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 require_once 'dbConnection.php';
 
-function registerUser($email, $first_name, $last_name, $department, $password, $username){
+function registerUser($email, $first_name, $last_name, $department_id, $password, $username){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -17,8 +17,7 @@ function registerUser($email, $first_name, $last_name, $department, $password, $
         //hash password
         $hash = md5($password);
         
-        //SQL query to be created after db creation
-        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code) VALUES ('$first_name, $last_name','$hash', $department, '$username', '$username@gre.ac.uk', $verino)";
+        $query = "INSERT INTO site_user (first_name, last_name, user_password, department_id, username, email, verification_code) VALUES ('$first_name', '$last_name', '$hash', $department_id, '$username', '$email', $veriNo)";
         
         // needs to be in another file whether it be in the controller or another class doesnt matter but it cant be in here the only thing in this class is things that change the database. will be done in a later release
      
