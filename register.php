@@ -40,39 +40,39 @@
         <div class="header">
             <h2>Register</h2>                
         </div>
-        <form method="post" action="register.php" enctype="application/x-www-form-urlencoded">
+        <form>
             
             <div class="content">
             <div class="input-group">
   	         <label>First Name</label>
-  	         <input type="text" name="first_name" id="first_name" value="<?php echo $_POST['first_name']; ?>" required>
+  	         <input type="text" name="first_name" id="first_name" required>
             </div>
             <div class="input-group">
   	         <label>Last Name</label>
-  	         <input type="text" name="last_name" id="last_name" value="<?php echo $_POST['last_name']; ?>" required>
+  	         <input type="text" name="last_name" id="last_name"  required>
             </div>
             <div class="input-group">
   	         <label>Username</label>
-  	         <input type="text" name="username" id="username" value="<?php echo $_POST['username']; ?>" required>
+  	         <input type="text" name="username" id="username"  required>
             </div>
             <div class="input-group">
   	         <label>Email</label>
-  	         <input type="email" name="email" id="email"  pattern=".+@gre.ac.uk" title="University of Greenwich emails only.." value="<?php echo $_POST['email']; ?>" required>
+  	         <input type="email" name="email" id="email"  pattern=".+@gre.ac.uk" title="University of Greenwich emails only.." required>
             </div>
             <div class="fieldWrapper">
             <div class="input-group">
   	         <label>Password</label>
-  	         <input type="password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required>
+  	         <input type="password" name="password" id="password" required>
             </div>
             <div class="input-group">
   	         <label>Confirm password</label>
-  	         <input type="password" name="password_2" id="password_2" onkeyup="checkPass(); return false;" value="<?php echo $_POST['password_2']; ?>" required>
+  	         <input type="password" name="password_2" id="password_2" onkeyup="checkPass(); return false;" required>
              <span id="confirmMessage" class="confirmMessage"></span>
             </div>
             </div>
             <div class="input-group">
   	         <label>Department</label>
-  	         <select name="department" id="departmentID" value="<?php echo $_POST['department']; ?>" required>
+  	         <select name="department" id="departmentID" required>
                     <option>Select Option</option>
                     <option value="1">testing</option>
                     <option value="2">Architecture</option>
