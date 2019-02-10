@@ -92,15 +92,18 @@
                     <strong>Enter CAPTCHA code below</strong><br/>
                 <input type="text" id="captchabox" name="captchabox">
                 </div><br/>
-                                      
+                <input type="checkbox">Please tick to accept our terms and conditions<br/>                 
                 <div class="inputreg-group">                        
                     <button type="button" name="add" id="add_user" class="refresh btn">Submit Details</button>                
                 </div>
                 <p id="testingSpace">   </p>
                 <script>
-                $(document).ready(function(){
-                     
+                  
+                $(document).ready(function(){                   
+                        
                     $("#add_user").click(function(){
+                        if($('input[type="checkbox"]').prop("checked") == true){                              
+                       
                            var first_name = $("#first_name").val();
                            var last_name = $("#last_name").val();
                            var username = $("#username").val();
@@ -118,17 +121,15 @@
                                     $("#testingSpace").text("Registration= "+output.register+" errorCode = " +output.errorCode);
                                 }
 
-                            });
-            
-                        
-                    });
-                               
-                   
-                               
-               });
-            
-            
-            
+                            });                       
+                    
+                        }else if($('input[type="checkbox"]').prop("checked") == false) {
+                                  alert("To use our site you must accept our terms and conditions");
+                              }
+                             
+                    });  
+                            
+                });           
             </script>		             
                 
                 <button type="submit" class="refresh btn" onclick="this.form.action='<?php echo URLFORM ?>'">Reset Form</button>
