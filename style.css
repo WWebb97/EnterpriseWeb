@@ -1,0 +1,142 @@
+/*CSS style coding taken and adjusted for this program from codewithawa.com url: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database*/
+
+.jumbotron{
+  color: #cc8800;   
+}
+body {
+  background-image: url(images/background5.png);
+  background-color: #dae0e5;
+  font-size: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  min-height: 500px;
+  font-family: "Impact", "Charcoal", sans-serif;
+  
+}
+.headerlog, .header {
+  width: 20%;
+  margin: 140px auto 0px;
+  color: whitesmoke;
+  background: #007bff;
+  text-align: center;
+  border: 1px solid #848484;
+  border-bottom: none;
+  border-radius: 5px 5px 0px 0px;
+  padding: 20px;
+}
+.contentlog, .content {
+  width: 20%;
+  margin: 0px auto 140px;
+  padding: 10px;
+  border: 1px solid #848484;
+  background: white;
+  border-radius: 0px 0px 5px 5px;
+  text-align: center;
+}
+
+.input-group {
+  margin: 10px 0px 10px 0px;
+}
+.input-group label {
+  display: block;
+  text-align: left;
+  margin: 3px;
+}
+.input-group input {
+  height: 30px;
+  width: 100%;
+  padding: 5px 0px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+
+.input-group select {
+  height: 35px;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+
+.btn {
+  cursor: pointer;
+  font-size: 20px;
+  text-align: center;
+  border: none;
+  padding: 10px 27px;
+  transition-duration: 0.4s;
+  border-radius: 12px;
+  color: whitesmoke;
+  background: #013369;
+  margin: 0 auto;
+}
+.refresh:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.80), 0 17px 50px 0 rgba(0,0,0,0.30);
+}
+.inputcapt-group input {
+  height: 30px;
+  width: 20%;
+  padding: 5px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+  text-align: center;
+}
+.captcha{
+  text-align: center;
+}
+.error {
+    width: 70%; 
+    margin: 0px auto; 
+    padding: 10px;
+    text-align: center;  
+    border: 1px solid #a94442; 
+    color: #a94442;
+    background: #f2dede;
+    border-radius: 5px;
+}
+.accept {
+    text-align: center;  
+    color: #3c763d; 
+    background: #dff0d8; 
+    border: 1px solid #3c763d;
+    margin:0 0 10px 0;
+    border-radius: 5px;
+    width: 60%; 
+    margin: 0px auto; 
+    padding: 10px;
+}
+/*taken and adjusted for this program from W3Schools url: https://www.w3schools.com/howto/howto_js_filter_table.asp*/
+.InputSearchmem {
+    background-image: url('images/searchicon.png'); 
+    background-position: 3px 1px; 
+    background-repeat: no-repeat; 
+    width: 25%; 
+    font-size: 14px; 
+    padding: 10px 20px 10px 60px; 
+    border: 1px solid #ddd; 
+    border-radius: 10px 0px 0px 10px;
+}
+.btnsearch {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    color: whitesmoke;
+    background: #664400;
+    border: 1px solid #664400;
+    border-radius: 0px 10px 10px 0px;
+}
+.InputSearchmain {
+    background-image: url('images/searchicon.png'); 
+    background-position: 3px 1px; 
+    background-repeat: no-repeat; 
+    width: 25%; 
+    font-size: 14px; 
+    padding: 10px 20px 10px 60px; 
+    border: 1px solid #ddd; 
+    border-radius: 10px 0px 0px 10px;
+}

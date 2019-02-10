@@ -1,4 +1,5 @@
 <?php
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
@@ -24,7 +25,7 @@ unset($_POST['last_name']);
 unset($_POST['departmentID']);
 unset($_POST['password']);
 unset($_POST['username']);
-unset($_POST['captcha']);
+unset($_POST['captchabox']);
 
 if ($captchabox == $_SESSION['random_code']){
     $result = registerUser($email, $first_name, $last_name, $departmentID, $password, $username);
