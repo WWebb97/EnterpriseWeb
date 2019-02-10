@@ -50,7 +50,7 @@ function setVerified ($username, $verificationNo){
                        'reason' => $conn['reason'],
                        'code' => 500);
     }else{
-    $sql = "UPDATE member SET verified = 1 WHERE username = '$username' AND verification_code = $verificationNo";
+    $sql = "UPDATE site_user SET verified = 1 WHERE username = '$username' AND verification_code = $verificationNo";
         if (mysqli_query($conn, $sql)){
             $result = 1;
             

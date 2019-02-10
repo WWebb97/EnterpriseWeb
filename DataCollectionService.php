@@ -46,30 +46,6 @@ function getUsers ($username, $password){
     return $return;
 }
 
-
-//not yet finished
-function getVerificationNo($email, $verify){
-     //connect to db
-    $result = null;
-    $conn = getConnection();
-    if(is_array($conn)){
-        $return = array('error' => $conn['error'],
-                       'reason' => $conn['reason'],
-                       'code' => 500);
-    }else{
-    $sql = "SELECT verification_code FROM table WHERE email = '$username'"; 
-    $query = mysqli_query($conn, $sql);
-    $row = $query->fetch_assoc();
-        if ($verify === $row['verifiedNumber']){
-            $result = 1;
-        }else{
-            $result = 0;
-        }
-    }
-    mysqli_close($conn);
-    return $result;    
-}
-
 function GetDepartmentID($department){
      //connect to db
     $result = null;
@@ -104,7 +80,7 @@ function getCategories(){
            $return  = "error";
         }
        if(mysqli_num_rows($result) > 0){
-            var_dump($result);
+            //var_dump($result);
             $categories = array(); 
             while($row = mysqli_fetch_assoc($result)){
                 array_push($categories, $row);
@@ -119,6 +95,28 @@ function getCategories(){
     return $return;
     
     
+}
+
+function getVerificationNo($username, $verificationCode){
+     //connect to db
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $result = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+    $sql = "SELECT verification_code FROM site_user WHERE username = '$username'"; 
+    $query = mysqli_query($conn, $sql);
+    $row = $query->fetch_assoc();
+        if ($verificationCode === $row['verification_code']){
+            $result = 1;
+        }else{
+            $result = 0;
+        }
+    }
+    mysqli_close($conn);
+    return $result;    
 }
 
 ?>

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!--Bootstrap css-->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <title></title>
+    </head>
+
+    <body>
+        
+        <script type="text/javascript">
+         $(document).ready(function(){   
+            $("#submit").click(function(e) {
+                e.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: "VerificationController.php",
+                        data: { 
+                            username: $.cookie("username").val(),
+                            verificationCode: $("#verify").val()
+                        },
+                        success: function(data, status, xhttp, errorMessage) {
+                            if(status == 400){
+                                alert('Incorrect Verification Code');
+                            }
+                            else{
+                                alert('success');
+                            }
+                        },
+                        error: function(result) {
+                            alert('Incorrect Verification Code');
+                        }
+                    });
+                });
+             });
+        </script>
+        <div style="padding-top:50px" class="container">
+
+        <!-- here for debugging -->
+            <div class="text-center">
+                <h1>QA system</h1>
+            </div>
+        <h3>Please input your verification code: </h3>
+        <form>
+                <div class="form-group">
+
+                <input type="text" maxlength="100" name="verify" id ="verify" value="" class="form-control">
+              </div>
+                <button type="button" class ="" id="submit">Verify me</button>
+            
+
+        </form>
+        
+        </div>
+         <!--Bootstrap JS -->
+       
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    </body>
+
+</html>
