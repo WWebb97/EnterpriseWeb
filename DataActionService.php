@@ -77,7 +77,7 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "ssssss", $nameIn, $desscriptionIn, $postAnon, $cat, $user, $pd);
             $nameIn = $name;
-            $descriptionIn =$description;
+            $descriptionIn = $description;
             $postAnon = $anon;
             $cat = $categoryId;
             $user = $userId;
