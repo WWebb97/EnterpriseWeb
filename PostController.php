@@ -58,7 +58,7 @@ function addPost(){
     unset($_POST["name"]);
     unset($_POST["description"]);
     unset($_POST["anon"]);
-    unset($_POST["category"]);
+    unset($_POST["categoryId"]);
     unset($_POST["userId"]);
     
     $return = array();
@@ -72,13 +72,14 @@ function addPost(){
     }
     
     $post = createPost($name, $description, $anon, $categoryId, $userId, $postDate);
-    
-    if($post === true){
-        $return = array ("postCreated"=>true);
-    }else{
-        http_response_code(500);
+    if(!$post{
+         http_response_code(500);
           $return = array ("errorCode"=>500,
                         "errorMessage"=> "Unable to create post");
+    }else{
+        updateCategoryCount($categoryId);
+        $return = array ("postCreated"=>true,
+                        "postId"=>$post);
     }
      echo json_encode($return);
 }

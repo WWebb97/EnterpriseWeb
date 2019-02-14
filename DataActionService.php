@@ -68,24 +68,27 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
-        $result = array('error' => $conn['error'],
+        $return = array('error' => $conn['error'],
                        'reason' => $conn['reason'],
                        'code' => 500);
     }else{
         
-           $sql = "insert into category(name, description, post_anon, category_id, user_id, post_date) values (?,?,?,?,?,?)";
+           $sql = "insert into post(name, description, post_anon, category_id, user_id, post_date) values (?,?,?,?,?,?)";
+        //echo $sql;
         if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "ssssss", $nameIn, $desscriptionIn, $postAnon, $cat, $user, $pd);
+            mysqli_stmt_bind_param($stmt, "ssiiii", $nameIn, $descriptionIn, $postAnon, $cat, $user, $pd);
             $nameIn = $name;
             $descriptionIn = $description;
             $postAnon = $anon;
             $cat = $categoryId;
             $user = $userId;
             $pd = $postDate;
-            //var_dump($stmt);
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
-                $return = true;
+                $return = mysqli_insert_id($link)
             }else{
+             //   echo mysqli_errno($conn);
                 $return = false;
             }
              mysqli_stmt_close($stmt);
@@ -93,6 +96,36 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
         mysqli_close($conn);
         return $return;
     }
+}
+
+function updateCategoryCount($categoryId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        
+           $sql = "update category set post_count = post_count + 1 where category_id = ?";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$cat);
+            $cat = $categoryId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = true;
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = false;
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
 }
 
 
