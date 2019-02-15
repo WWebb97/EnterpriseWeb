@@ -17,6 +17,7 @@ switch($method){
         addPost();
         break;
     case "editPost":
+        editPost();
         break;
     case "deletPost":
         break;
@@ -74,7 +75,7 @@ function addPost(){
     }
     
     $post = createPost($name, $description, $anon, $categoryId, $userId, $postDate);
-    if(!$post{
+    if($post === false){
          http_response_code(500);
           $return = array ("errorCode"=>500,
                         "errorMessage"=> "Unable to create post");
@@ -85,7 +86,46 @@ function addPost(){
     }
      echo json_encode($return);
 }
-function editPost(){}
+       
+function editPost(){
+    // name, description, anon, postdate, cat, postid;
+    $name = $_POST["name"];
+    $description = $_POST["description"];
+    $anon = $_POST["anon"];
+    $categoryId = $_POST["categoryId"];
+    $postId = $_POST["postId"];
+    
+    unset($_POST["name"]);
+    unset($_POST["description"]);
+    unset($_POST["anon"]);
+    unset($_POST["categoryId"]);
+    unset($_POST["postId"]);
+    
+    $return = array();
+    
+    if($name == null || $description == null || $anon == null || $categoryId == null || $postId == null){
+        http_response_code(400);
+        $return = array ("errorCode"=>400,
+                        "errorMessage"=> "the properties of name, description, anon, categoryId and postId must be set to add a post");
+        echo json_encode($return);
+        die();
+    }
+    
+    $post = updatePost($name, $description, $anon, $categoryId, $postId);
+    if($post === false){
+         http_response_code(500);
+          $return = array ("errorCode"=>500,
+                        "errorMessage"=> "Unable to update post");
+    }else{
+        updateCategoryCount($categoryId);
+        $return = array ("postupdated"=>true,
+                        "postId"=>$post);
+    }
+     echo json_encode($return);
+           
+}
+       
+       
 function deletePost(){};
 function getPost(){};
        
