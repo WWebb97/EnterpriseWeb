@@ -160,4 +160,36 @@ function updatePost($name, $description, $anon, $categoryId, $postId){
     }
 }
 
+function addImage($name, $location, $postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        
+           $sql = "insert into files (name, location, post_id) values (?,?,?)";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "ssi", $nameIn, $LocationIn,$pId);
+            $nameIn = $name;
+            $locationIn = $location;
+            $pId = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = true;
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = false;
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
+}
+
 ?>
