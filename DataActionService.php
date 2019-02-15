@@ -60,7 +60,6 @@ function setVerified ($username, $verificationNo){
     }
     mysqli_close($conn);
     return $result;
-    
 }
 
 
@@ -86,7 +85,7 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
-                $return = mysqli_insert_id($link)
+                $return = mysqli_insert_id($link);
             }else{
              //   echo mysqli_errno($conn);
                 $return = false;

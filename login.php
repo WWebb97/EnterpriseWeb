@@ -1,13 +1,5 @@
-<?php echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
-<?php
-//define('URLFORM', 'https://stuweb.cms.gre.ac.uk/~ad9047o/urlTesting.html'); 
-if(isset($_POST['username']) && !empty($_POST['username'])){
-$cookie_value=$_POST['username'];
-setcookie('user',$cookie_value, time() + 3600, '/');
-}
-?>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -18,23 +10,23 @@ setcookie('user',$cookie_value, time() + 3600, '/');
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="https://stuweb.cms.gre.ac.uk/~ad9047o/register.php">Home</a>
+            <a class="navbar-brand" href="index.html">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="https://stuweb.cms.gre.ac.uk/~ad9047o/register.php">Register</a>
+                        <a class="nav-link" href="register.php">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://stuweb.cms.gre.ac.uk/~ad9047o/login.php">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://">Your Ideas</a>
+                        <a class="nav-link" href="">Your Ideas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://">Upload Ideas</a>
+                        <a class="nav-link" href="">Upload Ideas</a>
                     </li>
                 </ul>
             </div>  
@@ -56,7 +48,7 @@ setcookie('user',$cookie_value, time() + 3600, '/');
   		        <button type="button"  id="submitButton" class="refresh btn" name="login_user">Login </button>                
 
             </div>
-            <p id="testingSpace">   </p>
+           <!-- <p id="testingSpace">   </p> -->
             <script>
                 $(document).ready(function(){
                      
@@ -71,7 +63,24 @@ setcookie('user',$cookie_value, time() + 3600, '/');
                             dataType: 'JSON',
                             success: function(output) {
                                     $("#testingSpace").text("login= "+output.login+" verified = " +output.verified);
+                                
+                                if(output.login == true){
+                                    //alert('correct login');
+                                    document.cookie = "username = " + username;
+                                    <?php session_start(); ?>
+                                    if(output.verified == false){
+                                        window.location.href = "Verification.html";
+                                        
+
+                                    }else{
+                                        window.location.href = "Index.html";
+                                    }
+                                    
+                                }else{
+                                    alert('incorrect Login');
                                 }
+                            }
+                            
 
                             });
             
