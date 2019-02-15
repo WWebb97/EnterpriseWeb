@@ -127,5 +127,37 @@ function updateCategoryCount($categoryId){
     
 }
 
+function updatePost($name, $description, $anon, $categoryId, $postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        
+           $sql = "UPDATE post SET name = ? , description = ?, post_anon = ?, category_id = ? WHERE post_id = ?";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "ssiii", $nameIn, $descriptionIn, $postAnon, $cat, $postIdIn);
+            $nameIn = $name;
+            $descriptionIn = $description;
+            $postAnon = $anon;
+            $cat = $categoryId;
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = mysqli_insert_id($link);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = false;
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
 
 ?>
