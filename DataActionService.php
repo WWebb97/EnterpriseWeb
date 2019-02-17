@@ -159,8 +159,8 @@ function updatePost($name, $description, $anon, $categoryId, $postId){
         return $return;
     }
 }
-
-function addImage($name, $location, $postId){
+/**
+function addDocument($name, $location, $postId){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -190,6 +190,6 @@ function addImage($name, $location, $postId){
         return $return;
     }
     
-}
+}**/
 
 ?>
