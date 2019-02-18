@@ -14,7 +14,7 @@ function getUsers ($username, $password){
                    'reason'=> $conn['reason'],
                    'code' => 500);
    }else{
-        $sql = "select username,user_password, verified from site_user where username = ? and user_password = ?";
+        $sql = "select username,user_password, verified, user_id from site_user where username = ? and user_password = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "ss", $usernameIn, $passwordIn);
@@ -23,11 +23,12 @@ function getUsers ($username, $password){
             //var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
                 $users = array();
-                mysqli_stmt_bind_result($stmt, $usernameOut, $user_passwordOut, $verified);
+                mysqli_stmt_bind_result($stmt, $usernameOut, $user_passwordOut, $verified, $user_id);
                 while(mysqli_stmt_fetch($stmt)){
                     $user = array("username"=>$usernameOut,
                                  "user_password"=>$user_passwordOut,
-                                 "verified"=>$verified);
+                                 "verified"=>$verified,
+                                 "user_id"=>$user_id);
                     array_push($users, $user);
                 }
               //  var_dump($users);

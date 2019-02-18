@@ -32,10 +32,12 @@ if(isset($user["error"])){
 }else {
     if($user["verified"] == 1){
         $return = array("login"=>true,
-                        "verified"=>true);
+                        "verified"=>true,
+                       "user_id"=>$user["user_id"]);
     }else{
         $return = array("login"=>true,
-                       "verified"=>false);
+                       "verified"=>false,
+                       "user_id"=>$user["user_id"]);
     }
     
 }
