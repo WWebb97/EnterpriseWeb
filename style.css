@@ -1,8 +1,4 @@
-/*CSS style coding taken and adjusted for this program from codewithawa.com url: https://codewithawa.com/posts/complete-user-registration-system-using-php-and-mysql-database*/
 
-.jumbotron{
-  color: #cc8800;   
-}
 body {
   background-image: url(images/background5.png);
   background-color: #dae0e5;
@@ -36,6 +32,47 @@ body {
   text-align: center;
 }
 
+.headerverify {
+  width: 40%;
+  margin: 100px auto 0px;
+  color: whitesmoke;
+  background: #007bff;
+  text-align: center;
+  border: 1px solid #848484;
+  border-bottom: none;
+  border-radius: 5px 5px 0px 0px;
+  padding: 20px;
+}
+.contentverify {
+  width: 40%;
+  margin: 0px auto 140px;
+  padding: 10px;
+  border: 1px solid #848484;
+  background: white;
+  border-radius: 0px 0px 5px 5px;
+  text-align: center;
+}
+.headerideas {
+  width: 25%;
+  margin: 100px auto 0px;
+  color: whitesmoke;
+  background: #007bff;
+  text-align: center;
+  border: 1px solid #848484;
+  border-bottom: none;
+  border-radius: 5px 5px 0px 0px;
+  padding: 20px;
+}
+.contentideas {
+  width: 25%;
+  margin: 0px auto 140px;
+  padding: 10px;
+  border: 1px solid #848484;
+  background: white;
+  border-radius: 0px 0px 5px 5px;
+  text-align: center;
+}
+
 .input-group {
   margin: 10px 0px 10px 0px;
 }
@@ -61,7 +98,14 @@ body {
   border-radius: 5px;
   border: 1px solid gray;
 }
-
+.input-group textarea {
+  height: 200px;
+  width: 100%;
+  padding: 5px 0px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
 .btn {
   cursor: pointer;
   font-size: 20px;
@@ -139,4 +183,46 @@ body {
     padding: 10px 20px 10px 60px; 
     border: 1px solid #ddd; 
     border-radius: 10px 0px 0px 10px;
+}
+.jumbotron {
+    width: 20%;
+    margin: 50px 0px 140px 275px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+.jumbotron1 {
+    width: 20%;
+    margin: 50px 0px 140px 100px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+.jumbotron2 {
+    width: 20%;
+    margin: 50px 0px 140px 100px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+.thumbup {
+    background-image: url('images/thumbup.jpg');
+}
+.thumbdown {
+    background-image: url('images/thumbdown.jpg');
+}
+img {
+  border: 1px solid #ddd;
+  border-radius: 100px;
+  width: 60px;
+  margin: 10px 0px 10px 80px;
 }

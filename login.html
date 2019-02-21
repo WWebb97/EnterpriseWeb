@@ -17,17 +17,11 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
+                        <a class="nav-link" href="register.html">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Your Ideas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Upload Ideas</a>
-                    </li>
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>                    
                 </ul>
             </div>  
         </nav>
@@ -45,35 +39,35 @@
   		        <input type="password" name="password" id="password" required>
             </div>
             <div class="input-group">
-  		        <button type="button"  id="submitButton" class="refresh btn" name="login_user">Login </button>                
+  		        <button type="button"  id="submitButton" class="refresh btn">Login </button>                
 
             </div>
-           <!-- <p id="testingSpace">   </p> -->
+            <p id="testingSpace">   </p> 
             <script>
                 $(document).ready(function(){
                      
                     $("#submitButton").click(function(){
                            var username = $("#username").val();
                            var password = $("#password").val();
+                           var user_id = $("#user_id").val();
                         $.ajax({
                             type: "POST",
                             url: "LoginController.php",
-                            data: {username:username, password:password},
+                            data: {username:username, password:password, user_id: $("#user_id").val()},
                             cache: false,
                             dataType: 'JSON',
                             success: function(output) {
-                                    $("#testingSpace").text("login= "+output.login+" verified = " +output.verified);
+                                    $("#testingSpace").text("login= "+output.login+" verified = " +output.verified+ " user id =" +output.user_id);
                                 
                                 if(output.login == true){
-                                    //alert('correct login');
                                     document.cookie = "username = " + username;
-                                    <?php session_start(); ?>
+                                    document.cookie = "user_id = " + user_id;
                                     if(output.verified == false){
                                         window.location.href = "Verification.html";
                                         
 
                                     }else{
-                                        window.location.href = "Index.html";
+                                        window.location.href = "index.html";
                                     }
                                     
                                 }else{
@@ -95,7 +89,7 @@
             
             </script>
   	         <p>
-  		        Not yet a member? <a href="register.php">Sign up</a>
+  		        Not yet a member? <a href="register.html">Sign up</a>
   	         </p>
          </div>
         </form>

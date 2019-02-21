@@ -9,8 +9,8 @@ header('Content-Type: application/json');
 
 $errorCode = null;
 $errorMessage = null;
-$return = array();
 
+$return = array();
 $username = $_POST['username'];
 $verificationCode = $_POST['verificationCode'];
 

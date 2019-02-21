@@ -169,7 +169,7 @@ function uploadFile(){
                         foreach($files as $var){
                             $insert = InsertImage("/coursework/images/", $var, $fileId); 
                             if(!($insert)){
-                                $failue = 1;
+                                $failure = 1;
                             }
                         }
                         if($failure === 1){
