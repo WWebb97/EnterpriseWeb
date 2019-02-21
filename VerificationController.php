@@ -21,7 +21,8 @@ unset($_POST['verificationCode']);
 if(getVerificationNo($username, $verificationCode) == 1){
     $result = setVerified($username, $verificationCode);
     if($result == 1){
-        $return = array("verification"=>true);
+        $return = array("verification"=>true,
+                       "username"=>$username);
     }else{
         http_response_code(400);
         $return = array("errorCode" => 400,

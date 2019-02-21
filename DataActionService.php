@@ -83,12 +83,14 @@ function createPost($name, $description, $anon, $categoryId, $userId, $postDate)
             $user = $userId;
             $pd = $postDate;
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
-          //  var_dump($stmt);
+            //var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
-                $return = mysqli_insert_id($link);
+                $return = mysqli_insert_id($conn);
             }else{
-             //   echo mysqli_errno($conn);
-                $return = false;
+              // echo mysqli_errno($conn);
+                $return = array("created"=>false,
+                                "message"=>mysqli_error($conn)
+                );
             }
              mysqli_stmt_close($stmt);
         }

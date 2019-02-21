@@ -215,14 +215,11 @@ body {
     text-align: left;
 }
 .thumbup {
-    background-image: url('images/thumbup.jpg');
+    background-image: url('images/thumbup.png');
 }
 .thumbdown {
-    background-image: url('images/thumbdown.jpg');
+    background-image: url('images/thumbdown.png');
 }
-img {
-  border: 1px solid #ddd;
-  border-radius: 100px;
-  width: 60px;
+.images {
   margin: 10px 0px 10px 80px;
 }
