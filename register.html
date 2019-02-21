@@ -1,145 +1,166 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">    
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+
 <head>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-<title>Register</title>
-<meta name="Author" content="ad9047o@gre.ac.uk"/>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="checkpass.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <title>Register</title>
+    <meta name="Author" content="ad9047o@gre.ac.uk" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="checkpass.js"></script>
 </head>
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="register.html">Home</a>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="register.html">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
-                    </li>                    
-                </ul>
-            </div>  
-        </nav>
-        <div class="header">
-            <h2>Register</h2>                
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="register.html">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+            </ul>
         </div>
-        <form>
-            
-            <div class="content">
+    </nav>
+    <div class="header">
+        <h2>Register</h2>
+    </div>
+    <form>
+
+        <div class="content">
             <div class="input-group">
-  	         <label>First Name</label>
-  	         <input type="text" name="first_name" id="first_name" required>
+                <label>First Name</label>
+                <input type="text" name="first_name" id="first_name" required>
             </div>
             <div class="input-group">
-  	         <label>Last Name</label>
-  	         <input type="text" name="last_name" id="last_name"  required>
+                <label>Last Name</label>
+                <input type="text" name="last_name" id="last_name" required>
             </div>
             <div class="input-group">
-  	         <label>Username</label>
-  	         <input type="text" name="username" id="username"  required>
+                <label>Username</label>
+                <input type="text" name="username" id="username" required>
             </div>
             <div class="input-group">
-  	         <label>Email</label>
-  	         <input type="email" name="email" id="email"  pattern=".+@gre.ac.uk" title="University of Greenwich emails only.." required>
+                <label>Email</label>
+                <input type="email" name="email" id="email" pattern=".+@gre.ac.uk" title="University of Greenwich emails only.." required>
             </div>
             <div class="fieldWrapper">
-            <div class="input-group">
-  	         <label>Password</label>
-  	         <input type="password" name="password" id="password" required>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <div class="input-group">
+                    <label>Confirm password</label>
+                    <input type="password" name="password_2" id="password_2" onkeyup="checkPass(); return false;" required>
+                    <span id="confirmMessage" class="confirmMessage"></span>
+                </div>
             </div>
             <div class="input-group">
-  	         <label>Confirm password</label>
-  	         <input type="password" name="password_2" id="password_2" onkeyup="checkPass(); return false;" required>
-             <span id="confirmMessage" class="confirmMessage"></span>
-            </div>
-            </div>
-            <div class="input-group">
-  	         <label>Department</label>
-  	         <select name="department" id="departmentID" required>
+                <label>Department</label>
+                <select name="department" id="departmentID" required>
                     <option>Select Option</option>
-                    <option value="1">testing</option>
-                    <option value="2">Architecture</option>
-                    <option value="3">Computing</option>
-                    <option value="4">Humanities</option>
-                    <option value="5">Business</option>
-                    <option value="6">Education</option>
-                    <option value="7">Health</option>
-                    <option value="8">Engineering</option>
-                    <option value="9">Science</option>
+                    <option value="1">Accounting & Finance</option>
+                    <option value="2">Human Resources & Organisational Behaviour</option>
+                    <option value="3">International Business & Economics</option>
+                    <option value="4">Marketing, Events & Tourism</option>
+                    <option value="5">Systems Management & Strategy</option>
+                    <option value="6">Architecture & Landscape</option>
+                    <option value="7">Built Environment</option>
+                    <option value="8">Computing & Informational Systems</option>                    
+                    <option value="9">Creative Professions & Digital Arts</option>
+                    <option value="10">History, Politics & Social Sciences</option>
+                    <option value="11">Law</option>
+                    <option value="12">Literature, Language & Theatre</option>
+                    <option value="13">Mathematical Sciences</option>
+                    <option value="14">Adult Nursing & Paramedic Science</option>
+                    <option value="15">Cross Faculty</option>
+                    <option value="16">Education & Community Studies</option>
+                    <option value="17">Family Care & Mental Health</option>
+                    <option value="18">Psychology, Social Work & Counselling</option>
+                    <option value="19">Teacher Education</option>
+                    <option value="20">Applied Engineering & Management</option>
+                    <option value="21">Engineering Science</option>
+                    <option value="22">Life & Sports Sciences</option>
+                    <option value="23">Pharmaceutical, Chemical & Environmental Sciences</option>
              </select>
             </div>
             <div class="captcha">
-                <img src="captcha.php" >
-                </div>
-                <div class="inputcapt-group"  >
-                    <strong>Enter CAPTCHA code below</strong><br/>
-                <input type="text" id="captchabox" name="captchabox">
-                </div><br/>
-                <input type="checkbox">Please tick to accept our terms and conditions<br/>                 
-                <div class="inputreg-group">                        
-                    <button type="button" name="add" id="add_user" class="refresh btn">Submit Details</button>                
-                </div><br/>
-<!--                <p id="testingSpace">   </p>-->
-                <script>
-                  
-                $(document).ready(function(){                   
-                        
-                    $("#add_user").click(function(){
-                        if($('input[type="checkbox"]').prop("checked") == true){                              
-                       
-                           var first_name = $("#first_name").val();
-                           var last_name = $("#last_name").val();
-                           var username = $("#username").val();
-                           var email = $("#email").val();
-                           var password = $("#password").val();
-                           var departmentID = $("#departmentID").val();
-                           var captchabox =$("#captchabox").val();
-                        $.ajax({
-                            type: "POST",
-                            url: "RegisterController.php",
-                            data: {first_name:first_name, last_name:last_name, username:username, email:email, password:password, departmentID:departmentID, captchabox:captchabox},
-                            cache: false,
-                            dataType: 'JSON',
-                            success: function(output) {
-                                    $("#testingSpace").text("Registration= "+output.register+" errorCode = " +output.errorCode);
-                                
-                                
-                                if(output.register == true){
-                                    document.cookie = "username = " + username;
-                                    window.location.href = "login.html";                                    
-                                }else{
-                                    unset.cookie;                                  
-                                }
-                            }
-
-                            });                       
-                    
-                        }else if($('input[type="checkbox"]').prop("checked") == false) {
-                                  alert("To use our site you must accept our terms and conditions");
-                              }
-                             
-                    });  
-                            
-                });           
-            </script>		             
-                
-                <button type="submit" class="refresh btn" onclick="this.form.action='register.html'">Reset Form</button>
-                
-                <p>
-                Already a member? <a href="login.html">Sign in</a>
-                </p>
-
+                <img src="captcha.php">
             </div>
-        </form>
+            <div class="inputcapt-group">
+                <strong>Enter CAPTCHA code below</strong><br/>
+                <input type="text" id="captchabox" name="captchabox">
+            </div><br/>
+            <input type="checkbox">Please tick to accept our terms and conditions<br/>
+            <div class="inputreg-group">
+                <button type="button" name="add" id="add_user" class="refresh btn">Submit Details</button>
+            </div><br/>
+            <!--                <p id="testingSpace">   </p>-->
+            <script>
+                $(document).ready(function() {
 
-    </body>
+                    $("#add_user").click(function() {
+                        if ($('input[type="checkbox"]').prop("checked") == true) {
+
+                            var first_name = $("#first_name").val();
+                            var last_name = $("#last_name").val();
+                            var username = $("#username").val();
+                            var email = $("#email").val();
+                            var password = $("#password").val();
+                            var departmentID = $("#departmentID").val();
+                            var captchabox = $("#captchabox").val();
+                            $.ajax({
+                                type: "POST",
+                                url: "RegisterController.php",
+                                data: {
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    username: username,
+                                    email: email,
+                                    password: password,
+                                    departmentID: departmentID,
+                                    captchabox: captchabox
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(output) {
+                                    $("#testingSpace").text("Registration= " + output.register + " errorCode = " + output.errorCode);
+
+
+                                    if (output.register == true) {
+                                        document.cookie = "username = " + username;
+                                        window.location.href = "Verification.html";
+                                    } else {
+                                        unset.cookie;
+                                    }
+                                }
+
+                            });
+
+                        } else if ($('input[type="checkbox"]').prop("checked") == false) {
+                            alert("To use our site you must accept our terms and conditions");
+                        }
+
+                    });
+
+                });
+            </script>
+
+            <button type="submit" class="refresh btn" onclick="this.form.action='register.html'">Reset Form</button>
+
+            <p>
+                Already a member? <a href="login.html">Sign in</a>
+            </p>
+
+        </div>
+    </form>
+
+</body>
+
 </html>
-
-       
-    
