@@ -207,10 +207,8 @@ function uploadFile(){
                         }
     
     
-<<<<<<< HEAD
 }*/
-=======
-}
+
 
 function fetchPostForEdit(){
     
@@ -240,5 +238,4 @@ function fetchPostForEdit(){
     echo json_encode($return);
 }
 
->>>>>>> de3e6e32ae71fb461823d746f4ed51723e466fcc
 ?>

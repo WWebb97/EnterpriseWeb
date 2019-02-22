@@ -161,6 +161,39 @@ function updatePost($name, $description, $anon, $categoryId, $postId){
         return $return;
     }
 }
+
+function addCommentWithPostId($postId, $userId, $contents){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+           $sql = "insert into comments(contents, user_id, post_id) values (?,?,?)";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "sii", $contentsIn, $userIdIn, $postIdIn);
+            $contentsIn = $contents;
+            $userIdIn = $userId;
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = true;
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "added"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
 /**
 function addDocument($name, $location, $postId){
     $result = null;
