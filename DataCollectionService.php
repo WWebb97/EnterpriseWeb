@@ -120,6 +120,7 @@ function getVerificationNo($username, $verificationCode){
     return $result;    
 }
 
+<<<<<<< HEAD
 
 function getCommentsWithPostId($postId){
     $return = "";
@@ -128,6 +129,8 @@ function getCommentsWithPostId($postId){
        $return = array('error' => $conn['error'],
                    'reason'=> $conn['reason'],
                    'valid' => false);
+    
+    
     }else{
         $sql = "SELECT u.username, c.contents FROM comments c join site_user u on u.user_id = c.user_id where post_id = ?";
         if($stmt = mysqli_prepare($conn, $sql)){
@@ -154,7 +157,38 @@ function getCommentsWithPostId($postId){
                             );
                 }
             }
-        mysqli_stmt_close($stmt);
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+}
+
+function listPosts(){
+    $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('error' => $conn['error'],
+                   'reason'=> $conn['reason'],
+                   'valid' => false);
+
+   }else{
+        $query = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = "error";
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $posts = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($posts, $row);
+            }
+            $return = $posts;  
+        }else{
+            $return = 0;
+        }
     }
     mysqli_close($conn);
     return $return;

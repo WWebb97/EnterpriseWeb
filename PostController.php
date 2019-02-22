@@ -22,6 +22,7 @@ switch($method){
     case "deletPost":
         break;
     case "getPost":
+        getPost();
         break;
     case "addAttatchment":
         break;
@@ -130,7 +131,28 @@ function editPost(){
        
        
 function deletePost(){};
-function getPost(){};
+
+function getPost(){
+    
+    $posts = listPosts();
+    $return = array();
+    if(isset($posts["error"])){
+        http_response_code ($posts["code"]);
+        $return = array( "errorCode"=> $posts["code"],
+                             "errorMessage"=> $posts["reason"]);
+    } else if($posts === 0){
+        http_response_code(500);
+        $return = array("errorCode" => 500,
+                       "errorMessage"=> "Unable to find any posts");    
+    }else if ($posts === "error"){
+        http_response_code(500);
+        $return = array("errorCode" => 500,
+                       "errorMessage"=> "Unable to perform database query");    
+    }else {
+        $return = $posts;
+    }
+    echo json_encode($return);
+}
        
 function uploadFile(){
             //start the image upload code
