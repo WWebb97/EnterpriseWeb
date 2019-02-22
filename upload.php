@@ -1,3 +1,9 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ERROR);
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
 <head>
@@ -22,7 +28,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="upload.html">Upload Ideas</a>
+                        <a class="nav-link" href="upload.php">Upload Ideas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="edit.html">Edit Ideas</a>
@@ -65,7 +71,7 @@
                                         $('#category').append('   </select>');
                                 },
                                 error: function(result) {
-                                    alert('unsuccessfull upload');
+                                    //alert('unsuccessfull upload');
                                 }
                             });
                        });
@@ -98,7 +104,7 @@
 <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
                 <input id="description" cols="80" rows="5"/>
             </div>
-            <input type="file" name="fileUpload" id="fileUpload">
+            <input type="file" multiple class="formInput" name="files[]" id="filesIn"/>
             <div class="input-group">
   		        <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
 
@@ -113,6 +119,7 @@
                 var description = $("#description").val();
                 var categoryId = $("#categoryId").val();
                 var anon = $('#anon').val();
+                
                     
                 e.preventDefault();
                 
@@ -134,11 +141,63 @@
                             
                              $("#testingSpace").text("upload= "+status.postCreated+" errormessage = " +status.errorMessage);
                             
-                            if(status.postCreated == true){
-                                    
-                                    alert('Idea successfully uploaded');                                   
-                                    window.location.href = "index.html";
-                                }
+                            if(status.postCreated == true){   
+                                alert('Idea successfully uploaded');                                   
+                                window.location.href = "index.html";
+                                <?php 
+                                     $fileId= null;
+                                        $error=array();
+                                        $files = array();
+                                        $extension=array("docx, pdf");
+                                        $fileCount = 1;
+                                        $uploadSuccess = 1;
+                                        foreach($_FILES["files"]["tmp_name"] as $key=>$tmp_name)
+                                                {
+                                                    $file_name=$_FILES["files"]["name"][$key];
+                                                    $file_tmp=$_FILES["files"]["tmp_name"][$key];
+                                                    $newFileName= "image".$imageCount."postid".$fileId;
+                                                    $fileCount ++;
+                                                    $ext=pathinfo($file_name,PATHINFO_EXTENSION);
+                                                    if(in_array($ext,$extension))
+                                                    {
+                                                        if(!file_exists("images/".$newFileName))
+                                                        {
+                                                            move_uploaded_file($file_tmp=$_FILES["files"]["tmp_name"][$key],"attachments2/".$file_name);
+                                                            $finalName= $newFileName.".".$ext;
+                                                            array_push($files, $finalName);
+                                                            
+                                                        }
+                                                        else
+                                                        {
+                                                            $uploadSuccess = 0;
+                                                            ?>
+                                                            alert("well that didnt work");
+                                                            <?php
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        array_push($error,"$file_name, ");
+                                                    }
+                                                }
+
+                                        //var_dump($error);
+                                        //var_dump($files);
+                                        $failure = 0;
+                                        foreach($files as $var){
+                                           // $insert = InsertImage("/coursework/images/", $var, $fileId); 
+                                            if(!($insert)){
+                                                $failure = 1;
+                                            }
+                                        }
+                                        if($failure === 1){
+                                            //echo "There was an error adding images to the post. The post was still created successfully.";
+                                        }else{
+                                            //echo "Post succsessfully created.";
+                                        }
+                                ?>
+
+                            }
                         },
                         error: function(result) {
                             alert('unsuccessfull upload');

@@ -120,8 +120,6 @@ function getVerificationNo($username, $verificationCode){
     return $result;    
 }
 
-<<<<<<< HEAD
-
 function getCommentsWithPostId($postId){
     $return = "";
     $conn = getConnection();

@@ -108,7 +108,7 @@ function updateCategoryCount($categoryId){
                        'code' => 500);
     }else{
         
-           $sql = "update category set post_count = post_count + 1 where category_id = ?";
+           $sql = "update category set post_count = post_count + 1 , last_post = '".time()."' where category_id = ?";
         //echo $sql;
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "i",$cat);

@@ -11,7 +11,7 @@ switch($method){
     case "getComments":
         getComments();
         break;
-    case "":
+    case "add":
         
         break;
  
