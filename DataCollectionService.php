@@ -120,4 +120,44 @@ function getVerificationNo($username, $verificationCode){
     return $result;    
 }
 
+
+function getCommentsWithPostId($postId){
+    $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('error' => $conn['error'],
+                   'reason'=> $conn['reason'],
+                   'valid' => false);
+    }else{
+        $sql = "SELECT u.username, c.contents FROM comments c join site_user u on u.user_id = c.user_id where post_id = ?";
+        if($stmt = mysqli_prepare($conn, $sql)){
+                mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+                $postIdIn = $postId;
+                //var_dump($stmt);
+                if(mysqli_stmt_execute($stmt)){
+                    $comments = array();
+                    mysqli_stmt_bind_result($stmt, $username, $content);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $comment = array("username"=>$username,
+                                         "comment"=>$content);
+                        array_push($comments, $comment);
+                    }
+                  //  var_dump($users);
+                    if (count($comments) === 0){
+                        $return = 0;
+                    }else{
+                        $return = $comments;
+                    }
+                }else{
+                    $return = array("values"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
 ?>
