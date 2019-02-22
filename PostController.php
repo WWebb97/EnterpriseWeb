@@ -26,6 +26,9 @@ switch($method){
         break;
     case "addAttatchment":
         break;
+    case "fetchPostForEdit":
+        fetchPostForEdit();
+        break;
 }
     
 function categories(){
@@ -204,5 +207,38 @@ function uploadFile(){
                         }
     
     
+<<<<<<< HEAD
 }*/
+=======
+}
+
+function fetchPostForEdit(){
+    
+    $postId = $_POST['postId'];
+    $userId = $_POST['userId'];
+    
+    unset($_POST['postId']);
+    unset($_POST['userId']);
+    
+    $posts = fetchPost($postId, $userId);
+    $return = array();
+    if(isset($posts["error"])){
+        http_response_code ($posts["code"]);
+        $return = array( "errorCode"=> $posts["code"],
+                             "errorMessage"=> $posts["reason"]);
+    } else if($posts === 0){
+        http_response_code(500);
+        $return = array("errorCode" => 500,
+                       "errorMessage"=> "Unable to find any posts");    
+    }else if ($posts === "error"){
+        http_response_code(500);
+        $return = array("errorCode" => 500,
+                       "errorMessage"=> "Unable to perform database query");    
+    }else {
+        $return = $posts;
+    }
+    echo json_encode($return);
+}
+
+>>>>>>> de3e6e32ae71fb461823d746f4ed51723e466fcc
 ?>
