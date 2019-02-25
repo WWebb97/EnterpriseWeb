@@ -161,7 +161,40 @@ function updatePost($name, $description, $anon, $categoryId, $postId){
         return $return;
     }
 }
-/**
+
+function addCommentWithPostId($postId, $userId, $contents){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+           $sql = "insert into comments(contents, user_id, post_id) values (?,?,?)";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "sii", $contentsIn, $userIdIn, $postIdIn);
+            $contentsIn = $contents;
+            $userIdIn = $userId;
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = true;
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "added"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+
 function addDocument($name, $location, $postId){
     $result = null;
     $conn = getConnection();
@@ -192,6 +225,87 @@ function addDocument($name, $location, $postId){
         return $return;
     }
     
-}**/
+}
+
+
+function addVotePost($vote, $postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        if($vote == 'ThumbsUp'){
+            $voteAm = '+1';
+        }else{
+            $voteAm = '-1';
+        }
+        
+        $sql = "UPDATE post SET points = points $voteAm WHERE post_id = $postId";
+        if(mysqli_query($conn, $sql)){
+            $return = true;
+        }else{
+            $return = mysqli_error($conn);
+        }
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
+function addVoteLog($userId, $postId, $vote){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        if($vote == 'ThumbsUp'){
+            $positive = 1;
+            $negative = 0;
+        }else{
+            $positive = 0;
+            $negative = 1;
+        }
+        $sql = "INSERT INTO post_rating (user_id, post_id, positive, negative) VALUES ( $userId, $postId, $positive, $negative )";    
+        if(mysqli_query($conn, $sql)){
+            $return = true;
+        }else{
+            $return = false;
+        }
+    }
+    mysqli_close($conn);
+    return $return;  
+}
+
+function updateVoteLog($vote, $userId, $postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        if($vote == 'ThumbsUp'){
+            $positive = 1;
+            $negative = 0;
+        }else{
+            $positive = 0;
+            $negative = 1;
+        }
+        
+        $sql = "UPDATE post_rating SET positive = $positive, negative = $negative WHERE user_id = $userId AND post_id = $postId";
+        if(mysqli_query($conn, $sql)){
+            $return = true;
+        }else{
+            $return = false;
+        }
+    }
+    mysqli_close($conn);
+    return $return;  
+}
+
+
 
 ?>

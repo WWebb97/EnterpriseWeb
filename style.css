@@ -1,5 +1,5 @@
 
-body {
+/*body {
   background-image: url(images/background5.png);
   background-color: #dae0e5;
   font-size: 100%;
@@ -8,9 +8,10 @@ body {
   background-position: center;
   background-size: cover;
   min-height: 500px;
-/*  font-family: "Impact", "Charcoal", sans-serif;*/
+  font-family: "Impact", "Charcoal", sans-serif;
   
 }
+*/
 .headerlog, .header {
   width: 20%;
   margin: 100px auto 0px;
@@ -183,36 +184,7 @@ body {
     border: 1px solid #ddd; 
     border-radius: 10px 0px 0px 10px;
 }
-.jumbotron {
-    width: 20%;
-    margin: 50px 0px 140px 275px;
-    display: inline-block;
-    padding: 10px;
-    border: 1px solid #848484;
-    background: white;
-    border-radius: 5px 5px 5px 5px;
-    text-align: left;
-}
-.jumbotron1 {
-    width: 20%;
-    margin: 50px 0px 140px 100px;
-    display: inline-block;
-    padding: 10px;
-    border: 1px solid #848484;
-    background: white;
-    border-radius: 5px 5px 5px 5px;
-    text-align: left;
-}
-.jumbotron2 {
-    width: 20%;
-    margin: 50px 0px 140px 100px;
-    display: inline-block;
-    padding: 10px;
-    border: 1px solid #848484;
-    background: white;
-    border-radius: 5px 5px 5px 5px;
-    text-align: left;
-}
+
 .thumbup {
     background-image: url('images/thumbup.png');
 }
