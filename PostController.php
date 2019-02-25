@@ -156,7 +156,7 @@ function getPost(){
     }
     echo json_encode($return);
 }
-       
+/*       
 function uploadFile(){
             //start the image upload code
                         $fileId= $createPost;
@@ -207,7 +207,8 @@ function uploadFile(){
                         }
     
     
-}
+}*/
+
 
 function fetchPostForEdit(){
     
