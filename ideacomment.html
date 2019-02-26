@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
+    <script src="https://pagination.js.org/dist/2.1.4/pagination.min.js"></script>
+    <title>Index</title>
+    <meta name="Author" content="ad9047o@gre.ac.uk"/>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" href="index.html">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="upload.php">Suggest an Ideas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Logout.html">Logout</a>
+                    </li>
+                </ul>
+            </div>  
+        </nav>
+        
+        <br/>
+        <br/>
+        
+         
+             <div class="container">
+                 <div class="jumbotron">
+                <h2>Comments</h2>
+                <script>
+                $(document).ready(function(){
+                    
+                    
+                    var postId = getUrlVars()["postId"];
+                    function getUrlVars() {
+                        var vars = {};
+                        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                            vars[key] = value;
+                        });
+                        return vars;
+                    };
+                   $.ajax({
+                        type: "POST",
+                        url: "CommentAndRatingController.php",
+                        data: {method:"getComments", postId:postId},
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            var userId = $.cookie('userid');
+                            
+                            $.each(data.comments, function(i, val){
+
+                                $('#contentcomment').append('<div class="container"><h5>'+val.username+'</h5><p>'+val.comment+'</p><hr/>');
+                
+                                                                
+                                
+                            });
+                                },
+                                error: function(result) {
+                                    alert('unsuccessful comment fetch');
+                                }
+                    }); 
+                            
+                    
+                });
+            
+            </script>
+            <div id="contentcomment"></div>
+                     </div>
+            </div>
+            
+            
+             
+        
+    </body>
+</html>
