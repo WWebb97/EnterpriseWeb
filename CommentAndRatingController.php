@@ -19,6 +19,7 @@ switch($method){
         break;
  
 }
+
 function getComments(){
     $postId = $_POST["postId"];
     unset($_POST["postId"]);
@@ -37,33 +38,6 @@ function getComments(){
     }else{
         $return = array("comments"=>$comments);
     }
-    echo json_encode($return);
-    
-}
-function addComment(){
-    $postId = $_POST["postId"];
-    $userId = $_POST["userId"];
-    $contents = $_POST["contents"];
-    
-    unset($_POST["userId"]);
-    unset($_POST["postId"]);
-    unset($_POST["contents"]);
-    
-   if($postId == null || $userId == null || $contents == null){
-        http_response_code(400);
-        echo json_encode(array("message"=>"Must provide a post Id, user id and contents"));
-    }
-    
-    $return = array();
-    $commentsReturn = addCommentWithPostId($postId, $userId, $contents);
-    
-    if($commentsReturn === true){
-        $return = array("added"=>true);
-    }else{
-        $return = array("added"=>false,
-                       "message"=>$commentsReturn["message"]);
-    }
-    
     echo json_encode($return);
     
 }
