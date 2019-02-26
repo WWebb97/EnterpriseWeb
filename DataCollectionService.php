@@ -222,4 +222,27 @@ function fetchPost($postId, $userId){
     return $return;
 }
 
+function getVoteLog($userId, $postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        $sql = "SELECT * FROM post_rating WHERE user_id = $userId AND post_id = $postId";
+        $query = mysqli_query($conn, $sql);
+        
+        if(mysqli_num_rows($query)>=1){
+            
+            $return = true;
+            
+        }else{
+            $return = false;
+        }
+    }
+    mysqli_close($conn);
+    return $return;  
+}
+
 ?>
