@@ -24,7 +24,8 @@ switch($method){
     case "getPost":
         getPost();
         break;
-    case "addAttatchment":
+    case "addAttachment":
+        uploadFiles();
         break;
     case "fetchPostForEdit":
         fetchPostForEdit();
@@ -156,58 +157,66 @@ function getPost(){
     }
     echo json_encode($return);
 }
-/*       
-function uploadFile(){
-            //start the image upload code
-                        $fileId= $createPost;
-                        $error=array();
-                        $files = array();
-                        $extension=array("docx, pdf");
-                        $fileCount = 1;
-                        $uploadSuccess = 1;
-                        foreach($_FILES["files"]["tmp_name"] as $key=>$tmp_name)
-                                {
-                                    $file_name=$_FILES["files"]["name"][$key];
-                                    $file_tmp=$_FILES["files"]["tmp_name"][$key];
-                                    $newFileName= "image".$imageCount."postid".$fileId;
-                                    $fileCount ++;
-                                    $ext=pathinfo($file_name,PATHINFO_EXTENSION);
-                                    if(in_array($ext,$extension))
-                                    {
-                                        if(!file_exists("images/".$newFileName))
-                                        {
-                                            move_uploaded_file($file_tmp=$_FILES["files"]["tmp_name"][$key],"images/".$newFileName.".".$ext);
-                                            $finalName= $newFileName.".".$ext;
-                                            array_push($files, $finalName);
-                                        }
-                                        else
-                                        {
-                                            $uploadSuccess = 0;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        array_push($error,"$file_name, ");
-                                    }
-                                }
-                        
-                        //var_dump($error);
-                        //var_dump($files);
-                        $failure = 0;
-                        foreach($files as $var){
-                            $insert = InsertImage("/coursework/images/", $var, $fileId); 
-                            if(!($insert)){
-                                $failure = 1;
-                            }
-                        }
-                        if($failure === 1){
-                            echo "There was an error adding images to the post. The post was still created successfully.";
-                        }else{
-                            echo "Post succsessfully created.";
-                        }
+      
+function uploadFiles(){
+//start the image upload code
+    $postId = $_POST["postId"];
+    $files = $_POST["files"];
+    unset($_POST["postId"]);
+    unset($_POST["files"]);
+    //var_dump($files);
+    $fileId= $createPost;
+    $error=array();
+    //$files = array();
+    $extension=array("docx, pdf");
+    $fileCount = 1;
+    $uploadSuccess = 1;
+    foreach($files["files"]["tmp_name"] as $key=>$tmp_name)
+            {
+                $file_name=$_FILES["files"]["name"][$key];
+                $file_tmp=$_FILES["files"]["tmp_name"][$key];
+                //$newFileName= "image".$imageCount."postid".$fileId;
+                $fileCount ++;
+                $newFileName = $file_name."postId".$postId;
+                $ext=pathinfo($file_name,PATHINFO_EXTENSION);
+                $error = null;
+                if(in_array($ext,$extension))
+                {
+                    if(!file_exists("attachment2/".$newFileName))
+                    {
+                        move_uploaded_file($file_tmp=$_FILES["files"]["tmp_name"][$key],"attachment2/".$newFileName.".".$ext);
+                        $finalName= $newFileName.".".$ext;
+                        array_push($files, $finalName);
+                    }
+                    else
+                    {
+                        $uploadSuccess = 0;
+                    }
+                }
+                else
+                {
+                    array_push($error,"$file_name");
+                }
+            }
+
+    //var_dump($error);
+    //var_dump($files);
+    $failure = 0;
+    var_dump($error);
+   /* foreach($files as $var){
+        $insert = InsertImage("/coursework/images/", $var, $fileId); 
+        if(!($insert)){
+            $failure = 1;
+        }
+    }*/
+    /*if($failure === 1){
+        echo "There was an error adding images to the post. The post was still created successfully.";
+    }else{
+        echo "Post succsessfully created.";
+    }*/
     
     
-}*/
+}
 
 
 function fetchPostForEdit(){
