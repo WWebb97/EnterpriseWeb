@@ -1,6 +1,11 @@
 
+<<<<<<< HEAD
+body {
+  background-image: url(images/background3.png);
+=======
 /*body {
   background-image: url(images/background5.png);
+>>>>>>> 95d5da64ee478805637b93c1d19aa9efefb8d05f
   background-color: #dae0e5;
   font-size: 100%;
   background-repeat: no-repeat;
@@ -16,7 +21,7 @@
   width: 20%;
   margin: 100px auto 0px;
   color: whitesmoke;
-  background: #007bff;
+  background: #496e96;
   text-align: center;
   border: 1px solid #848484;
   border-bottom: none;
@@ -37,7 +42,7 @@
   width: 40%;
   margin: 100px auto 0px;
   color: whitesmoke;
-  background: #007bff;
+  background: #496e96;
   text-align: center;
   border: 1px solid #848484;
   border-bottom: none;
@@ -57,7 +62,7 @@
   width: 25%;
   margin: 100px auto 0px;
   color: whitesmoke;
-  background: #007bff;
+  background: #496e96;
   text-align: center;
   border: 1px solid #848484;
   border-bottom: none;
@@ -73,7 +78,26 @@
   border-radius: 0px 0px 5px 5px;
   text-align: center;
 }
-
+.headersettings {
+  width: 60%;
+  margin: 100px auto 0px;
+  color: whitesmoke;
+  background: #496e96;
+  text-align: center;
+  border: 1px solid #848484;
+  border-bottom: none;
+  border-radius: 5px 5px 0px 0px;
+  padding: 20px;
+}
+.contentsettings {
+  width: 60%;
+  margin: 0px auto 140px;
+  padding: 10px;
+  border: 1px solid #848484;
+  background: white;
+  border-radius: 0px 0px 5px 5px;
+  text-align: center;
+}
 .input-group {
   margin: 10px 0px 10px 0px;
 }
@@ -155,6 +179,7 @@
     padding: 10px;
 }
 /*taken and adjusted for this program from W3Schools url: https://www.w3schools.com/howto/howto_js_filter_table.asp*/
+/*
 .InputSearchmem {
     background-image: url('images/searchicon.png'); 
     background-position: 3px 1px; 
@@ -184,7 +209,43 @@
     border: 1px solid #ddd; 
     border-radius: 10px 0px 0px 10px;
 }
+<<<<<<< HEAD
+*/
+/*
+.jumbotron {
+    width: 20%;
+    margin: 50px 0px 140px 275px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+.jumbotron1 {
+    width: 20%;
+    margin: 50px 0px 140px 100px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+.jumbotron2 {
+    width: 20%;
+    margin: 50px 0px 140px 100px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #848484;
+    background: white;
+    border-radius: 5px 5px 5px 5px;
+    text-align: left;
+}
+*/
+=======
 
+>>>>>>> 95d5da64ee478805637b93c1d19aa9efefb8d05f
 .thumbup {
     background-image: url('images/thumbup.png');
 }

@@ -245,4 +245,67 @@ function getVoteLog($userId, $postId){
     return $return;  
 }
 
+function getPermissionsList(){
+     $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results'=>false,
+                       'message'$conn["reason"]);
+   }else{
+        $query = "SELECT * FROM category";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = "error";
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $permissions = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($permissions, $row);
+            }
+            $return = array("results"=>$permissions);  
+        }else{
+            $return = array("results"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+}
+
+function getAllUsers(){
+    $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results'=>false,
+                       'message'$conn["reason"]);
+   }else{
+        $query = "SELECT * FROM site_user";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = array("results"=>false,
+                           "message"=>mysqli_error($conn));
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $users = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($users, $row);
+            }
+            $return = array("results"=>$users);  
+        }else{
+            $return = array("results"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+    
+    
+}
+
 ?>

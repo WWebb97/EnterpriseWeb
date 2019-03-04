@@ -6,7 +6,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
 
-<title>Index</title>
+<title>Settings</title>
 <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
@@ -22,28 +22,28 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="upload.html">Upload Ideas</a>
+                        <a class="nav-link" href="upload.php">Suggest Ideas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="edit.html">Edit Ideas</a>
+                        <a class="nav-link" href="settings.html">User Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.html">Register</a>
-                    </li>                    
+                        <a class="nav-link" href="">Logout</a>
+                    </li>
                 </ul>
             </div>  
         </nav>
         
-        <div class="headerideas">
-            <h2>Submit an idea</h2>                
+        <div class="headersettings">
+            <h2>Settings</h2>                
         </div>
         <form>
-        <div class="contentideas">
+        <div class="contentsettings">
+
             <div class="input-group">
   		        <label>Title</label>
-  		        <input type="text" id="name" required>
             </div>
-            <div class="input-group" id="category">
+            <!--<div class="input-group" id="category">
   	         <label>Category</label>
                 <script>
                        $(document).ready(function(){   
@@ -65,25 +65,13 @@
                                         $('#category').append('   </select>');
                                 },
                                 error: function(result) {
-                                    //alert('unsuccessfull upload');
+                                    alert('unsuccessfull upload');
                                 }
                             });
                        });
                 
                 
                 </script>
-  	         <!--<select name="department" id="categoryId" required>
-                    <option>Select Option</option>
-                    <option value="1">testing</option>
-                    <option value="2">Architecture</option>
-                    <option value="3">Computing</option>
-                    <option value="4">Humanities</option>
-                    <option value="5">Business</option>
-                    <option value="6">Education</option>
-                    <option value="7">Health</option>
-                    <option value="8">Engineering</option>
-                    <option value="9">Science</option>
-             </select>-->
             </div>
             <div class="input-group">
   	         <label>Select to post anonymously or not</label>
@@ -95,17 +83,19 @@
             </div>
             <div class="input-group">
                 <label>Write your idea here</label>
-<!--                <textarea id="description" cols="80" rows="5"></textarea>-->
+                <textarea id="description" cols="80" rows="5"></textarea>
                 <input id="description" cols="80" rows="5"/>
             </div>
-            <input type="file" multiple class="formInput" name="files[]" id="filesIn"/>
+            <input type="file" name="fileUpload" id="fileUpload">
             <div class="input-group">
   		        <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
 
             </div>
+-->
 <!--        <p id="testingSpace">   </p>-->
         </div>
         </form>
+<!--
         <script type="text/javascript">
          $(document).ready(function(){   
             $("#submitIdea").click(function(e) {
@@ -113,8 +103,6 @@
                 var description = $("#description").val();
                 var categoryId = $("#categoryId").val();
                 var anon = $('#anon').val();
-//                var files = $('#filesIn').val();
-                
                     
                 e.preventDefault();
                 
@@ -133,37 +121,14 @@
                         cache: false,
                         dataType: 'JSON',
                         success: function(data, status, xhttp, errorMessage) {
-                         //$("#testingSpace").text("upload= "+data.postCreated+" errormessage = " +data.errorMessage);
                             
-                            if(data.created == true){   
-                                /*alert('Idea successfully uploaded');                                   
-                                window.location.href = "index.html";*/
-                                var postId = data.postId
-                                var files = $("#filesIn").val();
-                                $.ajax({
-                                    type: "POST",
-                                    url: "PostController.php",
-
-                                    data: {
-                                        method:"addAttachment",
-                                        files: files,
-                                        postId: postId
-                                    },
-                                    cache: false,
-                                    dataType: 'JSON',
-                                    success: function(data, status, xhttp, errorMessage) {
-                                        alert("Well that worked");
-                                    },
-                                    error: function(){
-
-                                    $("#testingSpace").text("upload= "+data.created+"postid= "+data.postId+" errormessage = " +status.errorMessage);
+                             $("#testingSpace").text("upload= "+status.postCreated+" errormessage = " +status.errorMessage);
                             
-                                    }
-                                });
-                            
-                            }
-                        
-                            
+                            if(status.postCreated == true){
+                                    
+                                    alert('Idea successfully uploaded');                                   
+                                    window.location.href = "index.html";
+                                }
                         },
                         error: function(result) {
                             alert('unsuccessfull upload');
@@ -173,6 +138,7 @@
              });
 
         </script>
+-->
         <!--Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

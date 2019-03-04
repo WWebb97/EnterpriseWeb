@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
+
+    <title>Edit your Idea</title>
+    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea'
+        });
+    </script>
+    <meta name="Author" content="ad9047o@gre.ac.uk" />
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <a class="navbar-brand" href="index.html">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <!--
+                    <li class="nav-item">
+                        <a class="nav-link" href="upload.html">Suggest Ideas</a>
+                    </li>
+-->
+                <li class="nav-item">
+                    <a class="nav-link" href="settings.html">User Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="headerideas">
+        <h2>Edit an idea</h2>
+    </div>
+    <form>
+        <div class="contentideas">
+            <div class="input-group">
+                <label>Title</label>
+                <input type="text" id="name" required>
+            </div>
+            <div class="input-group" id="category">
+                <label>Category</label>
+                <script>
+                    $(document).ready(function() {
+                        $.ajax({
+                            type: "POST",
+                            url: "PostController.php",
+
+                            data: {
+                                method: "categories",
+                            },
+                            cache: false,
+                            dataType: 'JSON',
+                            success: function(data, status, xhttp, errorMessage) {
+                                $('#category').append('<select name="department" id="categoryId" required>');
+                                $('#categoryId').append('<option>Select Option</option>');
+                                $.each(data, function(i, val) {
+                                    $('#categoryId').append('<option value=' + val.category_id + '>' + val.name + '</option>');
+                                });
+                                $('#category').append('   </select>');
+                            },
+                            error: function(result) {
+                                alert('unsuccessfull retrieval');
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="input-group">
+                <label>Select to post anonymously or not</label>
+                <select name="anonymously" id="anon" required>
+                    <option>Select Option</option>
+                    <option value=1>Yes</option>
+                    <option value=0>No</option>                    
+             </select>
+            </div>
+            <div class="input-group">
+                <label>Write your idea here</label>
+                <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
+                <input id="description" cols="80" rows="5" />
+            </div>
+            <input type="file" name="fileUpload" id="fileUpload">
+            <div class="input-group">
+                <button type="button" id="submitIdea" class="refresh btn">Edit your Idea</button>
+
+            </div>
+            <!--        <p id="testingSpace">   </p>-->
+        </div>
+    </form>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            
+            var postId = getUrlVars()["postId"];
+            function getUrlVars() {
+                var vars = {};
+                var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+                    vars[key] = value;
+                });
+                return vars;
+            };
+                //e.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+
+                    data: {
+                        method: "fetchPostForEdit",
+                        userId: $.cookie("userid"),                      
+                        postId: postId
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                        
+                        
+                        $("#name").val(data.name);
+                        
+                        
+                        
+//                        $.get('editpost.html?postId='+val.post_id, function(data) {
+//                            $('#name').val(data);
+//                            $('#description').val(data);
+//                            $('#category').val(data);
+//                            $('#anon').val(data);
+//                        });
+
+//                        $("#name").append('<input type="text" id="name" required>');
+//                        $.each(data, function(i, val) {
+//                                    $('#postId').append('<input value=' + val.name + '/>');
+//                                });
+//                            },
+//                            error: function(result) {
+//                                alert('unsuccessfull retrieval');
+//                            },
+
+
+                    },
+                    error: function(result) {
+                        alert('Something went wrong');
+                    }
+                  
+                });
+            
+            $("#submitIdea").click(function(e) {
+                var name = $("#name").val();
+                var description = $("#description").val();
+                var categoryId = $("#categoryId").val();
+                var anon = $('#anon').val();
+
+                e.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+
+                    data: {
+                        method: "editPost",
+                        userId: $.cookie("userid"),
+                        name: name,
+                        description: description,
+                        categoryId: categoryId,
+                        anon: anon,
+                        postId: postId
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+
+                        $("#testingSpace").text("edit idea= " + data.postupdated + " errormessage = " + status.errorMessage);
+
+                        if (data.postupdated == true) {
+                            alert('Idea edited successfully');
+                            window.location.href = "index.html";
+                        }
+                    },
+                    error: function(result) {
+                        alert('Something went wrong editing your idea');
+                    }
+                });
+            });
+        });
+    </script>
+    <!--Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+
+</html>

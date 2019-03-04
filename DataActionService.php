@@ -305,6 +305,184 @@ function updateVoteLog($vote, $userId, $postId){
     return $return;  
 }
 
+function changeUserRole($roleId, $userId){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('updated' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+           $sql = "alter table site_user set role_id = ? where user_id = ?";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "ii", $roleIdIn, $userIdIn);
+            $userIdIn = $userId;
+            $roleIdIn = $roleId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("updated"=>true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "updated"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
+function deleteCategoryWithId($categoryId){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('updated' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+           $sql = "delete from category where category_id = ?";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $categoryIdIn);
+            $categoryIdIn = $categoryId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("updated"=>true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "updated"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
 
+function newRole($roleName, $permissionSet){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('created' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+           $sql = "insert into role(role_name) values(?)";
+        //echo $sql;
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "s", $roleNameIn);
+            $roleNameIn = $roleName;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $roleId = mysqli_insert_id();
+                $permisssionSet = setRolePermissions();
+                $return = array("created"=>true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "created"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+// need to think of some way to error check this. can think of three ways need opinion on which is best.
+function setRolePermissions($roleId, $permissionSet){
+      $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('created' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "insert into permissions_set(role_id, permission_id) values(?,?)";
+        foreach($permissionSet as $permission){
+            if($stmt = mysqli_prepare($conn, $sql)){
+                mysqli_stmt_bind_param($stmt, "ii", $roleIdIn, $permissionIn);
+                $roleIdIn = $roleId;
+                $permissionIn = $permisssion;
+               // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+              //  var_dump($stmt);
+                mysqli_stmt_close($stmt);
+            }
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
+}
+
+function createNewCategory($categoryName, $postCount, $lastPost){
+          $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('created' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "insert into category(name, post_count, last_post) values(?,?,?)";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "sii", $name, $postCountIn, $lastPostIn);
+            $name = $categoryName;
+            $postCountIn = $postCount; 
+            $lastPostIn = $lastPost;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("created"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "created"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
+}
+ 
+function deleteRolePermissions($roleId){
+          $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "delete from permission_set where role_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $roleIdIn);
+            $roleIdIn = $roleId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("deleted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "deleted"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+    
 
 ?>
