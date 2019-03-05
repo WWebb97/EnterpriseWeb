@@ -308,4 +308,38 @@ function getAllUsers(){
     
 }
 
+function getFlaggedPosts(){
+     $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results'=>false,
+                       'message'$conn["reason"]);
+   }else{
+        $query = "SELECT * FROM post where flagged = 1";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = array("results"=>false,
+                           "message"=>mysqli_error($conn));
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $users = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($users, $row);
+            }
+            $return = array("results"=>$users);  
+        }else{
+            $return = array("results"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+    
+    
+    
+}
+
 ?>
