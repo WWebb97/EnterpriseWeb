@@ -10,6 +10,16 @@
     <title>Edit your Idea</title>
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
     <script>
+        $(document).ready(function(){            
+             if($.cookie("username")){
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+             }else{                              
+                $('#link3').prop("style", "display: none");
+                $('#link4').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+             }
+        });
         tinymce.init({
             selector: 'textarea'
         });
@@ -27,16 +37,20 @@
         </button>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
-                <!--
-                    <li class="nav-item">
-                        <a class="nav-link" href="upload.html">Suggest Ideas</a>
-                    </li>
--->
                 <li class="nav-item">
-                    <a class="nav-link" href="settings.html">User Settings</a>
+                    <a class="nav-link" id="link1" href="register.html">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Logout</a>
+                    <a class="nav-link" id="link2" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
                 </li>
             </ul>
         </div>
@@ -65,12 +79,12 @@
                             cache: false,
                             dataType: 'JSON',
                             success: function(data, status, xhttp, errorMessage) {
-                                $('#category').append('<select name="department" id="categoryId" required>');
-                                $('#categoryId').append('<option>Select Option</option>');
+//                                $('#category').append('<select name="department" id="categoryId" required>');
+//                                $('#categoryId').append('<option>Select Option</option>');
                                 $.each(data, function(i, val) {
                                     $('#categoryId').append('<option value=' + val.category_id + '>' + val.name + '</option>');
                                 });
-                                $('#category').append('   </select>');
+//                                $('#category').append('   </select>');
                             },
                             error: function(result) {
                                 alert('unsuccessfull retrieval');
@@ -82,9 +96,11 @@
             <div class="input-group">
                 <label>Select to post anonymously or not</label>
                 <select name="anonymously" id="anon" required>
+<!--
                     <option>Select Option</option>
                     <option value=1>Yes</option>
                     <option value=0>No</option>                    
+-->
              </select>
             </div>
             <div class="input-group">
@@ -125,28 +141,37 @@
                     cache: false,
                     dataType: 'JSON',
                     success: function(data, status, xhttp, errorMessage) {
+                       
+                        $("#name").val(data[0].name);
+                        $("#description").val(data[0].description);
+                        $('#anon').append('<select name="anonymously" id="anon" required>');
+                                $.each(data, function(i, val) {
+                                    if(val.post_anon == '0'){
+                                        var x = "Currently: No";
+                                    $('#anon').append('<option value=' + val.post_anon + '>' + x + '</option>');
+                                    $('#anon').append('<option value=' + 1 + '>' + 'Yes' + '</option>');
+                                    $('#anon').append('<option value=' + 0 + '>' + 'No' + '</option>');
+                                    }else{
+                                        var x = "Currently: Yes";
+                                    $('#anon').append('<option value=' + val.post_anon + '>' + x + '</option>');
+                                    $('#anon').append('<option value=' + 1 + '>' + 'Yes' + '</option>');
+                                    $('#anon').append('<option value=' + 0 + '>' + 'No' + '</option>');                                      
+                                    }
+                                    
+                                });
+                                $('#anon').append('   </select>');
                         
-                        
-                        $("#name").val(data.name);
-                        
-                        
-                        
-//                        $.get('editpost.html?postId='+val.post_id, function(data) {
-//                            $('#name').val(data);
-//                            $('#description').val(data);
-//                            $('#category').val(data);
-//                            $('#anon').val(data);
-//                        });
 
-//                        $("#name").append('<input type="text" id="name" required>');
-//                        $.each(data, function(i, val) {
-//                                    $('#postId').append('<input value=' + val.name + '/>');
-//                                });
-//                            },
-//                            error: function(result) {
-//                                alert('unsuccessfull retrieval');
-//                            },
-
+                       $('#category').append('<select name="department" id="categoryId" required>');
+                                $.each(data, function(i, val) {
+                                    if(val.category_id == '19'){
+                                        var x = "Currently: Law";
+                                    $('#categoryId').append('<option value=' + val.category_id + '>' + x + '</option>');
+                                    $('#categoryId').append('<option value=' + 19 + '>' + 'Dan fix backend code plz!!!!' + '</option>');
+                                    }
+                                });
+                                $('#category').append('   </select>');
+                                
 
                     },
                     error: function(result) {

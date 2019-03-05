@@ -11,7 +11,18 @@
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
-
+<script>
+    $(document).ready(function(){            
+             if($.cookie("username")){
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+             }else{                              
+                $('#link3').prop("style", "display: none");
+                $('#link4').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+             }
+        });
+</script>
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -21,19 +32,30 @@
         </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="Logout.html">Logout</a>
-                    </li>
-                    
+                <li class="nav-item">
+                    <a class="nav-link" id="link1"href="register.html">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link2"href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
+                </li>
                 </ul>
             </div>  
         </nav>
         
-        <div class="headerideas">
+        <div class="headeradd">
             <h2>Submit a comment</h2>                
         </div>
         <form>
-        <div class="contentideas">
+        <div class="contentadd">
 
             <div class="input-group">
                 <label>Write your comment here</label>
@@ -89,7 +111,7 @@
                             }
                         },
                         error: function(result) {
-                            alert('unsuccessfull upload');
+                            alert('unsuccessfull upload, Please login to use the service');
                         }
                     });
                 });

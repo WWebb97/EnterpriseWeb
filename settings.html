@@ -11,7 +11,19 @@
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
-
+<script type="text/javascript" src="checkpass.js"></script>
+<script>
+    $(document).ready(function(){            
+             if($.cookie("username")){
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+             }else{                              
+                $('#link3').prop("style", "display: none");
+                $('#link4').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+             }
+        });
+</script>
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -21,15 +33,21 @@
         </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="upload.php">Suggest Ideas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="settings.html">User Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Logout</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link1" href="register.html">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link2" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
+                </li>
                 </ul>
             </div>  
         </nav>
@@ -41,7 +59,26 @@
         <div class="contentsettings">
 
             <div class="input-group">
-  		        <label>Title</label>
+  		        <label>Change your password</label>
+            </div>
+            <div class="input-group">
+  		        <label>Old password</label>
+  		        <input type="text" name="username" id="username" required>
+            </div>
+            <div class="fieldWrapper">
+                <div class="input-group">
+                    <label>New Password</label>
+                    <input type="password" name="newpassword" id="newpassword" required>
+                </div>
+                <div class="input-group">
+                    <label>Confirm password</label>
+                    <input type="password" name="password_2" id="password_2" onkeyup="checkPass(); return false;" required>
+                    <span id="confirmMessage" class="confirmMessage"></span>
+                </div>
+            </div>
+            <div class="input-group">
+  		        <button type="button"  id="submitButton" class="refresh btn">Submit changes</button>                
+
             </div>
             <!--<div class="input-group" id="category">
   	         <label>Category</label>

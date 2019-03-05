@@ -17,7 +17,18 @@ error_reporting(E_ERROR);
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
-
+<script>
+    $(document).ready(function(){            
+             if($.cookie("username")){
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+             }else{                              
+                $('#link3').prop("style", "display: none");
+                $('#link4').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+             }
+        });
+</script>
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -27,12 +38,21 @@ error_reporting(E_ERROR);
         </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.html">Register</a>
-                    </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">login</a>
-                    </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link1" href="register.html">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link2" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
+                </li>
                 </ul>
             </div>  
         </nav>
@@ -75,18 +95,6 @@ error_reporting(E_ERROR);
                 
                 
                 </script>
-  	         <!--<select name="department" id="categoryId" required>
-                    <option>Select Option</option>
-                    <option value="1">testing</option>
-                    <option value="2">Architecture</option>
-                    <option value="3">Computing</option>
-                    <option value="4">Humanities</option>
-                    <option value="5">Business</option>
-                    <option value="6">Education</option>
-                    <option value="7">Health</option>
-                    <option value="8">Engineering</option>
-                    <option value="9">Science</option>
-             </select>-->
             </div>
             <div class="input-group">
   	         <label>Select to post anonymously or not</label>
