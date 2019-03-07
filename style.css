@@ -1,11 +1,5 @@
-
-<<<<<<< HEAD
 body {
   background-image: url(images/background3.png);
-=======
-/*body {
-  background-image: url(images/background5.png);
->>>>>>> 95d5da64ee478805637b93c1d19aa9efefb8d05f
   background-color: #dae0e5;
   font-size: 100%;
   background-repeat: no-repeat;
@@ -13,7 +7,7 @@ body {
   background-position: center;
   background-size: cover;
   min-height: 500px;
-  font-family: "Impact", "Charcoal", sans-serif;
+  //font-family: "Impact", "Charcoal", sans-serif;
   
 }
 */
@@ -209,7 +203,6 @@ body {
     border: 1px solid #ddd; 
     border-radius: 10px 0px 0px 10px;
 }
-<<<<<<< HEAD
 */
 /*
 .jumbotron {
@@ -243,9 +236,6 @@ body {
     text-align: left;
 }
 */
-=======
-
->>>>>>> 95d5da64ee478805637b93c1d19aa9efefb8d05f
 .thumbup {
     background-image: url('images/thumbup.png');
 }
