@@ -160,18 +160,10 @@
                                     
                                 });
                                 $('#anon').append('   </select>');
+                                                
                         
-
-                       $('#category').append('<select name="department" id="categoryId" required>');
-                                $.each(data, function(i, val) {
-                                    if(val.category_id == '19'){
-                                        var x = "Currently: Law";
-                                    $('#categoryId').append('<option value=' + val.category_id + '>' + x + '</option>');
-                                    $('#categoryId').append('<option value=' + 19 + '>' + 'Dan fix backend code plz!!!!' + '</option>');
-                                    }
-                                });
-                                $('#category').append('   </select>');
-                                
+                                var categoryId = data[0]["category_id"];
+            ;                    
 
                     },
                     error: function(result) {
