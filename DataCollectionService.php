@@ -250,14 +250,15 @@ function getPermissionsList(){
     $conn = getConnection();
     if(is_array($conn)){
        $return = array('results'=>false,
-                       'message'$conn["reason"]);
+                       'message'=>$conn["reason"]);
    }else{
-        $query = "SELECT * FROM category";
+        $query = "SELECT * FROM permission";
         //echo "query = $query <br>";
         $result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
         if(!$result){
-           $return  = "error";
+            $return  = array("results"=>false,
+                           "message"=>mysqli_error($conn));
         }
        if(mysqli_num_rows($result) > 0){
             //var_dump($result);
@@ -280,7 +281,7 @@ function getAllUsers(){
     $conn = getConnection();
     if(is_array($conn)){
        $return = array('results'=>false,
-                       'message'$conn["reason"]);
+                       'message'=>$conn["reason"]);
    }else{
         $query = "SELECT * FROM site_user";
         //echo "query = $query <br>";
@@ -304,6 +305,40 @@ function getAllUsers(){
     
     mysqli_close($conn);
     return $return;
+    
+    
+}
+
+function getFlaggedPosts(){
+     $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results'=>false,
+                       'message'=>$conn["reason"]);
+   }else{
+        $query = "SELECT * FROM post where flagged = 1";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = array("results"=>false,
+                           "message"=>mysqli_error($conn));
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $posts = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($posts, $row);
+            }
+            $return = array("results"=>$posts);  
+        }else{
+            $return = array("results"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+    
     
     
 }

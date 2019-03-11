@@ -334,6 +334,7 @@ function changeUserRole($roleId, $userId){
         mysqli_close($conn);
         return $return;
     }
+}
     
 function deleteCategoryWithId($categoryId){
      $return = null;
@@ -382,7 +383,7 @@ function newRole($roleName, $permissionSet){
           //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
                 $roleId = mysqli_insert_id();
-                $permisssionSet = setRolePermissions();
+                $permisssionSet = setRolePermissions($roleId, $permissionSet);
                 $return = array("created"=>true);
             }else{
              //   echo mysqli_errno($conn);

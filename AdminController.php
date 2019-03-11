@@ -29,6 +29,9 @@ switch($method){
     case "createCategory":
         createCategory();
         break;
+    case "flagged":
+        flaggedPosts();
+        break;
  
 }
 
@@ -174,6 +177,20 @@ function createCategory(){
     echo json_encode($created);
         
     
+}
+
+function flaggedPosts(){
+    $posts = getFlaggedPosts();
+    $return = array();
+    if($posts["results"]== false){
+        http_response_code(500);
+        $return = array("results"=>false,
+                       "message"=>$post["message"]);
+        
+    }else{
+        $return = array("results"=>$post["results"]);
+    }
+    echo json_encode($return);
 }
 
 ?>

@@ -31,7 +31,7 @@ switch($method){
         fetchPostForEdit();
         break;
 }
-    
+
 function categories(){
     $categories = getCategories();
     $return = array();
