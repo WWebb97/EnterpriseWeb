@@ -1,13 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
-    <script src="https://pagination.js.org/dist/2.1.4/pagination.min.js"></script>
+<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
     <title>Index</title>
     <meta name="Author" content="ad9047o@gre.ac.uk"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
     <body>
@@ -39,58 +39,189 @@
         
         <div class="container">
             <h2>This months ideas</h2>
-            
-            <script>
-                $(document).ready(function(){
-                    $.ajax({
-                        type: "POST",
-                        url: "PostController.php",
-                        data: {method:"getPost"},
-                        cache: false,
-                        dataType: 'JSON',
-                        success: function(data, status, xhttp, errorMessage) {
-                            var userId = $.cookie('userid');
-                            var edit ="";
-                            var view ="";
-                            var addcom ="";
-                            
-                            $.each(data, function(i, val){
-                                 view = '<a href="ideacomment.html?postId='+val.post_id+'">View Details</a>';
-                                 addcom = '<a href="addcomments.html?postId='+val.post_id+'">Add a comment</a>';
-                                if(userId == val.user_id){
-                                    
-                                 edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';
-                                
-                                }else{
-                                    edit = "<br/>";
-                                }
-                                
-                               $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p><div><img src="images/thumbdown.png" class="rounded float-right" alt="thumbdown"><img src="images/thumbup.png"  class="rounded float-right" alt="thumbdown"></div><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
-                                
-                            });
-                                },
-                                error: function(result) {
-                                    alert('unsuccessful post fetch');
-                                }
-                    });
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                });
-                    
-                </script>
-            
+            <div id="paginationControls"></div>
             <div id="content"></div>
             
-            </div>   
-                    
-             
-        
+            </div>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            var currentPage = 1;
+            var userId = $.cookie('userid');
+            var pageNum = 0;
+            var pages = null;
+            $.ajax({
+                type: "POST",
+                url: "PostController.php",
+                data: {method:"listPost", userId:userId},
+                cache: false,
+                dataType: 'JSON',
+                success: function(data, status, xhttp, errorMessage) {
+
+                    pages = data.results;
+                    var pageCount = data.pageCount;
+                    pageNum = pageCount;
+                    var pagination = $("#paginationControls");
+
+                    pagination.append('<nav aria-label="Page navigation example">');
+                    pagination.append('<ul class="pagination" id="paginationList">');
+                    paginationList = $("#paginationList");
+                    paginationList.append(' <li class="page-item"><btn class="page-link" name="previous" id="previous" href="#">Previous</button></li>');
+                    for(var i = 1 ; i<pageCount +1 ; i ++){
+                        paginationList.append('<li class="page-item"><button class="page-link" href="#" name='+i+'>'+i+'</button></li>');
+                    }
+                    paginationList.append('<li class="page-item"><button class="page-link" href="#" name="next" id="next">Next</button></li>');
+                    pagination.append('</ul>');
+                    pagination.append('</nav>');
+                    checkButtons();
+                    loadPosts(data.results[currentPage -1 ]);        
+
+                        },
+                        error: function(result) {
+                            alert(result.message);
+                        }
+            });
+
+            $(document).on("click", '#paginationControls li button', function(){
+                var name = $(this).attr("name");
+                if (name === "previous"){
+                    currentPage = currentPage -1;
+                    checkButtons();
+                    loadPosts(pages[currentPage -1]);
+                }
+                else if( name === "next"){
+                    currentPage = currentPage +1;
+                    checkButtons();
+                    loadPosts(pages[currentPage - 1]);
+                }
+                else{
+                    currentPage = name;
+                    checkButtons();
+                    loadPosts(pages[currentPage - 1]);
+                }
+                
+            });
+                
+            function checkButtons(){
+                if(currentPage == 1 ){
+                    $("#previous").prop("disabled", true);
+                }
+                if(currentPage == pageNum){
+                    $("#next").prop("disabled", true);
+                }
+                if(currentPage != 1 || currentPage != pageNum){
+                    $("#next").prop("disabled", false);
+                     $("#previous").prop("disabled", false);
+                }
+            }
+            
+            function loadPosts(data){
+                $("#content").empty();
+                 $.each(data, function(i, val){
+                         var edit ="";
+                        var view ="";
+                         var addcom ="";
+                         view = '<a href="ideacomment.html?postId='+val.post_id+'">View Details</a>';
+                         addcom = '<a href="addcomments.html?postId='+val.post_id+'">Add a comment</a>';
+                         if(val.positive === 1){
+                              var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
+                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                         }else if (val.negative === 1){
+                             var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" > <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
+                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                         }else{
+                                var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
+                         var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                         }
+                         var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
+
+                        if(userId == val.user_id){
+
+                         edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';
+
+                        }else{
+                            edit = "<br/>";
+                        }
+
+                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+thumbsUp+thumbsDown+'<div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                    });
+            }
+            function updateLocalPosts(postId, vote, score){
+                $.each(pages[currentPage -1], function(i,val) {
+                    if(val.post_id == postId){
+                        if(vote == "positive"){
+                            pages[currentPage -1][i].positive = 1;
+                            pages[currentPage -1][i].negative = 0;
+                            pages[currentPage -1][i].points = score;
+
+                        }else{
+                            pages[currentPage -1][i].positive = 0;
+                            pages[currentPage -1][i].negative = 1;
+                            pages[currentPage -1][i].points = score;
+                        }
+                    }    
+                });    
+            }
+            
+            $(document).on('click','#content :button',function(){
+                var Id = $(this).attr("id");
+                $(this).prop("disabled",true);
+                var result = Id.split("-");
+                var postId = result[1];
+                var vote = $(this).attr("name");
+                var voteVal = null;
+                if (vote == "ThumbsUp"){
+                    voteVal = "positive";
+                    $("#ThumbsDown-"+postId).prop("disabled", false);
+                }else{
+                    voteVal = "negative";
+                    $("#ThumbsUp-"+postId).prop("disabled", false);
+                }
+                var updated = true;
+                 $.each(pages[currentPage -1], function(i,val) {
+                    if(val.post_id == postId){
+                        if(val.positive == null || val.negative == null){
+                            updated = "false";
+                        }else{
+                            updated = "true";
+                        }
+                    }    
+                });  
+                 $.ajax({
+                    type: "POST",
+                    url: "CommentAndRatingController.php",
+                    data: {method:"vote", userId:$.cookie('userid'), postId:postId, vote:vote, update:updated},
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                        /*     $("#ThumbsUp-"+postId).attr("disabled", true);
+                            $("#ThumbsDown-"+postId).attr("disabled", true);*/
+                        $.ajax({
+                           type:"POST",
+                            url:"CommentAndRatingController.php",
+                            data:{method:"points", postId:postId},
+                            cache:false,
+                            dataType: "JSON",
+                            success: function(data){
+                                $("#points"+postId).text(data.score);
+                                updateLocalPosts(postId, voteVal, data.score);
+                                //what ever button is clicked need to enable the other one.
+                            },
+                            error: function(data){
+                                alert("your vote has been counted but we are currently unable to display the new score. Please refresh the page.");
+                            }
+
+                        });
+                    },
+                    error: function(date){
+                           alert("Error voting on posts please try again later."); 
+                    }
+                 });
+            });
+
+        });         
+    </script>
     </body>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
 </html>

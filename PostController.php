@@ -1,9 +1,10 @@
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ERROR);
+error_reporting(E_ALL);
 require "DataCollectionService.php";
 require "DataActionService.php";
+require "Utilities.php";
 header('Content-Type: application/json');
 $errorCode = null;
 $errorMessage = null;
@@ -21,14 +22,17 @@ switch($method){
         break;
     case "deletPost":
         break;
-    case "getPost":
+    /*case "getPost":
         getPost();
-        break;
+        break;*/
     case "addAttachment":
         uploadFiles();
         break;
     case "fetchPostForEdit":
         fetchPostForEdit();
+        break;
+    case "listPost":
+        listPosts();
         break;
 }
 
@@ -135,7 +139,7 @@ function editPost(){
        
        
 function deletePost(){};
-
+/*
 function getPost(){
     
     $posts = listPosts();
@@ -156,7 +160,7 @@ function getPost(){
         $return = $posts;
     }
     echo json_encode($return);
-}
+}*/
       
 function uploadFiles(){
 //start the image upload code
@@ -245,6 +249,38 @@ function fetchPostForEdit(){
         $return = $posts;
     }
     echo json_encode($return);
+}
+
+function listPosts(){
+    $userId = $_POST["userId"];
+    unset($_POST["userId"]);
+    $return = array();
+    if($userId == null){
+        http_response_code(400);
+        $return = array("results"=> false,
+                       "message"=> "A userId must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $posts = listPostsWithUserId($userId);
+    if($posts["results"] === false){
+        http_response_code(500);
+        $return = array("results"=>false,
+                       "message"=> $posts["message"]);
+        
+    }
+    else if ($posts["results"] === 0){
+        $return = array ("results"=>0);
+    }
+    else{
+        //echo json_encode($posts);
+        $returnPosts = paginateResults($posts["results"]);
+        $return = array("results"=>$returnPosts,
+                       "pageCount"=>sizeof($returnPosts));
+    }
+    echo json_encode($return);
+    
+    
 }
 
 ?>

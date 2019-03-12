@@ -161,33 +161,102 @@ function getCommentsWithPostId($postId){
     return $return;
 }
 
-function listPosts(){
+function getPostPoints($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("score"=>$conn["error"],
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select points from post where post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $posts = array();
+                    mysqli_stmt_bind_result($stmt, $points);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $post = array("score"=>$points);
+                        array_push($posts, $post);
+                    }
+                  //  var_dump($users);
+                    if (count($posts) === 0){
+                        $return = 0;
+                    }else{
+                        $return = $posts;
+                    }
+                }else{
+                    $return = array("score"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
+function listPostsWithUserId($userId){
     $return = "";
     $conn = getConnection();
     if(is_array($conn)){
-       $return = array('error' => $conn['error'],
-                   'reason'=> $conn['reason'],
-                   'valid' => false);
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
 
    }else{
-        $query = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id";
+        $sql = 
+        "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', 
+        IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', pr.post_rating_id, pr.positive, pr.negative FROM post
+        JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id
+        left outer join post_rating pr on pr.post_id = post.post_id where pr.post_rating_id is null 
+        union
+        SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', 
+        IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', pr.post_rating_id, pr.positive, pr.negative FROM post
+        JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id 
+        right outer join post_rating pr on pr.post_id = post.post_id where pr.user_id = ?";
         //echo "query = $query <br>";
-        $result = mysqli_query($conn, htmlspecialchars($query));               
+        //$result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
-        if(!$result){
-           $return  = "error";
-        }
-       if(mysqli_num_rows($result) > 0){
-            //var_dump($result);
-            $posts = array(); 
-            while($row = mysqli_fetch_assoc($result)){
-                array_push($posts, $row);
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $userIdIn);
+            $userIdIn = $userId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $posts = array();
+                    mysqli_stmt_bind_result($stmt, $postId, $postName, $postDescription, $postDate, $postUserId, $postPoints, $postCategoryname, $username, $postRatingId, $positive, $negative);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $post = array("post_id"=> $postId,
+                                     "name"=>$postName,
+                                     "description"=> $postDescription,
+                                     "date"=>$postDate,
+                                     "user_id"=>$postUserId,
+                                      "points"=>$postPoints,
+                                     "category"=>$postCategoryname,
+                                     "username"=>$username,
+                                     "post_rating_id"=>$postRatingId,
+                                     "positive"=>$positive,
+                                     "negative"=>$negative);
+                        array_push($posts, $post);
+                    }
+                  //  var_dump($users);
+                    if (sizeof($posts) === 0){
+                        $return = array("results"=>0);
+                    }else{
+                        $return = array("results"=>$posts);
+                    }
+                }else{
+                    $return = array("results"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
             }
-            $return = $posts;  
-        }else{
-            $return = 0;
-        }
-    }
+            mysqli_stmt_close($stmt);
+         }
     mysqli_close($conn);
     return $return;
 }
