@@ -14,17 +14,17 @@ switch($method){
     case "deleteCategory":
         deleteCategory();
         break;
-    case "getPermissions":
-        getPermissions();
+    case "updateCategory":
+        updateCategory();
         break;
-    case "createRole":
-        createRole();
+    case "getRoles":
+        getRoles();
         break;
     case "editRole":
         editRole();
         break;
     case "getUsers":
-        getUsers();
+        listUsers();
         break;
     case "createCategory":
         createCategory();
@@ -32,14 +32,13 @@ switch($method){
     case "flagged":
         flaggedPosts();
         break;
- 
 }
 
 function changeRole(){
     $userId = $_POST["userId"];
-    $roleId = $_POST["postId"];
+    $roleId = $_POST["roleId"];
     unset($_POST["userId"]);
-    unset($_POST["postId"]);
+    unset($_POST["roleId"]);
     $return = null;
     if($roleId == null || $userId == null){
         http_response_code(400);
@@ -78,42 +77,42 @@ function deleteCategory(){
     echo json_encode($return);
 }
 
-function getPermissions(){
-    $permissions = getPermissionsList();
-    $return = array();
-    if($permissions["results"] == false){
+function updateCategory(){
+    $catId = $_POST["categoryId"];
+    $categoryName = $_POST["categoryName"];
+    unset($_POST["categoryId"]);
+    unset($_POST["categoryName"]);
+    $return = null;
+    if($catId == null){
+        http_response_code(400);
+        echo json_encode(array("message"=> "parameters of category id required."));
+        die();
+    }
+    $update = updateACategory($categoryName, $catId);
+    if($update["updated"]== true){
+        $return = $update;
+    }
+    else{
         http_response_code(500);
-        $return = array("results"=> false,
-                       "message" => $permissions["message"]);
-    }else if ($permissions["results"] == 0){
-        $return = array("results"=>0);
-    }else{
-        $return = array("results"=>$permissions);
+        $return = $update;
     }
     echo json_encode($return);
 }
 
-function createRole(){
-    $roleName = $_POST["roleName"];
-    $permissionSet = $_POST["permissionSet"];
-    unset($_POST["roleName"]);
-    unset($_POST["permissionSet"]);
+
+function getRoles(){
+    $roles = getRolesList();
     $return = array();
-    if($roleName == null || $permissionSet == null){
-        http_response_code(400);
-        echo json_encode(array("message"=>"The role name and permission set must be set."));
-        die();
-    }
-    $role = newRole($roleName, $permissionSet);
-    if($role["created"]){
-        $return = array("created"=>true);
-    }else{
+    if($roles["results"] == false){
         http_response_code(500);
-        $return = array("created"=>false,
-                       "message"=>$role["message"]);
+        $return = array("results"=> false,
+                       "message" => $roles["message"]);
+    }else if ($roles["results"] == 0){
+        $return = array("results"=>0);
+    }else{
+        $return = array("results"=>$roles);
     }
     echo json_encode($return);
-    
 }
 
 function editRole(){
@@ -138,7 +137,7 @@ function editRole(){
     echo json_encode($return);
 }
 
-function getUsers(){
+function listUsers(){
     $users = getAllUsers();
     $return = array();
     if($users["results"] == 0){

@@ -352,7 +352,7 @@ function getAllUsers(){
        $return = array('results'=>false,
                        'message'=>$conn["reason"]);
    }else{
-        $query = "SELECT * FROM site_user";
+        $query = "SELECT u.user_id, u.username, u.last_login, u.role_id, r.role_name FROM site_user u JOIN role r ON r.role_id = u.role_id";
         //echo "query = $query <br>";
         $result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
@@ -377,6 +377,7 @@ function getAllUsers(){
     
     
 }
+
 
 function getFlaggedPosts(){
      $return = "";
