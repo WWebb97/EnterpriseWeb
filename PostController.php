@@ -25,9 +25,6 @@ switch($method){
     /*case "getPost":
         getPost();
         break;*/
-    case "addAttachment":
-        uploadFiles();
-        break;
     case "fetchPostForEdit":
         fetchPostForEdit();
         break;
@@ -35,6 +32,7 @@ switch($method){
         listPosts();
         break;
 }
+
 
 function categories(){
     $categories = getCategories();
@@ -66,28 +64,51 @@ function addPost(){
     $anon = $_POST["anon"];
     $categoryId = $_POST["categoryId"];
     $userId = $_POST["userId"];
-    
+    $files = $_FILES["files"];
+   
     unset($_POST["name"]);
     unset($_POST["description"]);
     unset($_POST["anon"]);
     unset($_POST["categoryId"]);
     unset($_POST["userId"]);
-    
+    unset($_FILES["files"]);
+   // echo json_encode(array("name"=>$name, "description"=>$description, "anon"=>$anon, "category"=>$categoryId, "userId"=>$userId));
     $return = array();
     
     if($name == null || $description == null || $anon == null || $categoryId == null || $userId == null){
         http_response_code(400);
-        $return = array ("errorCode"=>400,
-                        "errorMessage"=> "the properties of name, description, anon, categoryId and userId must be set to add a post");
+        $return = array ("created"=>false,
+                        "message"=> "the properties of name, description, anon, categoryId and userId must be set to add a post");
         echo json_encode($return);
         die();
     }
     
     $post = createPost($name, $description, $anon, $categoryId, $userId, $postDate);
+    
     if(is_numeric($post)){
-        updateCategoryCount($categoryId);
-        $return = array ("created"=>true,
-                        "postId"=>$post);
+        $postId = $post;
+        if($files != null){
+            $uploaded = uploadFiles($postId, $files);
+            if($uploaded["uploaded"] == true){
+              /*  $return = array("created"=> true,
+                               "postId"=>$postId);*/
+                $dbUpdate = addDocument($files["name"], $uploaded["savedName"], "/attachments2/" ,$postId);
+                if($dbUpdate["updated"]==  true){
+                    $return = array("created"=>true,
+                                   "postId"=>$postId);
+                }else{
+                    $return = array("created"=>false,
+                                   "message"=>$dbUpdate["message"]);
+                }
+            }else{
+                http_response_code(500);
+                $return = array("created"=>false,
+                               "message"=>$uploaded["message"]);
+            }
+        }else{
+              $return = array ("created"=>true,
+                        "postId"=>$postId);
+        }
 
     }else{
           http_response_code(500);
@@ -162,65 +183,6 @@ function getPost(){
     echo json_encode($return);
 }*/
       
-function uploadFiles(){
-//start the image upload code
-    $postId = $_POST["postId"];
-    $files = $_POST["files"];
-    unset($_POST["postId"]);
-    unset($_POST["files"]);
-    //var_dump($files);
-    $fileId= $createPost;
-    $error=array();
-    //$files = array();
-    $extension=array("docx, pdf");
-    $fileCount = 1;
-    $uploadSuccess = 1;
-    foreach($files["files"]["tmp_name"] as $key=>$tmp_name)
-            {
-                $file_name=$_FILES["files"]["name"][$key];
-                $file_tmp=$_FILES["files"]["tmp_name"][$key];
-                //$newFileName= "image".$imageCount."postid".$fileId;
-                $fileCount ++;
-                $newFileName = $file_name."postId".$postId;
-                $ext=pathinfo($file_name,PATHINFO_EXTENSION);
-                $error = null;
-                if(in_array($ext,$extension))
-                {
-                    if(!file_exists("attachment2/".$newFileName))
-                    {
-                        move_uploaded_file($file_tmp=$_FILES["files"]["tmp_name"][$key],"attachment2/".$newFileName.".".$ext);
-                        $finalName= $newFileName.".".$ext;
-                        array_push($files, $finalName);
-                    }
-                    else
-                    {
-                        $uploadSuccess = 0;
-                    }
-                }
-                else
-                {
-                    array_push($error,"$file_name");
-                }
-            }
-
-    //var_dump($error);
-    //var_dump($files);
-    $failure = 0;
-    var_dump($error);
-   /* foreach($files as $var){
-        $insert = InsertImage("/coursework/images/", $var, $fileId); 
-        if(!($insert)){
-            $failure = 1;
-        }
-    }*/
-    /*if($failure === 1){
-        echo "There was an error adding images to the post. The post was still created successfully.";
-    }else{
-        echo "Post succsessfully created.";
-    }*/
-    
-    
-}
 
 
 function fetchPostForEdit(){

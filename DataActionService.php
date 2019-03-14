@@ -194,29 +194,30 @@ function addCommentWithPostId($postId, $userId, $contents){
     }
 }
 
-function addDocument($name, $location, $postId){
+function addDocument($actualName,$savedName, $location, $postId){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
-        $return = array('error' => $conn['error'],
-                       'reason' => $conn['reason'],
-                       'code' => 500);
+        $return = array('updated' => false,
+                       'message' => $conn['reason']);
     }else{
         
-           $sql = "insert into files (name, location, post_id) values (?,?,?)";
+           $sql = "insert into files (actual_name, saved_name, location, post_id) values (?,?,?,?)";
         //echo $sql;
         if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "ssi", $nameIn, $LocationIn,$pId);
-            $nameIn = $name;
+            mysqli_stmt_bind_param($stmt, "sssi", $actualNameIn,$savedNameIn, $locationIn,$pId);
+            $actualNameIn = $actualName;
+            $savedNameIn = $savedName;
             $locationIn = $location;
             $pId = $postId;
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
-                $return = true;
+                $return = array("updated"=>true);
             }else{
              //   echo mysqli_errno($conn);
-                $return = false;
+                $return = array("updated"=>false,
+                               "message"=> mysqli_error($conn));
             }
              mysqli_stmt_close($stmt);
         }
