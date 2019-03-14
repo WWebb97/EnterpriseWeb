@@ -55,18 +55,20 @@
                         $.ajax({
                             type: "POST",
                             url: "LoginController.php",
-                            data: {username:username, password:password},
+                            data: {method:"login", username:username, password:password},
                             cache: false,
                             dataType: 'JSON',
                             success: function(output) {
                                     $("#testingSpace").text("login= "+output.login+" verified = " +output.verified+ " userid =" +output.user_id);
                                 
                                 if(output.login == true){
+                                    
                                     $.cookie("userid", output.user_id);
                                     $.cookie("username", username);
+                                    $.cookie("role", output.role_id);
+                                    $.cookie("timeStamp", output.last_login)
                                     if(output.verified == false){
                                         window.location.href = "Verification.html";
-                                        
 
                                     }else{
                                         window.location.href = "index.html";
