@@ -79,12 +79,12 @@
                             cache: false,
                             dataType: 'JSON',
                             success: function(data, status, xhttp, errorMessage) {
-//                                $('#category').append('<select name="department" id="categoryId" required>');
-//                                $('#categoryId').append('<option>Select Option</option>');
+                              $('#category').append('<select name="department" id="categoryId" required>');
+                            
                                 $.each(data, function(i, val) {
-                                    $('#categoryId').append('<option value=' + val.category_id + '>' + val.name + '</option>');
+                                    $('#categoryId').append('<option id="categoryOption'+val.category_id+'" value=' + val.category_id + '>' + val.name + '</option>');
                                 });
-//                                $('#category').append('   </select>');
+                                $('#category').append('   </select>');
                             },
                             error: function(result) {
                                 alert('unsuccessfull retrieval');
@@ -163,7 +163,12 @@
                                                 
                         
                                 var categoryId = data[0]["category_id"];
-            ;                    
+                                //alert(categoryId);
+                            
+                                $("#categoryOption"+categoryId).prop("selected",true);
+        
+                                
+                               
 
                     },
                     error: function(result) {
