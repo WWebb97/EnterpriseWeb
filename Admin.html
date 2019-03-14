@@ -10,8 +10,322 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <script>
+            $(document).ready(function(){                
+                
+                /*if($.cookie('Role') == 'Admin'){
+                    
+                }else{
+                    window.location.href=('index.html');
+                }*/
+                
+                
+                 $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+
+                    data: {
+                        method:"categories",
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                       
+                        $.each(data, function(i ,val) {
+
+
+                            $('.CategoriesDiv').append('<input type="text" value= '+val.name+' id=Cat'+val.category_id+'><button id ='+val.category_id+' value=Update>Update</button><button id ='+val.category_id+' value=Delete>Delete</button>&nbsp;&nbsp;&nbsp;');
+                        });
+                            $('.CategoriesDiv').append('<br /> <br />');
+                        $('.CategoriesDiv').append('<label for="NewCat">New category to add:&nbsp;</label><input type="text" id="NewCat"><button value=Add id="New">Add</button>');
+                    },
+                    error: function(result) {
+                        alert('error, please contact your Administrator');
+                    }
+                });
+              
+                 $.ajax({
+                    type: "POST",
+                    url: "AdminController.php",
+
+                    data: {
+                        method:"getUsers"
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                      
+                        
+                        $.each(data.results, function(i ,val) {
+                            var timeStamp = new Date(val.last_login*1000);
+                            var adminButton = null;
+                            
+                            
+                            if(val.role_id == 2){
+                                adminButton = '<button value= "RevokeAdmin" ID='+val.user_id+'>Revoke Admin</button>';
+                             
+                            }else{
+                                adminButton = '<button value= "MakeAdmin" ID='+val.user_id+'>Make Admin</button>';  
+                            }
+
+                            $('#users').append('<tr><td>'+val.username+'</td> <td>'+val.role_name+'</td> <td>'+timeStamp+'</td> <td>'+adminButton+'<button value="Suspend" ID='+val.user_id+' ">Suspend</button><button value="Ban" ID='+val.user_id+' ">Ban</button></td></tr>');
+                            
+                        });
+                            
+                    },
+                    error: function(result) {
+                        alert('error, please contact your Administrator');
+                    }
+                });
+                
+
+            });
+            
+        </script>
+        <script>
+            $(document).ready(function(){
+                $(document).on("click",".CategoriesDiv button", function() {
+                    var IDValue = $(this).attr("id");
+                    var buttonType = $(this).val();
+                    console.log(IDValue, buttonType);
+                    
+                    if(buttonType == 'Add'){
+                        var newCat = $("#NewCat").val();
+                        //console.log(newCat);
+                        $.ajax({
+                            type: "POST",
+                            url: "AdminController.php",
+                            data: {
+                                method:"createCategory",
+                                name: newCat
+                            },
+                            cache: false,
+                            dataType: 'JSON',
+                            success: function(data, status, xhttp, errorMessage) {
+                            location.reload();  
+                            },
+                            error: function(result) {
+                                alert('error, please contact your Administrator');
+                            }    
+                        });
+                        
+                    }else if(buttonType == 'Delete'){
+                        var m = confirm('Are you sure you want to delete this category?');
+                        if(m == true){
+                            console.log('confirm');
+                            $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"deleteCategory",
+                                    categoryId: IDValue
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                            
+                        }else{
+                            console.log('Nah fam');
+                        }   
+                    }else if (buttonType == 'Update'){
+                        var catToUpdate = "Cat" + IDValue
+                        var catValue =  $('#' + catToUpdate).val();
+                        console.log(catToUpdate, catValue);
+                        
+                        $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"updateCategory",
+                                    categoryId: IDValue,
+                                    categoryName: catValue
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                            
+                        
+                       
+                    } 
+                });
+                
+                
+                $(document).on("click",".User button", function() {
+                     var IDValue = $(this).attr("ID");
+                    var buttonType = $(this).val();
+                    console.log(IDValue, buttonType);
+                    
+                    if(buttonType == 'Ban'){
+                        
+                        $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"changeRole",
+                                    userId:IDValue ,
+                                    roleId: 3
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                            
+                        
+                    }else if(buttonType == 'Suspend'){
+                              
+                        $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"changeRole",
+                                    userId:IDValue ,
+                                    roleId: 4
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                            
+                        
+                    }else if (buttonType == 'MakeAdmin'){
+                        $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"changeRole",
+                                    userId:IDValue ,
+                                    roleId: 2
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                            location.reload();
+                    }else if(buttonType == 'RevokeAdmin'){
+                             $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"changeRole",
+                                    userId:IDValue ,
+                                    roleId: 1   
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                    }else{
+                        alert("Well that shouldn't happen");
+                    }
+                    
+                });
+            
+            });
+            
+        </script>
     </head>
     <body>
+         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" href="index.html">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="upload.html">Suggest an Ideas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="settings.html">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Logout.html">Logout</a>
+                    </li>
+                </ul>
+            </div>  
+        </nav>
+    
         
+        <br/>
+        <br/>
+        <div class="container">
+            <h1>Admin Settings</h1>
+            <div class="jumbotron">
+                <h2>Category Settings</h2>
+                <div class="CategoriesDiv"></div>
+                
+            </div>
+            
+
+                        
+          
+            <div class="jumbotron">
+                <h2>User Options</h2>
+                <label for='Search'>Search Users:&nbsp;</label>
+                <input type="text" id='Search'><button id=Search>Search</button>
+                
+                <div class=User>
+                <table class="table">
+                    <thead>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Last Login</th>
+                        <th>Options</th>
+                    </thead>
+                    <tbody id=users>
+                    
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            
+            <div class="jumbotron">  
+                <br/>    
+                <h2>Reports</h2>
+                <br/>  
+
+            </div>
+            
+        </div>
     </body>
 </html>

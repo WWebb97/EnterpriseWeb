@@ -231,9 +231,9 @@ function addVotePost($vote, $postId){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
-        $return = array('error' => $conn['error'],
-                       'reason' => $conn['reason'],
-                       'code' => 500);
+        $return = array('voted' => $conn['error'],
+                       'message' => $conn['reason']);
+
     }else{
         if($vote == 'ThumbsUp'){
             $voteAm = '+1';
@@ -243,24 +243,27 @@ function addVotePost($vote, $postId){
         
         $sql = "UPDATE post SET points = points $voteAm WHERE post_id = $postId";
         if(mysqli_query($conn, $sql)){
-            $return = true;
+            $return = array("voted"=>true);
         }else{
-            $return = mysqli_error($conn);
+            $return = array("voted"=>false,
+                            "message"=>mysqli_error($conn));
         }
     }
     mysqli_close($conn);
     return $return;
 }
 
+
 function addVoteLog($userId, $postId, $vote){
     $result = null;
     $conn = getConnection();
+    $positive = 0;
+    $negative = 0;
     if(is_array($conn)){
-        $return = array('error' => $conn['error'],
-                       'reason' => $conn['reason'],
-                       'code' => 500);
+        $return = array('voted' => false,
+                       'message' => $conn['reason']);
     }else{
-        if($vote == 'ThumbsUp'){
+        if($vote === 'ThumbsUp'){
             $positive = 1;
             $negative = 0;
         }else{
@@ -269,24 +272,26 @@ function addVoteLog($userId, $postId, $vote){
         }
         $sql = "INSERT INTO post_rating (user_id, post_id, positive, negative) VALUES ( $userId, $postId, $positive, $negative )";    
         if(mysqli_query($conn, $sql)){
-            $return = true;
+            $return = array("voted"=>true);
         }else{
-            $return = false;
+            $return = array("voted"=>false,
+                            "message"=>mysqli_error($conn));
         }
     }
     mysqli_close($conn);
     return $return;  
 }
 
-function updateVoteLog($vote, $userId, $postId){
+function updateVoteLog($userId, $postId, $vote){
     $result = null;
     $conn = getConnection();
+    $positive = 0;
+    $negative = 0;
     if(is_array($conn)){
-        $return = array('error' => $conn['error'],
-                       'reason' => $conn['reason'],
-                       'code' => 500);
+        $return = array('voted' => false,
+                       'message' => $conn['reason']);
     }else{
-        if($vote == 'ThumbsUp'){
+        if($vote === 'ThumbsUp'){
             $positive = 1;
             $negative = 0;
         }else{
@@ -296,9 +301,10 @@ function updateVoteLog($vote, $userId, $postId){
         
         $sql = "UPDATE post_rating SET positive = $positive, negative = $negative WHERE user_id = $userId AND post_id = $postId";
         if(mysqli_query($conn, $sql)){
-            $return = true;
+            $return = array("voted"=>true);
         }else{
-            $return = false;
+            $return = array("voted"=>false,
+                            "message"=>mysqli_error($conn));
         }
     }
     mysqli_close($conn);
@@ -455,6 +461,37 @@ function createNewCategory($categoryName, $postCount, $lastPost){
     }
     
 }
+
+function updateACategory($categoryName, $catID){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('created' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "update category set name = ? WHERE category_id= ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "si", $name, $categoryID);
+            $name = $categoryName;
+            $categoryID = $catID;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("updated"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "updated"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
  
 function deleteRolePermissions($roleId){
           $return = null;
