@@ -523,4 +523,34 @@ function deleteRolePermissions($roleId){
 }
     
 
+function updateLoginTime($userId, $timestamp){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('created' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "update site_user set last_login = ? WHERE user_id= ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "ii",$timestampIn, $userIDin );
+            $userIDin = $userId;
+            $timestampIn = $timestamp;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("updated"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "updated"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
 ?>
