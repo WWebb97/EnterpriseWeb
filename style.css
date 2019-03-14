@@ -124,7 +124,7 @@ body {
   border-radius: 5px;
   border: 1px solid gray;
 }
-.btn {
+/*.btn {
   cursor: pointer;
   font-size: 20px;
   text-align: center;
@@ -135,7 +135,7 @@ body {
   color: whitesmoke;
   background: #013369;
   margin: 0 auto;
-}
+}*/
 .refresh:hover {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.80), 0 17px 50px 0 rgba(0,0,0,0.30);
 }
@@ -236,12 +236,12 @@ body {
     text-align: left;
 }
 */
-.thumbup {
+/*.thumbup {
     background-image: url('images/thumbup.png');
 }
 .thumbdown {
     background-image: url('images/thumbdown.png');
-}
+}*/
 .images {
   margin: 10px 0px 10px 80px;
 }
