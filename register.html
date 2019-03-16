@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
 
 <head>
+    <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -12,24 +13,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.html">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="register.html">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+
     <div class="header">
-        <h2>Register</h2>
+        <img src="images/greenwichlogo.png" class="logoresponsive" width="200px" height="50px"/>
     </div>
     <form>
 
@@ -91,16 +77,20 @@
              </select>
             </div>
             <div class="captcha">
-                <img src="captcha.php">
+                <img src="captcha.php" class="captcharesponsive">
             </div>
             <div class="inputcapt-group">
                 <strong>Enter CAPTCHA code below</strong><br/>
                 <input type="text" id="captchabox" name="captchabox">
             </div><br/>
-            <input type="checkbox">Please tick to accept our terms and conditions<br/>
-            <div class="inputreg-group">
-                <button type="button" name="add" id="add_user" class="refresh btn">Submit Details</button>
-            </div><br/>
+            <div>
+            <input type="checkbox">Please tick to accept our terms and conditions
+            </div><br/>    
+            <div>
+                <button type="button" name="add" id="add_user" class="refresh btnreg">Submit Details</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="refresh btnreg" onclick="this.form.action='register.html'">Reset Form</button>
+            </div>
+            <div></div><br/>
             <!--                <p id="testingSpace">   </p>-->
             <script>
                 $(document).ready(function() {
@@ -152,7 +142,7 @@
                 });
             </script>
 
-            <button type="submit" class="refresh btn" onclick="this.form.action='register.html'">Reset Form</button>
+            
 
             <p>
                 Already a member? <a href="login.html">Sign in</a>
