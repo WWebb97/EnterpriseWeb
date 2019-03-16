@@ -40,7 +40,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="link5" href="Logout.html">Logout</a>
-                </li>                    
+                </li>
                 </ul>
             </div>  
         </nav>
@@ -49,118 +49,84 @@
             <h2>Submit an idea</h2>                
         </div>
         <form>
-        <div class="contentideas">
-            <div class="input-group">
-  		        <label>Title</label>
-  		        <input type="text" id="name" required>
-            </div>
-            <div class="input-group" id="category">
-  	         <label>Category</label>
-                <script>
-                       $(document).ready(function(){   
-                             $.ajax({
-                                type: "POST",
-                                url: "PostController.php",
-
-                                data: {
-                                    method:"categories",
-                                },
-                                cache: false,
-                                dataType: 'JSON',
-                                success: function(data, status, xhttp, errorMessage) {
-                                       $('#category').append('<select name="department" id="categoryId" required>');
-                                       $('#categoryId').append('<option>Select Option</option>');
-                                       $.each(data, function(i ,val) {
-                                              $('#categoryId').append('<option value='+val.category_id+'>'+val.name+'</option>');
-                                        });
-                                        $('#category').append('   </select>');
-                                },
-                                error: function(result) {
-                                    //alert('unsuccessfull upload');
-                                }
-                            });
-                       });
-                
-                
-                </script>
-            </div>
-            <div class="input-group">
-  	         <label>Select to post anonymously or not</label>
-  	         <select name="anonymously" id="anon" required>
-                    <option>Select Option</option>
-                    <option value=1>Yes</option>
-                    <option value=0>No</option>                    
-             </select>
-            </div>
-            <div class="input-group">
-                <label>Write your idea here</label>
-<!--                <textarea id="description" cols="80" rows="5"></textarea>-->
-                <input id="description" cols="80" rows="5"/>
-            </div>
-            <input type="file" multiple class="formInput" name="files[]" id="filesIn"/>
-            <div class="input-group">
-  		        <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
-
-            </div>
-<!--        <p id="testingSpace">   </p>-->
-        </div>
-        </form>
-        <script type="text/javascript">
-         $(document).ready(function(){   
-            $("#submitIdea").click(function(e) {
-                var name = $("#name").val();
-                var description = $("#description").val();
-                var categoryId = $("#categoryId").val();
-                var anon = $('#anon').val();
-//                var files = $('#filesIn').val();
-                
-                    
-                e.preventDefault();
-                
-                    $.ajax({
-                        type: "POST",
-                        url: "PostController.php",
-                        
-                        data: {
-                            method:"addPost",
-                            userId: $.cookie("userid"),
-                            name:name,
-                            description:description,
-                            categoryId:categoryId,
-                            anon:anon
-                        },
-                        cache: false,
-                        dataType: 'JSON',
-                        success: function(data, status, xhttp, errorMessage) {
-                         //$("#testingSpace").text("upload= "+data.postCreated+" errormessage = " +data.errorMessage);
-                            
-                            if(data.created == true){   
-                                /*alert('Idea successfully uploaded');                                   
-                                window.location.href = "index.html";*/
-                                var postId = data.postId
-                                var files = $("#filesIn").val();
-                                $.ajax({
+            <div class="contentideas">
+                <div class="input-group">
+                    <label>Title</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="input-group" id="category">
+                 <label>Category</label>
+                    <script>
+                           $(document).ready(function(){   
+                                 $.ajax({
                                     type: "POST",
                                     url: "PostController.php",
 
                                     data: {
-                                        method:"addAttachment",
-                                        files: files,
-                                        postId: postId
+                                        method:"categories",
                                     },
                                     cache: false,
                                     dataType: 'JSON',
                                     success: function(data, status, xhttp, errorMessage) {
-                                        alert("Well that worked");
+                                           $('#category').append('<select name="category" id="categoryId" required>');
+                                           $('#categoryId').append('<option>Select Option</option>');
+                                           $.each(data, function(i ,val) {
+                                                  $('#categoryId').append('<option value='+val.category_id+'>'+val.name+'</option>');
+                                            });
+                                            $('#category').append('   </select>');
                                     },
-                                    error: function(){
-
-                                    $("#testingSpace").text("upload= "+data.created+"postid= "+data.postId+" errormessage = " +status.errorMessage);
-                            
+                                    error: function(result) {
+                                        //alert('unsuccessfull upload');
                                     }
                                 });
-                            
-                            }
+                           });
+
+
+                    </script>
+                </div>
+                <div class="input-group">
+                 <label>Select to post anonymously or not</label>
+                 <select name="anon" id="anon" required>
+                        <option>Select Option</option>
+                        <option value=1>Yes</option>
+                        <option value=0>No</option>                    
+                 </select>
+                </div>
+                <div class="input-group">
+                    <label>Write your idea here</label>
+    <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
+                    <input id="description" cols="80" rows="5" name="description"/>
+                </div>
+                <input type="file" class="formInput" name="files[]" id="filesIn"/>
+                <div class="input-group">
+                    <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
+
+                </div>
+            </div>
+        </form>
+        <script type="text/javascript">
+         $(document).ready(function(){   
+            $("#submitIdea").click(function(e) {
+                var data = new FormData();
+                data.append("name",$("#name").val());
+                data.append("description",$("#description").val());
+                data.append("categoryId",$("#categoryId").val());
+                data.append("anon",$('#anon').val());
+                data.append("method","addPost");
+                data.append("files", $("#filesIn").get(0).files[0]);
+                data.append("userId", $.cookie("userid"));
+                    
+                //e.preventDefault();
+                
+                    $.ajax({
+                        type: "POST",
+                        url: "PostController.php",
+                        data:data,
+                        cache: false,
+                        dataType: 'multipart/form-data',
+                        processData: false,
+                        contentType: false,
+                        success: function(data, status, xhttp, errorMessage) {       
                         
                             
                         },
