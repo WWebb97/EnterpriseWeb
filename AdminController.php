@@ -39,7 +39,7 @@ function changeRole(){
     $roleId = $_POST["roleId"];
     unset($_POST["userId"]);
     unset($_POST["roleId"]);
-    $return = null;
+    //$return = null;
     if($roleId == null || $userId == null){
         http_response_code(400);
         echo json_encode(array("message"=> "parameters of user id and role id must be set."));

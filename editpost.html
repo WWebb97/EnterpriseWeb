@@ -8,6 +8,7 @@
     <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
 
     <title>Edit your Idea</title>
+    <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
     <script>
         $(document).ready(function(){            
@@ -18,7 +19,11 @@
                 $('#link3').prop("style", "display: none");
                 $('#link4').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
              }
+                var username = $.cookie("username");
+                $("#session").text(username +" on session");
+             
         });
         tinymce.init({
             selector: 'textarea'
@@ -31,24 +36,39 @@
 
 <body>
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="index.html">Home</a>
+            <a class="navbar-brand" href="index.html">
+                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" id="link1" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link2" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                    </li>
+                </ul>                
+            </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" id="session"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                    </li>                    
+                </ul>
+        </nav>
 
     <div class="headerideas">
         <h2>Edit an idea</h2>
@@ -104,7 +124,7 @@
             </div>
             <input type="file" name="fileUpload" id="fileUpload">
             <div class="input-group">
-                <button type="button" id="submitIdea" class="refresh btn">Edit your Idea</button>
+                <button type="button" id="submitIdea" class="refresh btneditpost">Edit your Idea</button>
 
             </div>
             <!--        <p id="testingSpace">   </p>-->
