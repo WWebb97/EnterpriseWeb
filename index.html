@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
 <head>
-<!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
     <title>Index</title>
+    <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <meta name="Author" content="ad9047o@gre.ac.uk"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="jquery-3.3.1.min.js"></script>
@@ -10,21 +10,50 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script> 
-        $(document).ready(function(){            
-             if($.cookie("username")){
+        $(document).ready(function(){
+            
+            
+            var timeStamp = $.cookie("timeStamp");
+            var dt = eval(timeStamp*1000);
+            var mydate = new Date(dt);
+            //var userId = $.cookie("userid");
+            var username = $.cookie("username");
+
+                    
+            
+            if(timeStamp == 0 && $.cookie("username")) {
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
-             }else{                              
-                $('#link3').prop("style", "display: none");
-                $('#link4').prop("style", "display: none");
-                $('#link5').prop("style", "display: none");
-             }
+                alert("welcome " + username);
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                alert("welcome back " + username + " last login on "+ mydate);
+            }
+            
+            
+            $("#session").text(username +" on session");
+    
+            
+            
+//             if($.cookie("username")){
+//                $('#link1').prop("style", "display: none");
+//                $('#link2').prop("style", "display: none");
+//             }else{                              
+//                $('#link3').prop("style", "display: none");
+//                $('#link4').prop("style", "display: none");
+//                $('#link5').prop("style", "display: none");
+//                $('#link6').prop("style", "display: none");
+//                
+//             }
         });
+        
     </script>  
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="index.html">Home</a>
+            <a class="navbar-brand" href="index.html">
+                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -37,17 +66,24 @@
                         <a class="nav-link" id="link2" href="login.html">Login</a>
                     </li>
                     <li class="nav-item">
-<!--                        <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>-->
-                        <a class="nav-link" id="link3" href="upload.html">Suggest an Ideas</a>
+                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="link4" href="settings.html">User Settings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link5" href="Logout.html">Logout</a>
-                    </li>                                      
+                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                    </li>
+                </ul>                
+            </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" id="session"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                    </li>                    
                 </ul>
-            </div>  
         </nav>
         
         <br/>
@@ -136,21 +172,21 @@
                 $("#content").empty();
                  $.each(data, function(i, val){
                          var edit ="";
-                        var view ="";
+                         var view ="";
                          var addcom ="";
                          view = '<a href="ideacomment.html?postId='+val.post_id+'">View Details</a>';
                          addcom = '<a href="addcomments.html?postId='+val.post_id+'">Add a comment</a>';
                          if(val.positive === 1){
-                              var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                              var thumbsUp = '<button type="button" class="btn btn/default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" disabled="disabled"> <span class="glyphicon glyphicon-thumbsup" name="ThumbsUp">Thumbs Up</span></button>';
+                              var thumbsDown = '<button type="button" class="btn btn/default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbsdown" name="ThumbsDown">Thumbs Down</span></button>';
                          }else if (val.negative === 1){
-                             var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" > <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                              var thumbsUp = '<button type="button" class="btn btn/default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" > <span class="glyphicon glyphicon-thumbsup" name="ThumbsUp">Thumbs Up</span></button>';
+                              var thumbsDown = '<button type="button" class="btn btn/default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" disabled="disabled"> <span class="glyphicon glyphicon-thumbsdown" name="ThumbsDown">Thumbs Down</span></button>';
                          }else{
-                                var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                         var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                              var thumbsUp = '<button type="button" class="btn btn/default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp"> <span class="glyphicon glyphicon-thumbsup" name="ThumbsUp">Thumbs Up</span></button>';
+                              var thumbsDown = '<button type="button" class="btn btn/default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbsdown" name="ThumbsDown">Thumbs Down</span></button>';
                          }
-                         var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
+                              var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
                         if(userId == val.user_id){
 

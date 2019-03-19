@@ -7,6 +7,7 @@
 <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
 
 <title>Index</title>
+<link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
 <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
@@ -20,29 +21,48 @@
                 $('#link3').prop("style", "display: none");
                 $('#link4').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
              }
+                var username = $.cookie("username");
+                $("#session").text(username +" on session");
+             
         });
 </script>
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="index.html">Home</a>
+            <a class="navbar-brand" href="index.html">
+                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" id="link3" href="upload.php">Suggest an Idea</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="link4" href="settings.html">User Settings</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="link5" href="Logout.html">Logout</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link1" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link2" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                    </li>
+                </ul>                
+            </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" id="session"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                    </li>                    
                 </ul>
-            </div>  
         </nav>
         
         <div class="headerideas">
@@ -94,12 +114,14 @@
                 </div>
                 <div class="input-group">
                     <label>Write your idea here</label>
-    <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
+<!--                    <textarea id="description" cols="80" rows="5"></textarea>-->
                     <input id="description" cols="80" rows="5" name="description"/>
                 </div>
+                <div>
                 <input type="file" class="formInput" name="files[]" id="filesIn"/>
+                </div>
                 <div class="input-group">
-                    <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
+                    <button type="button"  id="submitIdea" class="refresh btnupload">Submit Idea</button>                
 
                 </div>
             </div>
@@ -127,7 +149,7 @@
                         processData: false,
                         contentType: false,
                         success: function(data, status, xhttp, errorMessage) {       
-                        
+                        window.location.href = "index.html";
                             
                         },
                         error: function(result) {
