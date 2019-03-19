@@ -216,7 +216,47 @@ function fetchPostForEdit(){
 function listPosts(){
     $userId = $_POST["userId"];
     unset($_POST["userId"]);
+    $sorting = $_POST["sorting"];
+    $timing = $_POST["timing"];
+    unset($_POST["sorting"]);
     $return = array();
+    $sort = "";
+    $time = "";
+    
+    $lastMonth1Unix = date(strtotime("first day of previous month"));
+    $lastMonth2Unix = date(strtotime("last day of previous month"));
+    $thisMonth1Unix = date(strtotime("first day of this month"));
+    $thisMonth2Unix = date(strtotime("last day of this month"));
+    
+    switch($sorting){
+        case 1:
+            
+            $sort = 'post_date desc';
+            break;
+        case 2:
+            $sort = 'points desc';
+            break; 
+        case 3:
+            $sort = 'points asc';
+            break;
+        default:
+            $sort = 'post_date desc';
+            
+    }
+    
+    switch($timing){
+        case 1:
+            $time = "post.post_date BETWEEN $lastMonth1Unix AND $lastMonth2Unix";
+            break;
+        case 2:
+            $time = "post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix";
+            break;
+        default:
+            $time = "post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix";
+            //$time = "post.post_date BETWEEN $lastMonth1Unix AND $lastMonth2Unix";
+    }
+    
+    
     if($userId == null){
         http_response_code(400);
         $return = array("results"=> false,
@@ -224,7 +264,7 @@ function listPosts(){
         echo json_encode($return);
         die();
     }
-    $posts = listPostsWithUserId($userId);
+    $posts = listPostsWithUserId($userId, $sort, $timing);
     if($posts["results"] === false){
         http_response_code(500);
         $return = array("results"=>false,

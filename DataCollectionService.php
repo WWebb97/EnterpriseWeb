@@ -202,7 +202,7 @@ function getPostPoints($postId){
     
 }
 
-function listPostsWithUserId($userId){
+function listPostsWithUserId($userId, $sorting, $time){
     $return = "";
     $conn = getConnection();
     if(is_array($conn)){
@@ -211,21 +211,16 @@ function listPostsWithUserId($userId){
 
    }else{
         $sql = 
-        "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', 
-        IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', pr.post_rating_id, pr.positive, pr.negative FROM post
-        JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id
-        left outer join post_rating pr on pr.post_id = post.post_id where pr.post_rating_id is null 
-        union
-        SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', 
-        IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', pr.post_rating_id, pr.positive, pr.negative FROM post
-        JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id 
-        right outer join post_rating pr on pr.post_id = post.post_id where pr.user_id = ?";
+        "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', if(pr.user_id = ?, pr.post_rating_id ,null) as 'post_rating_id', if(pr.user_id = ?, pr.positive , null ) as 'positive', if(pr.user_id = ?, pr.negative, null) as 'negative' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id left outer join post_rating pr on pr.post_id = post.post_id
+        order by $sorting";
         //echo "query = $query <br>";
         //$result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
          if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "i", $userIdIn);
-            $userIdIn = $userId;
+            mysqli_stmt_bind_param($stmt, "iii", $userIdIn1, $userIdIn2, $userIdIn3);
+            $userIdIn1 = $userId;
+            $userIdIn2 = $userId;
+            $userIdIn3 = $userId;
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
              if(mysqli_stmt_execute($stmt)){
