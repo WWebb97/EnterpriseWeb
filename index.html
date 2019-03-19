@@ -18,34 +18,42 @@
             var mydate = new Date(dt);
             //var userId = $.cookie("userid");
             var username = $.cookie("username");
-
-                    
             
-            if(timeStamp == 0 && $.cookie("username")) {
+            
+           if($.cookie("loginalert")) {
+               
+               if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                
+            }              
+               
+               
+           }else{
+               
+                if(timeStamp == 0 && $.cookie("username")) {
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 alert("welcome " + username);
+                $.cookie("loginalert", 1);
             }else{
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 alert("welcome back " + username + " last login on "+ mydate);
+                $.cookie("loginalert", 1);
             }
+               
+               
+               
+           }
             
             
             $("#session").text(username +" on session");
-    
             
-            
-//             if($.cookie("username")){
-//                $('#link1').prop("style", "display: none");
-//                $('#link2').prop("style", "display: none");
-//             }else{                              
-//                $('#link3').prop("style", "display: none");
-//                $('#link4').prop("style", "display: none");
-//                $('#link5').prop("style", "display: none");
-//                $('#link6').prop("style", "display: none");
-//                
-//             }
         });
         
     </script>  
