@@ -1,0 +1,56 @@
+s<!doctype html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> 
+        </script>
+        <title>URL Testing</title>
+    </head>
+    <body>
+        <h1>
+            Testing Space
+        </h1>
+        <p id="testingSpace"></p>
+        <script> 
+            $("document").ready(function(){
+               
+            /*         $.ajax({
+                            type: "POST",
+                            url: "PostController.php",
+                            data: {method:"categories"},
+                            cache: false,
+                            dataType: 'JSON',
+                            success: function(output) {
+                                    $("#testingSpace").text("categories call completed");
+                                }
+
+                            });*/
+                
+                /*      $.ajax({
+                            type: "POST",
+                            url: "PostController.php",
+                            data: {method:"addPost", name:"testing", description:"testing post", anon:0, categoryId:1, userId:1},
+                            cache: false,
+                            dataType: 'JSON',
+                            success: function(output) {
+                                    $("#testingSpace").text("add post call completed");
+                                }
+
+                            });*/
+                      $.ajax({
+                            type: "POST",
+                            url: "PostController.php",
+                            data: {method:"postDeadlineDate"},
+                            cache: false,
+                            dataType: 'JSON',
+                            success: function(output) {
+                                    $("#testingSpace").text("add post call completed");
+                                }
+
+                            });
+                
+            });
+        
+        
+        </script>
+    </body>
+</html>

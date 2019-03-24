@@ -9,54 +9,25 @@
     <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <script> 
+    <script>        
         $(document).ready(function(){
-            
-            
-            var timeStamp = $.cookie("timeStamp");
-            var dt = eval(timeStamp*1000);
-            var mydate = new Date(dt);
-            //var userId = $.cookie("userid");
-            var username = $.cookie("username");
-            
-            
-           if($.cookie("loginalert")) {
-               
-               if(timeStamp == 0 && $.cookie("username")) {
-                $('#link1').prop("style", "display: none");
-                $('#link2').prop("style", "display: none");
-                
-            }else{
-                $('#link1').prop("style", "display: none");
-                $('#link2').prop("style", "display: none");
-                
-            }              
-               
-               
-           }else{
-               
-                if(timeStamp == 0 && $.cookie("username")) {
-                $('#link1').prop("style", "display: none");
-                $('#link2').prop("style", "display: none");
-                alert("welcome " + username);
-                $.cookie("loginalert", 1);
-            }else{
-                $('#link1').prop("style", "display: none");
-                $('#link2').prop("style", "display: none");
-                alert("welcome back " + username + " last login on "+ mydate);
-                $.cookie("loginalert", 1);
-            }
-               
-               
-               
-           }
-            
-            
-            $("#session").text(username +" on session");
+            console.log($.now());
+             $.ajax({
+                type: "POST",
+                url: "PostController.php",
+                data: {method:"postDeadlineDate"},
+                cache: false,
+                dataType: 'JSON',
+                success: function(data, status, xhttp, errorMessage) {
+                    
+                },
+                error: function(result) {
+                    alert('Error, please refresh the page')
+                }
+            });
             
         });
-        
-    </script>  
+    </script>    
 </head>
     <body>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -93,8 +64,9 @@
                     </li>                    
                 </ul>
         </nav>
-        
-         <br/>
+        <div id="Alerts"></div>
+        <div id="LastLogin"></div>
+        <br/>
         <br/>
         <div class="container">
             <h2>This months ideas</h2>
@@ -106,40 +78,154 @@
                         <option value="3">Least Rated</option>
                     </select>
                 </div>
+                <div class="col" id="category">
+                
+                </div>
                 <div class="col">
-                    <select name="timing"  class="form-control" id="timingID" required>
+                    <select name="Timing"  class="form-control" id="TimingID" required>
                         <option value="1">This months posts</option>
                         <option value="2">last months posts</option>
+                        <option value="3">All Posts</option>
                     </select>
                 </div>
             </div>
             <div id="content"></div>
             
             <div id="paginationControls"></div>
+        </div>  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){   
+             $.ajax({
+                type: "POST",
+                url: "PostController.php",
 
-            </div>  
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+                data: {
+                    method:"categories",
+                },
+                cache: false,
+                dataType: 'JSON',
+                success: function(data, status, xhttp, errorMessage) {
+                       $('#category').append('<select name="category" class="form-control" id="categoryId" required>');
+                       $('#categoryId').append('<option value ="0">Select Category</option>');
+                       $.each(data, function(i ,val) {
+                              $('#categoryId').append('<option value='+val.category_id+'>'+val.name+'</option>');
+                        });
+                        $('#category').append('   </select>');
+                },
+                error: function(result) {
+                    //alert('unsuccessfull upload');
+                }
+            });
+        });
+
+
+    </script>
     <script>
         $(document).ready(function(){
             
             var sorting = null;
+            var timing = null;
+            var category = null;
             
             $("#SortingID").change(function(){
                 var sorting = $(this).val();
-                console.log(sorting); 
-                
-                
+                var timing = $("#TimingID").val();
+                var category = $('#categoryId').val();
+                console.log(category); 
+
                 $.ajax({
                     type: "POST",
                     url: "PostController.php",
-                    data: {method:"listPost", userId:userId, sorting: sorting},
+                    data: {method:"listPost", userId: userId, sorting: sorting, timing: timing, category: category},
                     cache: false,
                     dataType: 'JSON',
                     success: function(data, status, xhttp, errorMessage) {
                         checkButtons();
                         loadPosts(data.results[currentPage -1 ]);        
 
+                            },
+                            error: function(result) {
+                                alert(result.message);
+                            }
+                });
+            });
+            
+            $(document).on("change","#category #categoryId", function() {
+                var category = $(this).val();
+                var sorting = $("#SortingID").val();
+                var timing = $("#TimingID").val();
+                
+                console.log(category); 
+                
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+                    data: {method:"listPost", userId:userId, sorting: sorting, timing: timing, category: category},
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                        
+                        $("#paginationControls").empty();
+                        checkButtons();
+                        loadPosts(data.results[currentPage -1 ]);    
+                        pages = data.results;
+                        var pageCount = data.pageCount;
+                        pageNum = pageCount;
+                        var pagination = $("#paginationControls");
+
+                        pagination.append('<nav aria-label="Page navigation example">');
+                        pagination.append('<ul class="pagination justify-content-center" id="paginationList">');
+                        paginationList = $("#paginationList");
+                        paginationList.append(' <li class="page-item"><btn cla2ss="page-link" name="previous" id="previous" href="#">Previous</button></li>');
+                        for(var i = 1 ; i<pageCount +1 ; i ++){
+                            paginationList.append('<li class="page-item"><button class="page-link" href="#" name='+i+'>'+i+'</button></li>');
+                        }
+                        paginationList.append('<li class="page-item"><button class="page-link" href="#" name="next" id="next">Next</button></li>');
+                        pagination.append('</ul>');
+                        pagination.append('</nav>');
+                            },
+                            error: function(result) {
+                                alert(result.message);
+                            }
+                });
+            });
+
+            
+            $("#TimingID").change(function(){
+                var timing = $(this).val();
+                var sorting = $("#SortingID").val();
+                var category = $('#categoryId').val();
+                console.log(timing); 
+                
+                
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+                    data: {method:"listPost", userId:userId, sorting: sorting, timing: timing, category: category},
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                        
+                        $("#paginationControls").empty();
+                        checkButtons();
+                        loadPosts(data.results[currentPage -1 ]);    
+                        pages = data.results;
+                        var pageCount = data.pageCount;
+                        pageNum = pageCount;
+                        var pagination = $("#paginationControls");
+
+                        pagination.append('<nav aria-label="Page navigation example">');
+                        pagination.append('<ul class="pagination justify-content-center" id="paginationList">');
+                        paginationList = $("#paginationList");
+                        paginationList.append(' <li class="page-item"><btn cla2ss="page-link" name="previous" id="previous" href="#">Previous</button></li>');
+                        for(var i = 1 ; i<pageCount +1 ; i ++){
+                            paginationList.append('<li class="page-item"><button class="page-link" href="#" name='+i+'>'+i+'</button></li>');
+                        }
+                        paginationList.append('<li class="page-item"><button class="page-link" href="#" name="next" id="next">Next</button></li>');
+                        pagination.append('</ul>');
+                        pagination.append('</nav>');
                             },
                             error: function(result) {
                                 alert(result.message);
@@ -154,7 +240,7 @@
             $.ajax({
                 type: "POST",
                 url: "PostController.php",
-                data: {method:"listPost", userId:userId, sorting: sorting},
+                data: {method:"listPost", userId:userId, sorting: sorting, timing: timing, category: category},
                 cache: false,
                 dataType: 'JSON',
                 success: function(data, status, xhttp, errorMessage) {
@@ -200,7 +286,6 @@
                     checkButtons();
                     loadPosts(pages[currentPage - 1]);
                 }
-                
             });
                 
             function checkButtons(){
@@ -237,8 +322,15 @@
                          var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
                         if(userId == val.user_id){
-
-                         edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';
+                            if(val.date <= $.cookie("Deadline3")){
+                                edit = "This post has been locked &#128274;";
+                                addcom = "";
+                            }else if(val.date <= $.cookie("Deadline")){
+                                     
+                                edit = "This post has been locked for editing &#128274;";
+                            }else{
+                                edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
+                            }
 
                         }else{
                             edit = "<br/>";
@@ -247,6 +339,7 @@
                        $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+thumbsUp+thumbsDown+'<div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
                     });
             }
+            
             function updateLocalPosts(postId, vote, score){
                 $.each(pages[currentPage -1], function(i,val) {
                     if(val.post_id == postId){
@@ -254,7 +347,6 @@
                             pages[currentPage -1][i].positive = 1;
                             pages[currentPage -1][i].negative = 0;
                             pages[currentPage -1][i].points = score;
-
                         }else{
                             pages[currentPage -1][i].positive = 0;
                             pages[currentPage -1][i].negative = 1;
@@ -264,7 +356,6 @@
                 });    
             }
             
-
             $(document).on('click','#content :button',function(){
                 var Id = $(this).attr("id");
                 $(this).prop("disabled",true);
@@ -312,20 +403,71 @@
                             error: function(data){
                                 alert("your vote has been counted but we are currently unable to display the new score. Please refresh the page.");
                             }
-
                         });
                     },
                     error: function(date){
                            alert("Error voting on posts please try again later."); 
                     }
                  });
-            });
-            
-            
-            
-            
-        });         
+            }); 
+        });
+        
     </script>
+        <script> 
+        $(document).ready(function(){
+            
+            var timeStamp = $.cookie("timeStamp");
+            var dt = eval(timeStamp*1000);
+            var mydate = new Date(dt);
+            //var userId = $.cookie("userid");
+            var username = $.cookie("username");
+                
+           if($.cookie("loginalert")) {
+               
+               if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");                
+            }              
+           }else{               
+                if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                //alert("welcome " + username);
+                    
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome '+username+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    
+                $.cookie("loginalert", 1);
+                    
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                //alert("welcome back " + username + " last login on "+ mydate);
+                $.cookie("loginalert", 1);
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                
+            }
+ 
+           }
+
+            $("#session").text(username +" on session");
+            
+            var postDate = $.cookie("Deadline");
+            var endDate = $.cookie("Deadline2");
+            var thisDate = $.now();
+            
+            if(postDate <= thisDate || endDate >= thisDate){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
+        });
+        
+    </script>          
     </body>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
 </html>
