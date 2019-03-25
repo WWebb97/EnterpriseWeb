@@ -8,7 +8,9 @@
     <script src="jquery-3.3.1.min.js"></script>
     <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet" type="text/css" />
+    
     <script>        
         $(document).ready(function(){
             console.log($.now());
@@ -178,7 +180,7 @@
                         pagination.append('<nav aria-label="Page navigation example">');
                         pagination.append('<ul class="pagination justify-content-center" id="paginationList">');
                         paginationList = $("#paginationList");
-                        paginationList.append(' <li class="page-item"><btn cla2ss="page-link" name="previous" id="previous" href="#">Previous</button></li>');
+                        paginationList.append(' <li class="page-item"><button class="page-link" name="previous" id="previous" href="#">Previous</button></li>');
                         for(var i = 1 ; i<pageCount +1 ; i ++){
                             paginationList.append('<li class="page-item"><button class="page-link" href="#" name='+i+'>'+i+'</button></li>');
                         }
@@ -219,7 +221,7 @@
                         pagination.append('<nav aria-label="Page navigation example">');
                         pagination.append('<ul class="pagination justify-content-center" id="paginationList">');
                         paginationList = $("#paginationList");
-                        paginationList.append(' <li class="page-item"><btn cla2ss="page-link" name="previous" id="previous" href="#">Previous</button></li>');
+                        paginationList.append(' <li class="page-item"><button class="page-link" name="previous" id="previous" href="#">Previous</button></li>');
                         for(var i = 1 ; i<pageCount +1 ; i ++){
                             paginationList.append('<li class="page-item"><button class="page-link" href="#" name='+i+'>'+i+'</button></li>');
                         }
@@ -310,14 +312,14 @@
                          view = '<a href="ideacomment.html?postId='+val.post_id+'">View Details</a>';
                          addcom = '<a href="addcomments.html?postId='+val.post_id+'">Add a comment</a>';
                          if(val.positive === 1){
-                              var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                            var thumbsUp = '<button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" disabled="disabled" style=float:left > <span class="fa fa-thumbs-up" name="ThumbsUp"></span></button>' ;
+                            var thumbsDown = ' <button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" style=float:left > <span class="fa fa-thumbs-down" name="ThumbsDown"></span></button> ';
                          }else if (val.negative === 1){
-                             var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" > <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                              var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" disabled="disabled"> <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                            var thumbsUp = '<button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp"  style=float:left > <span class="fa fa-thumbs-up" name="ThumbsUp"></span></button>';
+                            var thumbsDown = '<button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" disabled="disabled" style=float:left > <span class="fa fa-thumbs-down" name="ThumbsDown"></span></button> ';
                          }else{
-                                var thumbsUp = '<div><button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp"> <span class="glyphicon glyphicon-thumbs-up" name="ThumbsUp">Thumbs Up</span></button> </div>';
-                         var thumbsDown = '<div><button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown" > <span class="glyphicon glyphicon-thumbs-down" name="ThumbsDown">Thumbs Down</span></button> </div>';
+                            var thumbsUp = '<button type="button" class="btn btn-default" id=ThumbsUp-'+val.post_id+' name="ThumbsUp" style=float:left > <span class="fa fa-thumbs-up" name="ThumbsUp"></span></button> ';
+                            var thumbsDown = '<button type="button" class="btn btn-default" id=ThumbsDown-'+val.post_id+' name="ThumbsDown"  style=float:left > <span class="fa fa-thumbs-down" name="ThumbsDown"  ></span></button> ';
                          }
                          var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
@@ -336,7 +338,7 @@
                             edit = "<br/>";
                         }
 
-                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+thumbsUp+thumbsDown+'<div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
                     });
             }
             

@@ -228,7 +228,7 @@ function addDocument($actualName,$savedName, $location, $postId){
 }
 
 
-function addVotePost($vote, $postId){
+function addVotePost($vote, $postId, $updated){
     $result = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -236,12 +236,27 @@ function addVotePost($vote, $postId){
                        'message' => $conn['reason']);
 
     }else{
-        if($vote == 'ThumbsUp'){
-            $voteAm = '+1';
-        }else{
-            $voteAm = '-1';
-        }
+        if($updated === "true"){
+            if($vote == 'ThumbsUp'){
+                $voteAm = '+2';
+            }else{
+                $voteAm = '-2';
+            }
+        }else if ($updated === "false"){
+            if($vote == 'ThumbsUp'){
+                $voteAm = '+1';
+            }else{
+                $voteAm = '-1';
+            }
         
+        }else{
+            if($vote == 'ThumbsUp'){
+                $voteAm = '+1';
+            }else{
+                $voteAm = '-1';
+            }
+        }
+
         $sql = "UPDATE post SET points = points $voteAm WHERE post_id = $postId";
         if(mysqli_query($conn, $sql)){
             $return = array("voted"=>true);

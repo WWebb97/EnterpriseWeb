@@ -118,7 +118,7 @@ function vote(){
         echo json_encode($return);
         die();
     }
-    $voted = addVotePost($vote,$postId);
+    $voted = addVotePost($vote,$postId,$update);
     if($voted["voted"]){
         $voteLog =null;
         if($update === "true"){
