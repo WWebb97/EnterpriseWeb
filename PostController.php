@@ -31,6 +31,10 @@ switch($method){
     case "listPost":
         listPosts();
         break;
+    case "postDeadlineDate":
+        postDeadlineDate();
+        break;
+    
 }
 
 
@@ -217,8 +221,11 @@ function listPosts(){
     $userId = $_POST["userId"];
     unset($_POST["userId"]);
     $sorting = $_POST["sorting"];
-    $timing = $_POST["timing"];
     unset($_POST["sorting"]);
+    $timing = $_POST["timing"];
+    unset($_POST["timing"]);
+    $category = $_POST["category"];
+    unset($_POST["category"]);
     $return = array();
     $sort = "";
     $time = "";
@@ -229,8 +236,7 @@ function listPosts(){
     $thisMonth2Unix = date(strtotime("last day of this month"));
     
     switch($sorting){
-        case 1:
-            
+        case 1:            
             $sort = 'post_date desc';
             break;
         case 2:
@@ -240,22 +246,22 @@ function listPosts(){
             $sort = 'points asc';
             break;
         default:
-            $sort = 'post_date desc';
-            
+            $sort = 'post_date desc';            
     }
     
     switch($timing){
         case 1:
-            $time = "post.post_date BETWEEN $lastMonth1Unix AND $lastMonth2Unix";
+            $time = "where post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix";
             break;
         case 2:
-            $time = "post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix";
+            $time = "where post.post_date BETWEEN $lastMonth1Unix AND $lastMonth2Unix";
+            break;
+        case 3: 
+            $time = null;
             break;
         default:
-            $time = "post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix";
-            //$time = "post.post_date BETWEEN $lastMonth1Unix AND $lastMonth2Unix";
-    }
-    
+            $time = "where post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix"; 
+    }    
     
     if($userId == null){
         http_response_code(400);
@@ -264,7 +270,7 @@ function listPosts(){
         echo json_encode($return);
         die();
     }
-    $posts = listPostsWithUserId($userId, $sort, $timing);
+    $posts = listPostsWithUserId($userId, $sort, $time, $category);
     if($posts["results"] === false){
         http_response_code(500);
         $return = array("results"=>false,
@@ -282,6 +288,19 @@ function listPosts(){
     }
     echo json_encode($return);
     
+    
+}
+
+function postDeadlineDate(){
+    $thisMonthUnix = date(strtotime("last day of this month"));
+    $firstMonthUnix = date(strtotime("first day of this month"));
+    $dateUnix = date(strtotime('-7 days', $thisMonthUnix));
+    
+    echo $dateUnix;
+    
+    setCookie('Deadline', $dateUnix);
+    setCookie('Deadline2', $thisMonthUnix);
+    setCookie('Deadline3', $firstMonthUnix);
     
 }
 

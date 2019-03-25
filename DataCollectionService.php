@@ -202,18 +202,29 @@ function getPostPoints($postId){
     
 }
 
-function listPostsWithUserId($userId, $sorting, $time){
+function listPostsWithUserId($userId, $sorting, $time, $category){
     $return = "";
+    $cat = null;
     $conn = getConnection();
     if(is_array($conn)){
        $return = array('results' => $conn['error'],
                    'message'=> $conn['reason']);
 
    }else{
-        $sql = 
-        "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', if(pr.user_id = ?, pr.post_rating_id ,null) as 'post_rating_id', if(pr.user_id = ?, pr.positive , null ) as 'positive', if(pr.user_id = ?, pr.negative, null) as 'negative' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id left outer join post_rating pr on pr.post_id = post.post_id
-        order by $sorting";
-        //echo "query = $query <br>";
+        if($category == 0){
+            $cat = null;
+        }else{
+            if($time == null){
+                $cat = "WHERE post.category_id = $category";
+            }else{
+                $cat = "AND post.category_id = $category";
+            }
+            
+        }
+        
+        
+        $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', if(pr.user_id = ?, pr.post_rating_id ,null) as 'post_rating_id', if(pr.user_id = ?, pr.positive , null ) as 'positive', if(pr.user_id = ?, pr.negative, null) as 'negative' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id left outer join post_rating pr on pr.post_id = post.post_id $time $cat order by $sorting";
+        //echo "query = $sql <br>";
         //$result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
          if($stmt = mysqli_prepare($conn, $sql)){
