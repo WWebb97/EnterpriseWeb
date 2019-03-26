@@ -298,26 +298,28 @@ function listPosts(){
                 $post["negative"] = null;
                 array_push($postsWithRatings, $post);
              }
-            $return = array("results" =>paginateResults($postsWithRatings));
+            $returnPosts = paginateResults($postsWithRatings);
+            $return = array("results" => $returnPosts,
+                           "pageCount"=>sizeof($returnPosts));
         }else{
             //make sure posts and raitings are joined;
             $postRatings = $ratings["results"];
             foreach ($postsWithoutRatings as $post){
+                $post["post_rating_id"] = null;
+                $post["positive"] = null;
+                $post["negative"] = null;
                 foreach($postRatings as $rating){
-                    if($rating["post_id"] ==$post["post_id"]){
+                    if($rating["post_id"] == $post["post_id"]){
                         $post["post_rating_id"] = $rating["post_rating_id"];
                         $post["positive"] = $rating["positive"];
                         $post["negative"] = $rating["negative"];
-                        array_push($postsWithRatings, $post);
-                    } else{
-                        $post["post_rating_id"] = null;
-                        $post["positive"] = null;
-                        $post["negative"] = null;
-                        array_push($postsWithRatings, $post);
-                    }  
+                    }
                 }
+                 array_push($postsWithRatings, $post);
             }
-            $return = array("results" =>paginateResults($postsWithRatings));
+            $returnPosts = paginateResults($postsWithRatings);
+            $return = array("results" => $returnPosts,
+                           "pageCount"=>sizeof($returnPosts));
             
         }
         /*$returnPosts = paginateResults($posts["results"]);
