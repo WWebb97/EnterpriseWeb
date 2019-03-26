@@ -282,9 +282,47 @@ function listPosts(){
     }
     else{
         //echo json_encode($posts);
-        $returnPosts = paginateResults($posts["results"]);
+        $ratings = listPostRatings($userId);
+        $return = $ratings;
+        $postsWithoutRatings = $posts["results"];
+        //$return = $postsWithoutRatings;
+        $postsWithRatings = array();
+        if($ratings["results"] === false){
+            //error return some kind of data error
+            $return = array ("results"=>false);
+        }else if ($ratings["results"]=== 0){
+            // return all posts with no raitings
+            foreach ($postsWithoutRatings as $post){
+                $post["post_rating_id"] = null;
+                $post["positive"] = null;
+                $post["negative"] = null;
+                array_push($postsWithRatings, $post);
+             }
+            $return = array("results" =>paginateResults($postsWithRatings));
+        }else{
+            //make sure posts and raitings are joined;
+            $postRatings = $ratings["results"];
+            foreach ($postsWithoutRatings as $post){
+                foreach($postRatings as $rating){
+                    if($rating["post_id"] ==$post["post_id"]){
+                        $post["post_rating_id"] = $rating["post_rating_id"];
+                        $post["positive"] = $rating["positive"];
+                        $post["negative"] = $rating["negative"];
+                        array_push($postsWithRatings, $post);
+                    } else{
+                        $post["post_rating_id"] = null;
+                        $post["positive"] = null;
+                        $post["negative"] = null;
+                        array_push($postsWithRatings, $post);
+                    }  
+                }
+            }
+            $return = array("results" =>paginateResults($postsWithRatings));
+            
+        }
+        /*$returnPosts = paginateResults($posts["results"]);
         $return = array("results"=>$returnPosts,
-                       "pageCount"=>sizeof($returnPosts));
+                       "pageCount"=>sizeof($returnPosts));*/
     }
     echo json_encode($return);
     
