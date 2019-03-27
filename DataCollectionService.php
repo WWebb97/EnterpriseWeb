@@ -469,8 +469,48 @@ function getFlaggedPosts(){
     
     mysqli_close($conn);
     return $return;
-    
-    
+}
+
+function getFileDetails($fileId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("files"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select file_id, location, post_id, saved_name, actual_name from files where file_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $fileIdIn);
+            $fileIdIn = $fileId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $files = array();
+                    mysqli_stmt_bind_result($stmt, $fileIDOut, $location, $postID, $savedName, $actualName);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $file = array("file_id"=>$fileIDOut,
+                                     "location"=>$location,
+                                     "post_id"=>$postID,
+                                     "saved_name"=>$savedName,
+                                     "actual_name"=>$actualName);
+                        array_push($files, $file);
+                    }
+                  //  var_dump($users);
+                    if (count($files) === 0){
+                        $return = array("files"=>0);
+                    }else{
+                        $return = array("files"=>$files);
+                    }
+                }else{
+                    $return = array("score"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
     
 }
 

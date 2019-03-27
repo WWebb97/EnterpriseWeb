@@ -34,6 +34,12 @@ switch($method){
     case "postDeadlineDate":
         postDeadlineDate();
         break;
+    case "deleteFile":
+        deleteAttachement();
+        break;
+    case "deleteFileRecord":
+        deleteFileRecordOnly();
+        break;
     
 }
 
@@ -96,7 +102,7 @@ function addPost(){
             if($uploaded["uploaded"] == true){
               /*  $return = array("created"=> true,
                                "postId"=>$postId);*/
-                $dbUpdate = addDocument($files["name"], $uploaded["savedName"], "/attachments2/" ,$postId);
+                $dbUpdate = addDocument($files["name"], $uploaded["savedName"], "attachments2/" ,$postId);
                 if($dbUpdate["updated"]==  true){
                     $return = array("created"=>true,
                                    "postId"=>$postId);
@@ -342,6 +348,80 @@ function postDeadlineDate(){
     setCookie('Deadline2', $thisMonthUnix);
     setCookie('Deadline3', $firstMonthUnix);
     
+}
+
+function downloadPost(){
+    
+    
+}
+
+function deleteAttachement(){
+    $fileId = $_POST["fileId"];
+    unset ($_POST["fileId"]);
+    $return = array();
+    if($fileId == null){
+        http_response_code(400);
+        $return = array ("deleted"=> false,
+                        "message"=> "A file ID must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $file = getFileDetails($fileId);
+    $fileResults = $file["files"];
+    //echo json_encode($fileResults);
+    if($fileResults === 0){
+        http_response_code (500);
+        $return = array("deleted"=>false,
+                       "message"=>"Unable to find file with an id of ".$fileId);
+        echo json_encode($return);
+        die();
+    }else if($fileResults === false){
+        http_response_code(500);
+         $return = array("deleted"=>false,
+                       "message"=>"Error collecting file information");
+         echo json_encode($return);
+        die();
+    }
+    else {
+        $fileName = $fileResults[0]["location"].$fileResults[0]["saved_name"];
+       if(unlink($fileName)){
+            $return = array("deleted"=>true);
+            $deletedFile = deleteFileRecord($fileId);
+            if($deletedFile["deleted"] === true){
+                $return = array("deleted"=>true);
+            }else{
+                $return = array("deleted"=>true,
+                           "message"=> "record of file still exists and must be deleted");
+        }
+        }else{
+            $return = array("deleted"=>false);
+        }
+             
+    }
+        echo json_encode($return);
+    
+}
+
+function deleteFileRecordOnly(){
+    $fileId = $_POST["fileId"];
+    unset ($_POST["fileId"]);
+    $return = array();
+    if($fileId == null){
+        http_response_code(400);
+        $return = array ("deleted"=> false,
+                        "message"=> "A file ID must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $deletedFile = deleteFileRecord($fileId);
+    if($deletedFile["deleted"] === true){
+        $return = array("deleted"=>true);
+    }else{
+        $return = array("deleted"=>false,
+               "message"=> "record could not be deleted");
+        
+    }
+     echo json_encode($return);
 }
 
 ?>
