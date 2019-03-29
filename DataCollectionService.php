@@ -202,6 +202,51 @@ function getPostPoints($postId){
     
 }
 
+
+function getSinglePost($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("post"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select p.name, p.description, p.post_date, p.points, if(p.post_anon = 1,'Anon',u.username) as 'username', c.name  from post p join site_user u on u.user_id = p.user_id join category c on c.category_id = p.category_id where post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $posts = array();
+                    mysqli_stmt_bind_result($stmt, $nameOut, $descOut, $date, $points, $username, $cname);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $post = array("name"=>$nameOut,
+                                     "description"=>$descOut,
+                                     "post_date"=>$date,
+                                     "points"=>$points,
+                                     "username"=>$username,
+                                     "category"=>$cname);
+                        array_push($posts, $post);
+                    }
+                  //  var_dump($users);
+                    if (count($posts) === 0){
+                        $return = array("post"=>0);
+                    }else{
+                        $return = array("post"=>$posts);
+                    }
+                }else{
+                    $return = array("post"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
 function listPostsWithUserId($userId, $sorting, $time, $category){
     $return = "";
     $cat = null;
@@ -503,6 +548,49 @@ function getFileDetails($fileId){
                     }
                 }else{
                     $return = array("score"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
+
+
+function getPostFiles($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("files"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select location, saved_name, actual_name from files where post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $files = array();
+                    mysqli_stmt_bind_result($stmt, $location, $saved_name, $actual_name);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $file = array("location"=>$location,
+                                     "saved_name"=>$saved_name,
+                                     "actual_name"=>$actual_name);
+                        array_push($files, $file);
+                    }
+                  //  var_dump($users);
+                    if (count(files) === 0){
+                        $return = array("files"=>0);
+                    }else{
+                        $return = array("files"=>$files);
+                    }
+                }else{
+                    $return = array("files"=>false,
                                 "message"=>mysqli_error($conn)
                             );
                 }

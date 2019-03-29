@@ -22,9 +22,9 @@ switch($method){
         break;
     case "deletPost":
         break;
-    /*case "getPost":
+    case "getPost":
         getPost();
-        break;*/
+        break;
     case "fetchPostForEdit":
         fetchPostForEdit();
         break;
@@ -39,6 +39,9 @@ switch($method){
         break;
     case "deleteFileRecord":
         deleteFileRecordOnly();
+        break;
+    case "getFiles":
+        getFiles();
         break;
     
 }
@@ -192,7 +195,35 @@ function getPost(){
     }
     echo json_encode($return);
 }*/
-      
+
+function getPost(){
+    $postId = $_POST["postId"];
+    unset($_POST["postId"]);
+    
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("post"=>false,
+                              "message"=>"A post id must be given"));
+        die();
+    }
+    $return = array();
+    $post = getSinglePost($postId);
+    if($post["post"] === false){
+        http_response_code(500);
+        $return = array("post"=>false,
+                       "message"=>$post["message"]);
+    }
+    else if ($post["post"] === 0){
+        http_response_code(404);
+        $return = array("post"=>false,
+                       "message"=>"Unable to find post");
+    }
+    else{
+        $return = array("post"=>$post["post"]);
+    }
+    echo json_encode($return);
+    
+}
 
 
 function fetchPostForEdit(){
@@ -422,6 +453,34 @@ function deleteFileRecordOnly(){
         
     }
      echo json_encode($return);
+}
+
+function getFiles(){
+     $postId = $_POST["postId"];
+    unset($_POST["postId"]);
+    
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("files"=>false,
+                              "message"=>"A post id must be given"));
+        die();
+    }
+    $return = array();
+    $file = getPostFiles($postId);
+    if($file["files"] === false){
+        http_response_code(500);
+        $return = array("files"=>false,
+                       "message"=>$file["message"]);
+    }
+    else if ($file["files"] === 0){
+        $return = array("files"=>false,
+                       "message"=>"Unable to find post");
+    }
+    else{
+        $return = array("files"=>$file["files"]);
+    }
+    echo json_encode($return);
+    
 }
 
 ?>
