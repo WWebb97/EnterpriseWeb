@@ -335,7 +335,7 @@ function changeUserRole($roleId, $userId){
                        'message' => $conn['reason']);
         return $return;
     }else{
-           $sql = "alter table site_user set role_id = ? where user_id = ?";
+           $sql = "update site_user set role_id = ? where user_id = ?";
         //echo $sql;
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "ii", $roleIdIn, $userIdIn);
