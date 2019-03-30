@@ -14,7 +14,8 @@
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="checkpass.js"></script>
 <script>
-    $(document).ready(function(){            
+    $(document).ready(function(){
+        var role = $.cookie("role");
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -24,8 +25,21 @@
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
              }
+            if (role == 1){
+                $('#link5').prop("style", "display: none");
+            }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
+        
+         var postDate = $.cookie("Deadline");
+            var endDate = $.cookie("Deadline2");
+            var thisDate = $.now();
+        if(postDate <= thisDate || endDate >= thisDate){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
         });
 </script>
 </head>

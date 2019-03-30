@@ -11,7 +11,6 @@
 <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
     <body class="log">
-
         <div class="headerlog">
             <img src="images/greenwichlogo.png" class="logoresponsive" width="200px" height="50px"/>                            
         </div>
@@ -48,7 +47,10 @@
                                 
                             var role = output.role_id;
                             if(role == 3) {
-                                    alert('You have been banned from the site');
+                                    //alert('You have been banned from the site');         
+                   
+                                 $('#Alerts').append('<div class="alert alert-warning" role="alert">Your account have been banned and its been reviewed by your QA manager.</div>');
+                                
                             }else{
                                 
                                 if(output.login == true){
@@ -119,6 +121,7 @@
   	         <p>
   		        Not yet a member? <a href="register.html">Sign up</a>
   	         </p>
+            <div id="Alerts"></div>
          </div>
         </form>
 

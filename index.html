@@ -305,6 +305,8 @@
             
             function loadPosts(data){
                 $("#content").empty();
+                var role = $.cookie("role");                
+                
                  $.each(data, function(i, val){
                          var edit ="";
                         var view ="";
@@ -337,9 +339,18 @@
                         }else{
                             edit = "<br/>";
                         }
+                     if(role == 4){
+                         
+//                         $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<br><div>'+view+'</div>');
+                                   
+                         $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<div></div><br><div></div><div>'+view+'</div><div>&#128274;</div>');
+                         
+                     }else{
 
                        $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                     }
                     });
+                
             }
             
             function updateLocalPosts(postId, vote, score){
@@ -423,7 +434,18 @@
             var mydate = new Date(dt);
             //var userId = $.cookie("userid");
             var username = $.cookie("username");
-                
+            var role = $.cookie("role");          
+             
+               
+           if(role == 4){
+            $('#link1').prop("style", "display: none");
+            $('#link2').prop("style", "display: none");
+            $('#link3').addClass('disabled');
+            $('#link4').prop("style", "display: none");
+            $('#link5').prop("style", "display: none");
+                   
+            $('#Alerts').append('<div class="alert alert-warning" role="alert">Your account is suspended and its been reviewed by your QA manager.</div>');
+           }else if (role == 2){
            if($.cookie("loginalert")) {
                
                if(timeStamp == 0 && $.cookie("username")) {
@@ -434,7 +456,8 @@
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");                
             }              
-           }else{               
+           }else{                   
+            
                 if(timeStamp == 0 && $.cookie("username")) {
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -452,8 +475,48 @@
                 $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 
             }
+           
  
            }
+          }else{
+              if($.cookie("loginalert")) {
+               
+               if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+            }              
+           }else{                   
+            
+                if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                //alert("welcome " + username);
+                    
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome '+username+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    
+                $.cookie("loginalert", 1);
+                    
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                //alert("welcome back " + username + " last login on "+ mydate);
+                $.cookie("loginalert", 1);
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                
+            }
+           
+ 
+           }
+              
+          }
 
             $("#session").text(username +" on session");
             

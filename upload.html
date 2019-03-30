@@ -13,7 +13,8 @@
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script>
-    $(document).ready(function(){            
+    $(document).ready(function(){
+        var role = $.cookie("role");
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -23,6 +24,9 @@
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
              }
+            if (role == 1){
+                $('#link5').prop("style", "display: none");
+            }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
