@@ -175,7 +175,7 @@
                 
                 
                 $(document).on("click",".User button", function() {
-                     var IDValue = $(this).attr("ID");
+                     var IDValue = $(this).attr("id");
                     var buttonType = $(this).val();
                     console.log(IDValue, buttonType);
                     
@@ -208,7 +208,7 @@
                                 url: "AdminController.php",
                                 data: {
                                     method:"changeRole",
-                                    userId:IDValue ,
+                                    userId: IDValue ,
                                     roleId: 4
                                     
                                 },
@@ -229,7 +229,7 @@
                                 url: "AdminController.php",
                                 data: {
                                     method:"changeRole",
-                                    userId:IDValue ,
+                                    userId: IDValue ,
                                     roleId: 2
                                     
                                 },
@@ -296,7 +296,10 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
-                </ul>                
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
+                </ul>         
             </div>
                 <ul class="navbar-nav">
                     <li class="nav-item">
