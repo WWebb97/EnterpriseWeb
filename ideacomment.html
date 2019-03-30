@@ -70,6 +70,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
                 </ul>                
             </div>
                 <ul class="navbar-nav">
@@ -87,12 +90,19 @@
         
          
              <div class="container">
+                 <div class="jumbotron" id="postSpace"></div>    
+                 <div id="files">
+                     <div class="jumbotron" id="filesJumbo">
+                        <h2>Files</h2> 
+                     </div>
+                 </div>
                  <div class="jumbotron">
                 <h2>Comments</h2>
                 <script>
+          
                 $(document).ready(function(){
                     
-                    
+         
                     var postId = getUrlVars()["postId"];
                     function getUrlVars() {
                         var vars = {};
@@ -101,6 +111,9 @@
                         });
                         return vars;
                     };
+                    
+                    
+                
                    $.ajax({
                         type: "POST",
                         url: "CommentAndRatingController.php",
@@ -121,15 +134,70 @@
                                 error: function(result) {
                                     alert('unsuccessful comment fetch');
                                 }
-                    }); 
-                            
+                    });
                     
+                               
+                   $.ajax({
+                        type: "POST",
+                        url: "PostController.php",
+                        data: {method:"getPost", postId:postId},
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            var val = data["post"][0];
+                            $("#postSpace").append('<p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p><p>'+val.points+'</p>');
+                        },
+                        error: function(result) {
+                            alert('Unable to get post information');
+                        }
+                    });
+                    
+                   $.ajax({
+                        type: "POST",
+                        url: "PostController.php",
+                        data: {method:"getFiles", postId:postId},
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            var files = data["files"];
+                            if (files === 0){
+                                $("#files").empty();
+                            }else if(files === null){
+                                $("#files").empty();
+                            }else {
+                                $.each(files, function(i, val){
+                                $("#filesJumbo").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
+                                
+                             });
+                            }
+                       
+                            
+                                 
+                            
+                        },
+                        error: function(result) {
+                            alert('Unable to get files for post');
+                        }
+                    }); 
+                    $(".fileLink").on("click",function(e){
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = e.name;
+                    });      
+                   $('.fileLink').click(function(e) {
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = e.name;
+                    });
+                    $(document).on("click",".fileLink",function(e){
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = $(this).attr("name");
+                    });
+                
                 });
-            
+ 
             </script>
             <div id="contentcomment"></div>
-                     </div>
-            </div>
+             </div>
+        </div>
             
             
              

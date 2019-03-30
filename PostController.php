@@ -22,9 +22,9 @@ switch($method){
         break;
     case "deletPost":
         break;
-    /*case "getPost":
+    case "getPost":
         getPost();
-        break;*/
+        break;
     case "fetchPostForEdit":
         fetchPostForEdit();
         break;
@@ -33,6 +33,15 @@ switch($method){
         break;
     case "postDeadlineDate":
         postDeadlineDate();
+        break;
+    case "deleteFile":
+        deleteAttachement();
+        break;
+    case "deleteFileRecord":
+        deleteFileRecordOnly();
+        break;
+    case "getFiles":
+        getFiles();
         break;
     
 }
@@ -96,7 +105,7 @@ function addPost(){
             if($uploaded["uploaded"] == true){
               /*  $return = array("created"=> true,
                                "postId"=>$postId);*/
-                $dbUpdate = addDocument($files["name"], $uploaded["savedName"], "/attachments2/" ,$postId);
+                $dbUpdate = addDocument($files["name"], $uploaded["savedName"], "attachments2/" ,$postId);
                 if($dbUpdate["updated"]==  true){
                     $return = array("created"=>true,
                                    "postId"=>$postId);
@@ -186,7 +195,35 @@ function getPost(){
     }
     echo json_encode($return);
 }*/
-      
+
+function getPost(){
+    $postId = $_POST["postId"];
+    unset($_POST["postId"]);
+    
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("post"=>false,
+                              "message"=>"A post id must be given"));
+        die();
+    }
+    $return = array();
+    $post = getSinglePost($postId);
+    if($post["post"] === false){
+        http_response_code(500);
+        $return = array("post"=>false,
+                       "message"=>$post["message"]);
+    }
+    else if ($post["post"] === 0){
+        http_response_code(404);
+        $return = array("post"=>false,
+                       "message"=>"Unable to find post");
+    }
+    else{
+        $return = array("post"=>$post["post"]);
+    }
+    echo json_encode($return);
+    
+}
 
 
 function fetchPostForEdit(){
@@ -282,9 +319,49 @@ function listPosts(){
     }
     else{
         //echo json_encode($posts);
-        $returnPosts = paginateResults($posts["results"]);
+        $ratings = listPostRatings($userId);
+        $return = $ratings;
+        $postsWithoutRatings = $posts["results"];
+        //$return = $postsWithoutRatings;
+        $postsWithRatings = array();
+        if($ratings["results"] === false){
+            //error return some kind of data error
+            $return = array ("results"=>false);
+        }else if ($ratings["results"]=== 0){
+            // return all posts with no raitings
+            foreach ($postsWithoutRatings as $post){
+                $post["post_rating_id"] = null;
+                $post["positive"] = null;
+                $post["negative"] = null;
+                array_push($postsWithRatings, $post);
+             }
+            $returnPosts = paginateResults($postsWithRatings);
+            $return = array("results" => $returnPosts,
+                           "pageCount"=>sizeof($returnPosts));
+        }else{
+            //make sure posts and raitings are joined;
+            $postRatings = $ratings["results"];
+            foreach ($postsWithoutRatings as $post){
+                $post["post_rating_id"] = null;
+                $post["positive"] = null;
+                $post["negative"] = null;
+                foreach($postRatings as $rating){
+                    if($rating["post_id"] == $post["post_id"]){
+                        $post["post_rating_id"] = $rating["post_rating_id"];
+                        $post["positive"] = $rating["positive"];
+                        $post["negative"] = $rating["negative"];
+                    }
+                }
+                 array_push($postsWithRatings, $post);
+            }
+            $returnPosts = paginateResults($postsWithRatings);
+            $return = array("results" => $returnPosts,
+                           "pageCount"=>sizeof($returnPosts));
+            
+        }
+        /*$returnPosts = paginateResults($posts["results"]);
         $return = array("results"=>$returnPosts,
-                       "pageCount"=>sizeof($returnPosts));
+                       "pageCount"=>sizeof($returnPosts));*/
     }
     echo json_encode($return);
     
@@ -301,6 +378,108 @@ function postDeadlineDate(){
     setCookie('Deadline', $dateUnix);
     setCookie('Deadline2', $thisMonthUnix);
     setCookie('Deadline3', $firstMonthUnix);
+    
+}
+
+function downloadPost(){
+    
+    
+}
+
+function deleteAttachement(){
+    $fileId = $_POST["fileId"];
+    unset ($_POST["fileId"]);
+    $return = array();
+    if($fileId == null){
+        http_response_code(400);
+        $return = array ("deleted"=> false,
+                        "message"=> "A file ID must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $file = getFileDetails($fileId);
+    $fileResults = $file["files"];
+    //echo json_encode($fileResults);
+    if($fileResults === 0){
+        http_response_code (500);
+        $return = array("deleted"=>false,
+                       "message"=>"Unable to find file with an id of ".$fileId);
+        echo json_encode($return);
+        die();
+    }else if($fileResults === false){
+        http_response_code(500);
+         $return = array("deleted"=>false,
+                       "message"=>"Error collecting file information");
+         echo json_encode($return);
+        die();
+    }
+    else {
+        $fileName = $fileResults[0]["location"].$fileResults[0]["saved_name"];
+       if(unlink($fileName)){
+            $return = array("deleted"=>true);
+            $deletedFile = deleteFileRecord($fileId);
+            if($deletedFile["deleted"] === true){
+                $return = array("deleted"=>true);
+            }else{
+                $return = array("deleted"=>true,
+                           "message"=> "record of file still exists and must be deleted");
+        }
+        }else{
+            $return = array("deleted"=>false);
+        }
+             
+    }
+        echo json_encode($return);
+    
+}
+
+function deleteFileRecordOnly(){
+    $fileId = $_POST["fileId"];
+    unset ($_POST["fileId"]);
+    $return = array();
+    if($fileId == null){
+        http_response_code(400);
+        $return = array ("deleted"=> false,
+                        "message"=> "A file ID must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $deletedFile = deleteFileRecord($fileId);
+    if($deletedFile["deleted"] === true){
+        $return = array("deleted"=>true);
+    }else{
+        $return = array("deleted"=>false,
+               "message"=> "record could not be deleted");
+        
+    }
+     echo json_encode($return);
+}
+
+function getFiles(){
+     $postId = $_POST["postId"];
+    unset($_POST["postId"]);
+    
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("files"=>false,
+                              "message"=>"A post id must be given"));
+        die();
+    }
+    $return = array();
+    $file = getPostFiles($postId);
+    if($file["files"] === false){
+        http_response_code(500);
+        $return = array("files"=>false,
+                       "message"=>$file["message"]);
+    }
+    else if ($file["files"] === 0){
+        $return = array("files"=>false,
+                       "message"=>"Unable to find post");
+    }
+    else{
+        $return = array("files"=>$file["files"]);
+    }
+    echo json_encode($return);
     
 }
 

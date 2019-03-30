@@ -202,6 +202,51 @@ function getPostPoints($postId){
     
 }
 
+
+function getSinglePost($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("post"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select p.name, p.description, p.post_date, p.points, if(p.post_anon = 1,'Anon',u.username) as 'username', c.name  from post p join site_user u on u.user_id = p.user_id join category c on c.category_id = p.category_id where post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $posts = array();
+                    mysqli_stmt_bind_result($stmt, $nameOut, $descOut, $date, $points, $username, $cname);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $post = array("name"=>$nameOut,
+                                     "description"=>$descOut,
+                                     "post_date"=>$date,
+                                     "points"=>$points,
+                                     "username"=>$username,
+                                     "category"=>$cname);
+                        array_push($posts, $post);
+                    }
+                  //  var_dump($users);
+                    if (count($posts) === 0){
+                        $return = array("post"=>0);
+                    }else{
+                        $return = array("post"=>$posts);
+                    }
+                }else{
+                    $return = array("post"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
 function listPostsWithUserId($userId, $sorting, $time, $category){
     $return = "";
     $cat = null;
@@ -221,21 +266,24 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
             }
             
         }
-        
-        
-        $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username', if(pr.user_id = ?, pr.post_rating_id ,null) as 'post_rating_id', if(pr.user_id = ?, pr.positive , null ) as 'positive', if(pr.user_id = ?, pr.negative, null) as 'negative' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id left outer join post_rating pr on pr.post_id = post.post_id $time $cat order by $sorting";
+        $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id $time $cat order by $sorting";//
         //echo "query = $sql <br>";
         //$result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
-         if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "iii", $userIdIn1, $userIdIn2, $userIdIn3);
+/*            mysqli_stmt_bind_param($stmt, "iii", $userIdIn1, $userIdIn2, $userIdIn3);
             $userIdIn1 = $userId;
             $userIdIn2 = $userId;
-            $userIdIn3 = $userId;
+            $userIdIn3 = $userId;*/
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
-             if(mysqli_stmt_execute($stmt)){
-                    $posts = array();
+        $result = mysqli_query($conn, $sql);
+             if(!$result){
+                      $return = array("results"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                 
+                }else{
+               /*  $posts = array();
                     mysqli_stmt_bind_result($stmt, $postId, $postName, $postDescription, $postDate, $postUserId, $postPoints, $postCategoryname, $username, $postRatingId, $positive, $negative);
                     while(mysqli_stmt_fetch($stmt)){
                         $post = array("post_id"=> $postId,
@@ -245,8 +293,57 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
                                      "user_id"=>$postUserId,
                                       "points"=>$postPoints,
                                      "category"=>$postCategoryname,
-                                     "username"=>$username,
+                                     "username"=>$username);
+                        array_push($posts, $post);
+                    }*/
+                 
+                    $posts = array(); 
+                    while($row = mysqli_fetch_assoc($result)){
+                        array_push($posts, $row);
+                    }
+                    $return = array("results"=>$posts);
+                  //  var_dump($users);
+                   /* if (sizeof($posts) === 0){
+                        $return = array("results"=>0);
+                    }else{
+                        $return = array("results"=>$posts);
+                    }*/
+                }
+            
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+}
+
+
+function listPostRatings($userId){
+     $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+
+   }else{
+        $sql = "SELECT post_rating_id, user_id, post_id, positive, negative from post_rating where user_id = ?";
+        //echo "query = $sql <br>";
+        //$result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $userIdIn);
+            $userIdIn = $userId;
+
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $posts = array();
+                    mysqli_stmt_bind_result($stmt,$postRatingId,$userIDOut, $PostID, $positive, $negative);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $post = array(
                                      "post_rating_id"=>$postRatingId,
+                                    "user_id"=>$userIDOut,
+                                    "post_id"=>$PostID,
                                      "positive"=>$positive,
                                      "negative"=>$negative);
                         array_push($posts, $post);
@@ -268,6 +365,7 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
     mysqli_close($conn);
     return $return;
 }
+
 
 function fetchPost($postId, $userId){
     $return = "";
@@ -416,9 +514,213 @@ function getFlaggedPosts(){
     
     mysqli_close($conn);
     return $return;
+}
+
+function getFileDetails($fileId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("files"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select file_id, location, post_id, saved_name, actual_name from files where file_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $fileIdIn);
+            $fileIdIn = $fileId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $files = array();
+                    mysqli_stmt_bind_result($stmt, $fileIDOut, $location, $postID, $savedName, $actualName);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $file = array("file_id"=>$fileIDOut,
+                                     "location"=>$location,
+                                     "post_id"=>$postID,
+                                     "saved_name"=>$savedName,
+                                     "actual_name"=>$actualName);
+                        array_push($files, $file);
+                    }
+                  //  var_dump($users);
+                    if (count($files) === 0){
+                        $return = array("files"=>0);
+                    }else{
+                        $return = array("files"=>$files);
+                    }
+                }else{
+                    $return = array("score"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
     
+}
+
+
+
+function getPostFiles($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("files"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select location, saved_name, actual_name from files where post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $files = array();
+                    mysqli_stmt_bind_result($stmt, $location, $saved_name, $actual_name);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $file = array("location"=>$location,
+                                     "saved_name"=>$saved_name,
+                                     "actual_name"=>$actual_name);
+                        array_push($files, $file);
+                    }
+                  //  var_dump($users);
+                    if (count(files) === 0){
+                        $return = array("files"=>0);
+                    }else{
+                        $return = array("files"=>$files);
+                    }
+                }else{
+                    $return = array("files"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
+function fetchIdeasByDept($time){
+    $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT d.name, count(p.post_id) as 'value' FROM post p JOIN site_user su on p.user_id = su.user_id JOIN department d on su.department_id = d.department_id $time GROUP BY d.name ";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['name'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+
+}
+
+function fetchIdeasByDate($time){
+    $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT FROM_UNIXTIME(`post_date`, '%D %M') as 'date', count(post_id) as 'value' FROM post $time Group by Date";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['date'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+
+}
+
+function topPosters($time){
+     $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT u.username, COUNT(p.post_id) as value FROM post p JOIN site_user u on u.user_id = p.user_id $time GROUP BY p.user_id LIMIT 5";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['username'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
+function fetchSelectedPosts($time){
+    $return = "";
+  
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+
+   }else{
+        
+        $sql = "SELECT p.name as 'Post Title',p.description as 'Description', FROM_UNIXTIME(p.post_date) as 'Date' ,p.points as 'Points', c.name as 'Category Name' , CONCAT('https://stuweb.cms.gre.ac.uk/~db1238b/EnterpriseWeb/attachments2/', f.saved_name) as 'Download File' FROM post_rating pr right JOIN site_user su on su.user_id = pr.user_id left JOIN post p ON p.post_id = pr.post_id JOIN category c on p.category_id = c.category_id left JOIN files f ON f.post_id = p.post_id WHERE su.role_id = 2 AND pr.positive = 1 $time";
+        
+        //echo "query = $sql <br>";
+        $result = mysqli_query($conn, $sql);
+             if(!$result){
+                      $return = array("results"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                 
+                }else{
+            
+                 
+                    $posts = array(); 
+                    while($row = mysqli_fetch_assoc($result)){
+                        array_push($posts, $row);
+                    }
+                    $return = array("results"=>$posts);
+                }
+            
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
     
     
 }
+
 
 ?>

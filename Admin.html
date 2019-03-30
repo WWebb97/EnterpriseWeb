@@ -61,7 +61,21 @@
                         $.each(data.results, function(i ,val) {
                             var timeStamp = new Date(val.last_login*1000);
                             var adminButton = null;
+                            var banButton = null;
                             
+                            if(val.role_id == 3){
+                                 banButton = '<button value= "RevokeBan" ID='+val.user_id+'>Unban user</button>';
+                             
+                            }else{
+                                banButton = '<button value= "Ban" ID='+val.user_id+'>Ban User</button>';  
+                            }
+
+                            if(val.role_id == 4){
+                                 suspendButton = '<button value= "RevokeSuspend" ID='+val.user_id+'>Reinstate user</button>';
+                             
+                            }else{
+                                suspendButton = '<button value= "Suspend" ID='+val.user_id+'>Suspend User</button>';  
+                            }
                             
                             if(val.role_id == 2){
                                 adminButton = '<button value= "RevokeAdmin" ID='+val.user_id+'>Revoke Admin</button>';
@@ -70,7 +84,7 @@
                                 adminButton = '<button value= "MakeAdmin" ID='+val.user_id+'>Make Admin</button>';  
                             }
 
-                            $('#users').append('<tr><td>'+val.username+'</td> <td>'+val.role_name+'</td> <td>'+timeStamp+'</td> <td>'+adminButton+'<button value="Suspend" ID='+val.user_id+' ">Suspend</button><button value="Ban" ID='+val.user_id+' ">Ban</button></td></tr>');
+                            $('#users').append('<tr><td>'+val.username+'</td> <td>'+val.role_name+'</td> <td>'+timeStamp+'</td> <td>'+adminButton+suspendButton+banButton+'</td></tr>');
                             
                         });
                             
@@ -175,7 +189,7 @@
                 
                 
                 $(document).on("click",".User button", function() {
-                     var IDValue = $(this).attr("ID");
+                     var IDValue = $(this).attr("id");
                     var buttonType = $(this).val();
                     console.log(IDValue, buttonType);
                     
@@ -200,7 +214,26 @@
                                 }
                             });
                             
-                        
+                    }else if(buttonType == 'RevokeSuspend'||buttonType == 'RevokeBan'){
+                              $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"changeRole",
+                                    userId:IDValue ,
+                                    roleId: 1
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });
+                             
                     }else if(buttonType == 'Suspend'){
                               
                         $.ajax({
@@ -208,7 +241,7 @@
                                 url: "AdminController.php",
                                 data: {
                                     method:"changeRole",
-                                    userId:IDValue ,
+                                    userId: IDValue ,
                                     roleId: 4
                                     
                                 },
@@ -223,26 +256,27 @@
                             });
                             
                         
+                        
                     }else if (buttonType == 'MakeAdmin'){
                         $.ajax({
                                 type: "POST",
                                 url: "AdminController.php",
                                 data: {
                                     method:"changeRole",
-                                    userId:IDValue ,
+                                    userId: IDValue ,
                                     roleId: 2
                                     
                                 },
                                 cache: false,
                                 dataType: 'JSON',
                                 success: function(data, status, xhttp, errorMessage) {
-
+                                    location.reload();
                                 },
                                 error: function(result) {
                                     alert('error, please contact your Administrator');
                                 }
-                            });
-                            location.reload();
+                            });       
+                        
                     }else if(buttonType == 'RevokeAdmin'){
                              $.ajax({
                                 type: "POST",
@@ -296,7 +330,10 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
-                </ul>                
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
+                </ul>         
             </div>
                 <ul class="navbar-nav">
                     <li class="nav-item">

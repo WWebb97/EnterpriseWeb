@@ -1,0 +1,456 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/tr/xhtml1/DTD/xhtml11.dtd" >
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+<head>
+    <title>Reporting</title>
+    <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
+    <meta name="Author" content="ad9047o@gre.ac.uk"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+   
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    
+    
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+    
+    <script>        
+        $(document).ready(function(){
+            console.log($.now());
+             $.ajax({
+                type: "POST",
+                url: "PostController.php",
+                data: {method:"postDeadlineDate"},
+                cache: false,
+                dataType: 'JSON',
+                success: function(data, status, xhttp, errorMessage) {
+                    
+                },
+                error: function(result) {
+                    alert('Error, please refresh the page')
+                }
+            });
+            //taken and amended from here: http://jsfiddle.net/hybrid13i/JXrwM/
+                $('button').click(function(){
+                    var time = $(this).attr("id");
+                    console.log(time);
+                    $.ajax({
+                        type: "POST",
+                        url: "ReportingController.php",
+                        data: {method:"exportValues", timing: time },
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            JSONToCSVConvertor(data.results, "Ideas_"+new Date().toISOString() , true);
+                        },
+                        error: function(result) {
+                            alert('Error, please refresh the page')
+                        }
+                    });
+
+                    
+                });
+            
+
+            
+            function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
+                //If JSONData is not an object then JSON.parse will parse the JSON string in an Object
+                var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
+
+                var CSV = '';    
+                //Set Report title in first row or line
+
+                //CSV += ReportTitle + '\r\n\n';
+
+                //This condition will generate the Label/Header
+                if (ShowLabel) {
+                    var row = "";
+
+                    //This loop will extract the label from 1st index of on array
+                    for (var index in arrData[0]) {
+
+                        //Now convert each value to string and comma-seprated
+                        row += index + ',';
+                    }
+
+                    row = row.slice(0, -1);
+
+                    //append Label row with line break
+                    CSV += row + '\r\n';
+                }
+
+                //1st loop is to extract each row
+                for (var i = 0; i < arrData.length; i++) {
+                    var row = "";
+
+                    //2nd loop will extract each column and convert it in string comma-seprated
+                    for (var index in arrData[i]) {
+                        row += '"' + arrData[i][index] + '",';
+                    }
+
+                    row.slice(0, row.length - 1);
+
+                    //add a line break after each row
+                    CSV += row + '\r\n';
+                }
+
+                if (CSV == '') {        
+                    alert("Invalid data");
+                    return;
+                }   
+
+                //Generate a file name
+                var fileName = "Export_";
+                //this will remove the blank-spaces from the title and replace it with an underscore
+                fileName += ReportTitle.replace(/ /g,"_");   
+
+                //Initialize file format you want csv or xls
+                var uri = 'data:text/csv;charset=utf-8,' + escape(CSV);
+
+                // Now the little tricky part.
+                // you can use either>> window.open(uri);
+                // but this will not work in some browsers
+                // or you will not get the correct file extension    
+
+                //this trick will generate a temp <a /> tag
+                var link = document.createElement("a");    
+                link.href = uri;
+
+                //set the visibility hidden so it will not effect on your web-layout
+                link.style = "visibility:hidden";
+                link.download = fileName + ".csv";
+
+                //this part will append the anchor tag and remove it after automatic click
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+ 
+        });
+    </script>    
+</head>
+    <body>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" href="index.html">
+                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" id="link1" href="register.html">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link2" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
+                </ul>                
+            </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" id="session"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                    </li>                    
+                </ul>
+        </nav>
+        
+        <script>
+            
+            document.addEventListener('DOMContentLoaded', function () {
+                var options = {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Number of ideas by Department'
+                    },
+                    series: [{}]
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "ReportingController.php",
+                    data: {method:"ideasNo"},
+                    //cache: false,
+                    dataType: 'JSON',
+                    success: function(data) {
+                       
+                        options.series[0].data = data;
+                        
+                        new Highcharts.Chart('Chart1', options);
+                    }
+                });
+                
+                
+                
+                $("#TimingID1").change(function(){
+                var timing = $(this).val(); 
+                    $.ajax({
+                        type: "POST",
+                        url: "ReportingController.php",
+                        data: {method:"ideasNo", timing: timing },
+                        //cache: false,
+                        dataType: 'JSON',
+                        success: function(data) {
+
+                            options.series[0].data = data;
+
+                            new Highcharts.Chart('Chart1', options);
+                        }
+                    });
+                });
+                
+                
+                
+                
+            });
+            document.addEventListener('DOMContentLoaded', function () {
+                var options = {
+                    chart: {
+                        type: 'spline'
+                    },
+                    title: {
+                        text: 'Ideas over time'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        tickInterval: 1,
+                        labels: {
+                            enabled: true,
+                            
+                        }
+                    },
+
+                    series: [{}]
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "ReportingController.php",
+                    data: {method:"ideasTime"},
+                    //cache: false,
+                    dataType: 'JSON',
+                    success: function(data) {
+                       
+                        options.series[0].data = data;
+                        options.xAxis.labels.formatter = function() { return data[this.value][0];};
+                        
+                        new Highcharts.Chart('Chart2', options);
+                    }
+                });
+
+                $("#TimingID2").change(function(){
+                var timing = $(this).val(); 
+                    $.ajax({
+                        type: "POST",
+                        url: "ReportingController.php",
+                        data: {method:"ideasTime", timing: timing },
+                        //cache: false,
+                        dataType: 'JSON',
+                        success: function(data) {
+
+                            options.series[0].data = data;
+                            options.xAxis.labels.formatter = function() { return data[this.value][0];};
+                            new Highcharts.Chart('Chart2', options);
+                        }
+                    });
+                });
+            });
+             document.addEventListener('DOMContentLoaded', function () {
+                var options = {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Top User'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        tickInterval: 1,
+                        labels: {
+                            enabled: true,
+                            
+                        }
+                    },
+
+                    series: [{}]
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "ReportingController.php",
+                    data: {method:"ideasTopUser"},
+                    //cache: false,
+                    dataType: 'JSON',
+                    success: function(data) {
+                       
+                        options.series[0].data = data;
+                        options.xAxis.labels.formatter = function() { return data[this.value][0];};
+                        
+                        new Highcharts.Chart('Chart3', options);
+                    }
+                });
+
+                $("#TimingID3").change(function(){
+                var timing = $(this).val(); 
+                    $.ajax({
+                        type: "POST",
+                        url: "ReportingController.php",
+                        data: {method:"ideasTopUser", timing: timing },
+                        //cache: false,
+                        dataType: 'JSON',
+                        success: function(data) {
+
+                            options.series[0].data = data;
+                            options.xAxis.labels.formatter = function() { return data[this.value][0];};
+                            new Highcharts.Chart('Chart3', options);
+                        }
+                    });
+                });
+            });
+        </script>
+        
+        <div class="container">
+            <br/>
+            <br/>
+            
+            <div class="jumbotron ">
+                <h2>Reporting</h2>
+                <br/>
+                <div class="row">
+                    <div class="col-2">
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><b>Ideas by department</b></a>
+                        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false"><b>Ideas over time</b></a>
+                        <a class="nav-link" id="v-pills-another-tab" data-toggle="pill" href="#v-pills-another" role="tab" aria-controls="v-pills-another" aria-selected="false"><b>Top posters</b></a>
+                    </div>
+                </div>
+
+                <div class="col-9">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                            <select name="Timing"  class="form-control" id="TimingID1" required>
+                                <option value="1">This months posts</option>
+                                <option value="2">Last months posts</option>
+                                <option value="3">All time</option>
+                            </select>
+                            <div id="Chart1" style="width:100%; height:400px;"></div></div>
+                        <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                         <select name="Timing"  class="form-control" id="TimingID2" required>
+                                <option value="1">This months posts</option>
+                                <option value="2">Last months posts</option>
+                                <option value="3">All time</option>
+                            </select>
+                            <div id="Chart2" style="width:100%; height:400px;"></div>
+                        </div>
+                         <div class="tab-pane fade" id="v-pills-another" role="tabpanel" aria-labelledby="v-pills-another-tab">
+                         <select name="Timing"  class="form-control" id="TimingID3" required>
+                                <option value="1">This months posts</option>
+                                <option value="2">Last months posts</option>
+                                <option value="3">All time</option>
+                            </select>
+                            <div id="Chart3" style="width:100%; height:400px;"></div>
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="jumbotron ">
+                <h2>Exporting</h2>
+                <br/>
+                <div class="alert alert-warning" role="alert">
+                    <b>Please note:</b>
+                    <p>Ideas for exporting are selected based on <b>Ideas that have been given a "Thumbs Up" by your <a href="Admin.html">QA Admin users</a>.</b> Please take this into consideration when exporting these posts</p>
+                    <p>This information is exported in CSV format, to allow it to be easily used with your favourite Spreadsheet program</p>
+                </div>
+                This months selected ideas <button id= 1>Export CSV</button>
+                <br/>
+                <br/>
+                Last months selected ideas <button id= 2>Export CSV</button>
+                <br/>
+                <br/>
+                All selected ideas <button id= 3>Export CSV</button>
+            </div>
+        </div>
+        <script> 
+        $(document).ready(function(){
+            
+            var timeStamp = $.cookie("timeStamp");
+            var dt = eval(timeStamp*1000);
+            var mydate = new Date(dt);
+            //var userId = $.cookie("userid");
+            var username = $.cookie("username");
+                
+           if($.cookie("loginalert")) {
+               
+               if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");                
+            }              
+           }else{               
+                if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                //alert("welcome " + username);
+                    
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome '+username+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    
+                $.cookie("loginalert", 1);
+                    
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                //alert("welcome back " + username + " last login on "+ mydate);
+                $.cookie("loginalert", 1);
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                
+            }
+ 
+           }
+
+            $("#session").text(username +" on session");
+            
+            var postDate = $.cookie("Deadline");
+            var endDate = $.cookie("Deadline2");
+            var thisDate = $.now();
+            
+            if(postDate <= thisDate || endDate >= thisDate){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
+        });
+        
+    </script>    
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+</html>

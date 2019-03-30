@@ -335,7 +335,7 @@ function changeUserRole($roleId, $userId){
                        'message' => $conn['reason']);
         return $return;
     }else{
-           $sql = "alter table site_user set role_id = ? where user_id = ?";
+           $sql = "update site_user set role_id = ? where user_id = ?";
         //echo $sql;
         if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "ii", $roleIdIn, $userIdIn);
@@ -560,6 +560,35 @@ function updateLoginTime($userId, $timestamp){
              //   echo mysqli_errno($conn);
                 $return = array(
                     "updated"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+function deleteFileRecord($fileId){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "delete from files where file_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$fileIdIn );
+            $fileIdIn = $fileId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("deleted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "deleted"=>false,
                     "message"=>mysqli_error($conn));
             }
              mysqli_stmt_close($stmt);
