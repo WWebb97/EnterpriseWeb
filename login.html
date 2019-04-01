@@ -31,6 +31,10 @@
 <!--            <p id="testingSpace">   </p> -->
             <script>
                 $(document).ready(function(){
+                    if($.cookie("username")) {
+                       window.location.href = "index.html";
+
+                    }
                      
                     $("#submitButton").click(function(){
 
@@ -44,7 +48,7 @@
                             dataType: 'JSON',
                             success: function(output) {
                                     $("#testingSpace").text("login= "+output.login+" verified = " +output.verified+ " userid =" +output.user_id);
-                                
+                                             
                             var role = output.role_id;
                             if(role == 3) {
                                     //alert('You have been banned from the site');         
@@ -97,7 +101,10 @@
                                     }
                                     
                                 }else{
-                                    alert('incorrect Login');
+                                    $('#Alerts').append('<div class="alert alert-warning" role="alert">Incorrect Login.</div>');
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 2000);
                                 }
                                 
                               }

@@ -14,6 +14,10 @@
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script>
     $(document).ready(function(){
+        if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
         var role = $.cookie("role");
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
@@ -26,6 +30,7 @@
              }
             if (role == 1){
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
             }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
@@ -67,6 +72,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
                 </ul>                
             </div>
                 <ul class="navbar-nav">
@@ -74,7 +82,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>

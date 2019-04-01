@@ -13,6 +13,10 @@
     
     <script>        
         $(document).ready(function(){
+            if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
             console.log($.now());
              $.ajax({
                 type: "POST",
@@ -65,7 +69,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>
@@ -270,7 +274,12 @@
 
                         },
                         error: function(result) {
+                            if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                            }else{
                             alert(result.message);
+                            }
                         }
             });
 
@@ -343,18 +352,16 @@
                             edit = "<br/>";
                         }
                      if(role == 4){
-                         
-//                         $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<br><div>'+view+'</div>');
                                    
                          $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<div></div><br><div></div><div>'+view+'</div><div>&#128274;</div>');
                          
                      }else{
 
-//                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
                      }
 
-//                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
-                    });
+                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                    });     
                 
             }
             
@@ -448,6 +455,7 @@
             $('#link3').addClass('disabled');
             $('#link4').prop("style", "display: none");
             $('#link5').prop("style", "display: none");
+            $('#link6').prop("style", "display: none");
                    
             $('#Alerts').append('<div class="alert alert-warning" role="alert">Your account is suspended and its been reviewed by your QA manager.</div>');
            }else if (role == 2){
@@ -490,11 +498,13 @@
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
                 
             }else{
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
             }              
            }else{                   
             
@@ -502,6 +512,7 @@
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
                 //alert("welcome " + username);
                     
                 $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome '+username+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -512,6 +523,7 @@
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
                 //alert("welcome back " + username + " last login on "+ mydate);
                 $.cookie("loginalert", 1);
                 $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');

@@ -12,6 +12,10 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script>
     $(document).ready(function(){
+        if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
         var role = $.cookie("role");
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
@@ -24,10 +28,12 @@
              }
             if (role == 1){
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
             }
             if (role == 4){
                 $('#link4').prop("style", "display: none");
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
             }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
@@ -80,7 +86,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>
@@ -132,7 +138,12 @@
                             });
                                 },
                                 error: function(result) {
-                                    alert('unsuccessful comment fetch');
+                                    if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                                    }else{
+                                            alert('unsuccessful comment fetch');
+                                    }
                                 }
                     });
                     
@@ -148,7 +159,13 @@
                             $("#postSpace").append('<p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p><p>'+val.points+'</p>');
                         },
                         error: function(result) {
-                            alert('Unable to get post information');
+                            if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                                    }else{
+                                            alert('Unable to get post information');
+                                    }
+                            
                         }
                     });
                     
@@ -176,7 +193,13 @@
                             
                         },
                         error: function(result) {
-                            alert('Unable to get files for post');
+                            if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                                    }else{
+                                            alert('Unable to get files for post');
+                                    }
+                            
                         }
                     }); 
                     $(".fileLink").on("click",function(e){

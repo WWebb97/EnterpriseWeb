@@ -42,6 +42,38 @@ function registerUser($email, $first_name, $last_name, $department_id, $password
     return $result;
 }
 
+function updatepassword($newpassword, $username){
+    
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $result = array('error' => $conn['error'],
+                       'reason' => $conn['reason'],
+                       'code' => 500);
+    }else{
+        
+        //hash password
+        $hash = md5($newpassword);
+        
+        $query = "UPDATE site_user SET user_password = '$hash' WHERE username = '$username'";
+        
+    
+        
+        // needs to be in another file whether it be in the controller or another class doesnt matter but it cant be in here the only thing in this class is things that change the database. will be done in a later release
+        
+        
+        if(mysqli_query($conn, $query)){
+            $result = 1;
+            
+        }else{
+            $result = mysqli_errno($conn);
+
+        }
+    }
+    mysqli_close($conn);
+    return $result;
+}
+
 function setVerified ($username, $verificationNo){
     $result = null;
     $conn = getConnection();

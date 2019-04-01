@@ -94,6 +94,11 @@
             <!--                <p id="testingSpace">   </p>-->
             <script>
                 $(document).ready(function() {
+                    
+                    if ($.cookie("userid")) {
+                        window.location.href = "index.html";
+                    }
+
 
                     $("#add_user").click(function() {
                         if ($('input[type="checkbox"]').prop("checked") == true) {

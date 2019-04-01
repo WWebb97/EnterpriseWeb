@@ -11,7 +11,11 @@
     <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
     <script>
-        $(document).ready(function(){   
+        $(document).ready(function(){
+            if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
             var role = $.cookie("role");
             var postDate = $.cookie("Deadline");
             var endDate = $.cookie("Deadline2");
@@ -33,6 +37,7 @@
              }
             if (role == 1){
                 $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
             }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
@@ -81,7 +86,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>
@@ -202,7 +207,12 @@
 
                     },
                     error: function(result) {
-                        alert('Something went wrong');
+                        if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                            }else{
+                                alert('Something went wrong');
+                            }
                     }
                   
                 });

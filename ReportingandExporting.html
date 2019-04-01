@@ -22,6 +22,10 @@
     
     <script>        
         $(document).ready(function(){
+            if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
             console.log($.now());
              $.ajax({
                 type: "POST",
