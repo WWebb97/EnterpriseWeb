@@ -440,11 +440,7 @@
 
             $("#session").text(username +" on session");
             
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
-            
-            if(postDate <= thisDate || endDate >= thisDate){
+            if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');

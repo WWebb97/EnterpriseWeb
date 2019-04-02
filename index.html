@@ -17,7 +17,7 @@
                window.location.href = "login.html";
 
             }
-            console.log($.now());
+            //console.log($.now());
              $.ajax({
                 type: "POST",
                 url: "PostController.php",
@@ -317,7 +317,7 @@
             
             function loadPosts(data){
                 $("#content").empty();
-                var role = $.cookie("role");                
+                var role = $.cookie("role");
                 
                  $.each(data, function(i, val){
                          var edit ="";
@@ -337,20 +337,31 @@
                          }
                          var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
-                        if(userId == val.user_id){
-                            if(val.date <= $.cookie("Deadline3")){
+                        
+                            if($.cookie("CommentLockdown") != null){
+                                if(userId == val.user_id){
+                                    edit = "This post has been locked for editing &#128274;";    
+                                }else{
+                                    edit = '';
+                                }
+                                
+                                
+                            }else if(val.post_date <= $.cookie("EditLockdown")){
                                 edit = "This post has been locked &#128274;";
                                 addcom = "";
-                            }else if(val.date <= $.cookie("Deadline")){
-                                     
-                                edit = "This post has been locked for editing &#128274;";
+                                
                             }else{
-                                edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
+                                if(userId == val.user_id){
+                                    edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
+                                }else{
+                                    edit = '';
+                                }
+                                
+                                
                             }
 
-                        }else{
-                            edit = "<br/>";
-                        }
+                       
+                            
                      if(role == 4){
                                    
                          $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<div></div><br><div></div><div>'+view+'</div><div>&#128274;</div>');
@@ -537,16 +548,19 @@
 
             $("#session").text(username +" on session");
             
-           /* var postDate = $.cookie("Deadline");
+            var postDate = $.cookie("Deadline");
             var endDate = $.cookie("Deadline2");
             var thisDate = $.now();
+
             
-            if(postDate <= thisDate || endDate >= thisDate){
+            
+            
+            if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');
                 $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }*/
+            }
         });
         
     </script>          

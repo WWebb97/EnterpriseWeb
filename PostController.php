@@ -272,10 +272,10 @@ function listPosts(){
     $sort = "";
     $time = "";
     
-    $lastMonth1Unix = date(strtotime("first day of previous month"));
-    $lastMonth2Unix = date(strtotime("last day of previous month"));
-    $thisMonth1Unix = date(strtotime("first day of this month"));
-    $thisMonth2Unix = date(strtotime("last day of this month"));
+    $lastMonth1Unix = date(strtotime("first day of previous month midnight"));
+    $lastMonth2Unix = date(strtotime("last day of previous month midnight"));
+    $thisMonth1Unix = date(strtotime("first day of this month midnight"));
+    $thisMonth2Unix = date(strtotime("last day of this month midnight"));
     
     switch($sorting){
         case 1:            
@@ -302,7 +302,7 @@ function listPosts(){
             $time = null;
             break;
         default:
-            $time = "where post.post_date BETWEEN $thisMonth1Unix AND $thisMonth2Unix"; 
+            $time = "where post.post_date BETWEEN $lastMonth2Unix AND $thisMonth2Unix"; 
     }    
     
     if($userId == null){
@@ -374,17 +374,27 @@ function listPosts(){
 }
 
 function postDeadlineDate(){
-    $thisMonthUnix = date(strtotime("last day of this month"));
-    $firstMonthUnix = date(strtotime("first day of this month"));
-    $dateUnix = date(strtotime('-7 days', $thisMonthUnix));
+    $LastOfMonth = date(strtotime("last day of this month midnight"));
+    $FirstOfMonth = date(strtotime("first day of this month midnight"));
+    $Lockdown = date(strtotime('-7 days midnight', $LastOfMonth));
     
-    echo $dateUnix;
+    echo time();
+   //setCookie('CommentLockdown', $Lockdown);
+    setCookie('EditLockdown', $FirstOfMonth);
     
-    setCookie('Deadline', $dateUnix);
-    setCookie('Deadline2', $thisMonthUnix);
-    setCookie('Deadline3', $firstMonthUnix);
+
+    if($Lockdown <= time() && $LastOfMonth >= time()){
+        setCookie('Deadline', 1);
+        setCookie('CommentLockdown', $Lockdown);
+       
+    }else{
+        setCookie('Deadline', 0);
+    }
     
+    
+    //1553817600, 1554854466
 }
+
 
 function downloadPost(){
     
@@ -487,5 +497,31 @@ function getFiles(){
     echo json_encode($return);
     
 }
+
+
+
+/*
+function flagAPost(){
+    $postId = $_POST['postId'];
+    unset($_POST['postId']);
+    $return = array();
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("Flagging"=false,
+                              "message"=>"A post id must be given"));
+        die();
+    }
+    
+    $flagging = flagPost($postId);
+    if($flagging["updated"] == true){
+        $return = $flagging;
+    }else{
+        http_response_code(400);
+        $return = $flagging;
+            
+    }
+    echo json_encode($return);
+}
+*/
 
 ?>
