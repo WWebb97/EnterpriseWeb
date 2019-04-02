@@ -35,16 +35,16 @@
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
-        
-            if(postDate <= thisDate || endDate >= thisDate){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#'); 
-                window.location.replace("index.html");
-
-            }
+//            var postDate = $.cookie("Deadline");
+//            var endDate = $.cookie("Deadline2");
+//            var thisDate = $.now();
+//        
+//            if(postDate <= thisDate || endDate >= thisDate){
+//                $('#link3').addClass('disabled');
+//                $('#link3').attr('href', '#'); 
+//                window.location.replace("index.html");
+//
+//            }
         });
 </script>
 </head>
@@ -167,10 +167,60 @@
                         url: "PostController.php",
                         data:data,
                         cache: false,
-                        dataType: 'multipart/form-data',
+                        dataType: 'JSON',
                         processData: false,
                         contentType: false,
-                        success: function(data, status, xhttp, errorMessage) {       
+                        success: function(data, status, xhttp, errorMessage) {
+                            
+//                            if (data.created == true) {
+//                             $.ajax({
+//                                        type: "POST",
+//                                        url: "EmailController.php",
+//
+//                                        data: {
+//                                            method:"uploadNotification",
+//                                            postname:$("#name").val(),
+//                                            category:$("#categoryId").val()
+//                                            
+//                                        },
+//                                        cache: false,
+//                                        dataType: 'JSON',
+//                                        success: function(data, status, xhttp, errorMessage) {
+//                                            
+////                                            if (data.sent == true) { 
+////                                            var subject = "Post with "+data.postname+" name. Has been created.";
+////                                            var message = "It has been created in "+data.category+" category.";
+////                                            var from = "From: db1238b@gre.ac.uk";
+////                                            $.ajax({
+////                                                type: "POST",
+////                                                url: "EmailController.php",
+////
+////                                                data: {
+////                                                    method:"EmailSending",
+////                                                    subject: subject,
+////                                                    message: message,
+////                                                    Sendemail: emails,
+////                                                    from : from,
+////                                                },
+////                                                cache: false,
+////                                                dataType: 'JSON',
+////                                                success: function(data, status, xhttp, errorMessage) {
+////
+////                                                    
+////                                                    
+////                                                },
+////                                                error: function(result) {
+////                                                    alert('unsuccessfull upload, Please login to use the service');
+////                                                }
+////                                            });
+////                                            }
+//                                            
+//                                        },
+//                                        error: function(result) {
+//                                            alert('unsuccessfull upload, Please login to use the service');
+//                                        }
+//                                    });
+//                            }
                         window.location.href = "index.html";
                             
                         },

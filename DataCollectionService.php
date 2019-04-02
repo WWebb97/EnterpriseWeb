@@ -49,6 +49,42 @@ function getUsers ($username, $password){
     return $return;
 }
 
+function getEmail (){
+    $return = array();
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('emails' => false,
+                   'message'=> $conn['reason']);
+   }else{
+        $sql = "SELECT s.email FROM site_user s JOIN role r  ON r.role_id = s.role_id WHERE r.role_name = 'Admin'";
+        
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt);
+            
+            //var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $emails = array();
+                mysqli_stmt_bind_result($stmt, $email);
+                while(mysqli_stmt_fetch($stmt)){
+                    $email = array("email"=>$email);
+                    array_push($emails, $email);
+                }
+              //  var_dump($users);
+                if (count($emails) === 0){
+                    $return = array('emails' => 0);
+                }else{
+                    $return = array('emails' => $emails);
+                }
+            }else{
+                $return = array('emails' => "error");
+            }
+        }
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
 function GetDepartmentID($department){
      //connect to db
     $result = null;
@@ -96,6 +132,28 @@ function getCategories(){
     
     mysqli_close($conn);
     return $return;
+    
+    
+}
+function getCategoryName($category){
+    $conn = getConnection();
+    if(is_array($conn)){
+       $result = array('error' => false,
+                   'message'=> $conn['reason']);
+   }else{
+        $sql = "SELECT name FROM category WHERE category_id = $category";
+        $result = mysqli_query($conn, $sql);
+        if(!$result){
+          $return = false;
+            return $return;
+        }
+        $categories = array();
+      while($row = mysqli_fetch_assoc($result)){
+                array_push($categories, $row);
+            }
+    }
+    mysqli_close($conn);
+    return $categories;
     
     
 }

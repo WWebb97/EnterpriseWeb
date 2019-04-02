@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require "DataCollectionService.php";
 require "DataActionService.php";
+require "EmailController.php";
 require "Utilities.php";
 header('Content-Type: application/json');
 $errorCode = null;
@@ -121,12 +122,16 @@ function addPost(){
         }else{
               $return = array ("created"=>true,
                         "postId"=>$postId);
+            
+                
+                
         }
 
     }else{
           http_response_code(500);
           $return = array ("created"=>$post["created"],
                         "message"=>$post["message"]);
+        
 
         
     }
