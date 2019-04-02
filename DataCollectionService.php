@@ -584,7 +584,7 @@ function getPostFiles($postId){
                         array_push($files, $file);
                     }
                   //  var_dump($users);
-                    if (count(files) === 0){
+                    if (count($files) === 0){
                         $return = array("files"=>0);
                     }else{
                         $return = array("files"=>$files);

@@ -83,8 +83,9 @@
     <div class="headerideas">
         <h2>Edit an idea</h2>
     </div>
-    <form>
+    
         <div class="contentideas">
+            <form>
             <div class="input-group">
                 <label>Title</label>
                 <input type="text" id="name" required>
@@ -132,14 +133,19 @@
                 <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
                 <input id="description" cols="80" rows="5" />
             </div>
-            <input type="file" name="fileUpload" id="fileUpload">
             <div class="input-group">
                 <button type="button" id="submitIdea" class="refresh btneditpost">Edit your Idea</button>
 
             </div>
+          
             <!--        <p id="testingSpace">   </p>-->
+            </form>
+            <button class="btn" class="DeletePostBTN" id="deletePost">Delete Post</button>
         </div>
-    </form>
+
+    <div class="jumbotron" id="filesJumbo">
+        <h2>Files</h2> 
+    </div>
     <script type="text/javascript">
         $(document).ready(function() {
             
@@ -237,6 +243,10 @@
                         alert('Something went wrong editing your idea');
                     }
                 });
+            });
+            
+            $("#deletePost").click(function(){
+                alert("does this button actually work");
             });
         });
     </script>

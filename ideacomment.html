@@ -149,11 +149,10 @@
                         dataType: 'JSON',
                         success: function(data, status, xhttp, errorMessage) {
                             var files = data["files"];
-                            if (files === 0){
+                            if (files === false){
                                 $("#files").empty();
-                            }else if(files === null){
-                                $("#files").empty();
-                            }else {
+                            }
+                            else {
                                 $.each(files, function(i, val){
                                 $("#filesJumbo").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
                                 

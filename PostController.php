@@ -43,6 +43,9 @@ switch($method){
     case "getFiles":
         getFiles();
         break;
+    case "deletePost":
+        deletePost();
+        break;
     
 }
 
@@ -172,7 +175,27 @@ function editPost(){
 }
        
        
-function deletePost(){};
+function deletePost(){
+    $postID = $_POST["postId"];
+    unset($_POST["postId"]);
+    if($postID == null){
+        http_response_code(400);
+        $return = array("delete"=>false,
+                       "message"=>"postId must be given");
+        echo json_encode($return);
+        die();
+    }
+    $return = array();
+    $delete = deletePostWithId($postId);
+    if($delte){
+        $fileDelte = 
+    }else{
+        $return = array("delete"=>false,
+                       "message"=>"unable to delete post from the database");
+    } 
+    
+    
+}
 /*
 function getPost(){
     

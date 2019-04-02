@@ -96,7 +96,7 @@
                                         method:"categories",
                                     },
                                     cache: false,
-                                    dataType: 'JSON',
+                                    dataType: 'json',
                                     success: function(data, status, xhttp, errorMessage) {
                                            $('#category').append('<select name="category" id="categoryId" required>');
                                            $('#categoryId').append('<option>Select Option</option>');
@@ -106,7 +106,8 @@
                                             $('#category').append('   </select>');
                                     },
                                     error: function(result) {
-                                        //alert('unsuccessfull upload');
+                                        alert('unable to get category list');
+                                        window.location.href = "index.html";
                                     }
                                 });
                            });
@@ -155,10 +156,11 @@
                         url: "PostController.php",
                         data:data,
                         cache: false,
-                        dataType: 'multipart/form-data',
+                        dataType: 'json',
                         processData: false,
                         contentType: false,
-                        success: function(data, status, xhttp, errorMessage) {       
+                        success: function(data, status, xhttp, errorMessage) {
+                            alert("post successfully created with id of " + data.postId );
                         window.location.href = "index.html";
                             
                         },

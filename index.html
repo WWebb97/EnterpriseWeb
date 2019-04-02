@@ -338,7 +338,7 @@
                             edit = "<br/>";
                         }
 
-                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
                     });
             }
             
@@ -457,7 +457,7 @@
 
             $("#session").text(username +" on session");
             
-            var postDate = $.cookie("Deadline");
+          /*  var postDate = $.cookie("Deadline");
             var endDate = $.cookie("Deadline2");
             var thisDate = $.now();
             
@@ -466,7 +466,7 @@
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');
                 $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }
+            }*/
         });
         
     </script>          
