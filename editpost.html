@@ -11,17 +11,19 @@
     <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
     <script>
-        $(document).ready(function(){   
-             
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
-            if(postDate <= thisDate || endDate >= thisDate){
+        $(document).ready(function(){
+            if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
+            var role = $.cookie("role");
+            if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');
                 $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
             }
+    
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -31,6 +33,10 @@
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
              }
+            if (role == 1){
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+            }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
@@ -68,6 +74,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
                 </ul>                
             </div>
                 <ul class="navbar-nav">
@@ -75,7 +84,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>
@@ -202,7 +211,12 @@
 
                     },
                     error: function(result) {
-                        alert('Something went wrong');
+                        if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                            }else{
+                                alert('Something went wrong');
+                            }
                     }
                   
                 });

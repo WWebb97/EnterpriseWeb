@@ -14,7 +14,12 @@
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="checkpass.js"></script>
 <script>
-    $(document).ready(function(){            
+    $(document).ready(function(){
+        if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
+        var role = $.cookie("role");
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -24,8 +29,19 @@
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
              }
+            if (role == 1){
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+            }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
+        
+         if($.cookie("Deadline") == 1){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
         });
 </script>
 </head>
@@ -53,6 +69,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
                 </ul>                
             </div>
 <!--             <div class="collapse navbar-collapse" id="collapsibleNavbar">-->
@@ -61,7 +80,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
 <!--             </div>-->
@@ -71,6 +90,7 @@
             <h2>Settings</h2>                
         </div>
         <form>
+        
         <div class="contentsettings">
 
             <div class="input-group">
@@ -78,12 +98,12 @@
             </div>
             <div class="input-group">
   		        <label>Old password</label>
-  		        <input type="text" name="username" id="username" required>
+  		        <input type="text" name="oldpassword" id="oldpassword" required>
             </div>
             <div class="fieldWrapper">
                 <div class="input-group">
                     <label>New Password</label>
-                    <input type="password" name="newpassword" id="newpassword" required>
+                    <input type="password" name="newpassword" id="password" required>
                 </div>
                 <div class="input-group">
                     <label>Confirm password</label>
@@ -95,102 +115,75 @@
   		        <button type="button"  id="submitButton" class="refresh btnsettings">Submit changes</button>                
 
             </div>
-            <!--<div class="input-group" id="category">
-  	         <label>Category</label>
-                <script>
-                       $(document).ready(function(){   
-                             $.ajax({
-                                type: "POST",
-                                url: "PostController.php",
-
-                                data: {
-                                    method:"categories",
-                                },
-                                cache: false,
-                                dataType: 'JSON',
-                                success: function(data, status, xhttp, errorMessage) {
-                                       $('#category').append('<select name="department" id="categoryId" required>');
-                                       $('#categoryId').append('<option>Select Option</option>');
-                                       $.each(data, function(i ,val) {
-                                              $('#categoryId').append('<option value='+val.category_id+'>'+val.name+'</option>');
-                                        });
-                                        $('#category').append('   </select>');
-                                },
-                                error: function(result) {
-                                    alert('unsuccessfull upload');
-                                }
-                            });
-                       });
-                
-                
-                </script>
-            </div>
-            <div class="input-group">
-  	         <label>Select to post anonymously or not</label>
-  	         <select name="anonymously" id="anon" required>
-                    <option>Select Option</option>
-                    <option value=1>Yes</option>
-                    <option value=0>No</option>                    
-             </select>
-            </div>
-            <div class="input-group">
-                <label>Write your idea here</label>
-                <textarea id="description" cols="80" rows="5"></textarea>
-                <input id="description" cols="80" rows="5"/>
-            </div>
-            <input type="file" name="fileUpload" id="fileUpload">
-            <div class="input-group">
-  		        <button type="button"  id="submitIdea" class="refresh btn">Submit Idea</button>                
-
-            </div>
--->
 <!--        <p id="testingSpace">   </p>-->
+            <div id="Alerts"></div>
         </div>
         </form>
-<!--
         <script type="text/javascript">
          $(document).ready(function(){   
-            $("#submitIdea").click(function(e) {
-                var name = $("#name").val();
-                var description = $("#description").val();
-                var categoryId = $("#categoryId").val();
-                var anon = $('#anon').val();
+            $("#submitButton").click(function(e) {
+                var username = $.cookie("username");
+                var password = $("#oldpassword").val();
+                var newpassword = $('#password').val();
                     
                 e.preventDefault();
                 
                     $.ajax({
                         type: "POST",
-                        url: "PostController.php",
+                        url: "LoginController.php",
                         
                         data: {
-                            method:"addPost",
-                            userId: $.cookie("userid"),
-                            name:name,
-                            description:description,
-                            categoryId:categoryId,
-                            anon:anon
+                            method:"login",
+                            username: username,
+                            password: password
                         },
                         cache: false,
                         dataType: 'JSON',
                         success: function(data, status, xhttp, errorMessage) {
                             
-                             $("#testingSpace").text("upload= "+status.postCreated+" errormessage = " +status.errorMessage);
+                             $("#testingSpace").text("upload= "+data.login+" errormessage = " +data.errorMessage);
                             
-                            if(status.postCreated == true){
+                            if(data.login == true){
+                                
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "UserSettingController.php",
+
+                                        data: {
+                                            method:"changepassword",
+                                            username: username,
+                                            newpassword: newpassword
+                                        },
+                                        cache: false,
+                                        dataType: 'JSON',
+                                        success: function(data, status, xhttp, errorMessage) {
+
+                                             $("#testingSpace").text("upload= "+data.passupdate+" errormessage = " +data.errorMessage);
+
+                                            if(data.passupdate == true){
+                                                $('#Alerts').append('<div class="alert alert-warning" role="alert">Your password has been successfully changed.</div>');
+                                                setTimeout(function() {
+                                                   window.location.href = "index.html";
+                                                }, 3000);
+
+                                                }
+                                        },
+                                        
+                                    });
                                     
-                                    alert('Idea successfully uploaded');                                   
-                                    window.location.href = "index.html";
+                                    
+                                }else {
+                                    $('#Alerts').append('<div class="alert alert-warning" role="alert">Your old password does not match our record. Please try again.</div>');
+                                    setTimeout(function() {
+                                        location.reload();
+                                    }, 3000);
                                 }
-                        },
-                        error: function(result) {
-                            alert('unsuccessfull upload');
-                        }
+                       },
                     });
                 });
              });
 
         </script>
--->
         <!--Bootstrap JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

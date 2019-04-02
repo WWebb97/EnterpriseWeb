@@ -13,7 +13,11 @@
     
     <script>        
         $(document).ready(function(){
-            console.log($.now());
+            if(typeof $.cookie("username") === 'undefined') {
+               window.location.href = "login.html";
+
+            }
+            //console.log($.now());
              $.ajax({
                 type: "POST",
                 url: "PostController.php",
@@ -55,6 +59,9 @@
                     <li class="nav-item">
                         <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                    </li>
                 </ul>                
             </div>
                 <ul class="navbar-nav">
@@ -62,7 +69,7 @@
                         <a class="nav-link disabled" id="session"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="link6" href="Logout.html">Logout</a>
+                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
                     </li>                    
                 </ul>
         </nav>
@@ -267,7 +274,12 @@
 
                         },
                         error: function(result) {
+                            if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                            }else{
                             alert(result.message);
+                            }
                         }
             });
 
@@ -305,6 +317,8 @@
             
             function loadPosts(data){
                 $("#content").empty();
+                var role = $.cookie("role");
+                
                  $.each(data, function(i, val){
                          var edit ="";
                         var view ="";
@@ -323,23 +337,40 @@
                          }
                          var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
-                        if(userId == val.user_id){
-                            if(val.date <= $.cookie("Deadline3")){
+                        
+                            if($.cookie("CommentLockdown") != null){
+                                if(userId == val.user_id){
+                                    edit = "This post has been locked for editing &#128274;";    
+                                }else{
+                                    edit = '';
+                                }
+                                
+                                
+                            }else if(val.post_date <= $.cookie("EditLockdown")){
                                 edit = "This post has been locked &#128274;";
                                 addcom = "";
-                            }else if(val.date <= $.cookie("Deadline")){
-                                     
-                                edit = "This post has been locked for editing &#128274;";
+                                
                             }else{
-                                edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
+                                if(userId == val.user_id){
+                                    edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
+                                }else{
+                                    edit = '';
+                                }
+                                
+                                
                             }
 
-                        }else{
-                            edit = "<br/>";
-                        }
+                       
+                            
+                     if(role == 4){
+                                   
+                         $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+'<div></div><br><div></div><div>'+view+'</div><div>&#128274;</div>');
+                         
+                     }else{
 
                        $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
                     });
+
             }
             
             function updateLocalPosts(postId, vote, score){
@@ -423,7 +454,19 @@
             var mydate = new Date(dt);
             //var userId = $.cookie("userid");
             var username = $.cookie("username");
-                
+            var role = $.cookie("role");          
+             
+               
+           if(role == 4){
+            $('#link1').prop("style", "display: none");
+            $('#link2').prop("style", "display: none");
+            $('#link3').addClass('disabled');
+            $('#link4').prop("style", "display: none");
+            $('#link5').prop("style", "display: none");
+            $('#link6').prop("style", "display: none");
+                   
+            $('#Alerts').append('<div class="alert alert-warning" role="alert">Your account is suspended and its been reviewed by your QA manager.</div>');
+           }else if (role == 2){
            if($.cookie("loginalert")) {
                
                if(timeStamp == 0 && $.cookie("username")) {
@@ -434,7 +477,8 @@
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");                
             }              
-           }else{               
+           }else{                   
+            
                 if(timeStamp == 0 && $.cookie("username")) {
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");
@@ -452,16 +496,63 @@
                 $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 
             }
+           
  
            }
+          }else{
+              if($.cookie("loginalert")) {
+               
+               if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+                
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+            }              
+           }else{                   
+            
+                if(timeStamp == 0 && $.cookie("username")) {
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+                //alert("welcome " + username);
+                    
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome '+username+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    
+                $.cookie("loginalert", 1);
+                    
+            }else{
+                $('#link1').prop("style", "display: none");
+                $('#link2').prop("style", "display: none");
+                $('#link5').prop("style", "display: none");
+                $('#link6').prop("style", "display: none");
+                //alert("welcome back " + username + " last login on "+ mydate);
+                $.cookie("loginalert", 1);
+                $('#LastLogin').append('<div class="alert alert-warning alert-dismissible fade show" role="alert">Welcome back <strong>'+username+';</strong></br> Your last login was on '+mydate+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                
+            }
+           
+ 
+           }
+              
+          }
 
             $("#session").text(username +" on session");
             
           /*  var postDate = $.cookie("Deadline");
             var endDate = $.cookie("Deadline2");
             var thisDate = $.now();
+
             
-            if(postDate <= thisDate || endDate >= thisDate){
+            
+            
+            if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');

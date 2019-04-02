@@ -49,6 +49,42 @@ function getUsers ($username, $password){
     return $return;
 }
 
+function getEmail (){
+    $return = array();
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('emails' => false,
+                   'message'=> $conn['reason']);
+   }else{
+        $sql = "SELECT s.email FROM site_user s JOIN role r  ON r.role_id = s.role_id WHERE r.role_name = 'Admin'";
+        
+        if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt);
+            
+            //var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $emails = array();
+                mysqli_stmt_bind_result($stmt, $email);
+                while(mysqli_stmt_fetch($stmt)){
+                    $email = array("email"=>$email);
+                    array_push($emails, $email);
+                }
+              //  var_dump($users);
+                if (count($emails) === 0){
+                    $return = array('emails' => 0);
+                }else{
+                    $return = array('emails' => $emails);
+                }
+            }else{
+                $return = array('emails' => "error");
+            }
+        }
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
 function GetDepartmentID($department){
      //connect to db
     $result = null;
@@ -96,6 +132,28 @@ function getCategories(){
     
     mysqli_close($conn);
     return $return;
+    
+    
+}
+function getCategoryName($category){
+    $conn = getConnection();
+    if(is_array($conn)){
+       $result = array('error' => false,
+                   'message'=> $conn['reason']);
+   }else{
+        $sql = "SELECT name FROM category WHERE category_id = $category";
+        $result = mysqli_query($conn, $sql);
+        if(!$result){
+          $return = false;
+            return $return;
+        }
+        $categories = array();
+      while($row = mysqli_fetch_assoc($result)){
+                array_push($categories, $row);
+            }
+    }
+    mysqli_close($conn);
+    return $categories;
     
     
 }
@@ -601,5 +659,126 @@ function getPostFiles($postId){
     return $return;
     
 }
+
+function fetchIdeasByDept($time){
+    $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT d.name, count(p.post_id) as 'value' FROM post p JOIN site_user su on p.user_id = su.user_id JOIN department d on su.department_id = d.department_id $time GROUP BY d.name ";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['name'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+
+}
+
+function fetchIdeasByDate($time){
+    $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT FROM_UNIXTIME(`post_date`, '%D %M') as 'date', count(post_id) as 'value' FROM post $time Group by Date";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['date'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+
+}
+
+function topPosters($time){
+     $return = "";
+    $cat = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+    }
+    
+    $sql = "SELECT u.username, COUNT(p.post_id) as value FROM post p JOIN site_user u on u.user_id = p.user_id $time GROUP BY p.user_id LIMIT 5";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $posts = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $posts[]= array($row['username'], $row['value']);
+        }
+     $return = $posts;
+    }
+    mysqli_close($conn);
+    return $return;
+}
+
+function fetchSelectedPosts($time){
+    $return = "";
+  
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
+
+   }else{
+        
+        $sql = "SELECT p.name as 'Post Title',p.description as 'Description', FROM_UNIXTIME(p.post_date) as 'Date' ,p.points as 'Points', c.name as 'Category Name' , CONCAT('https://stuweb.cms.gre.ac.uk/~db1238b/EnterpriseWeb/attachments2/', f.saved_name) as 'Download File' FROM post_rating pr right JOIN site_user su on su.user_id = pr.user_id left JOIN post p ON p.post_id = pr.post_id JOIN category c on p.category_id = c.category_id left JOIN files f ON f.post_id = p.post_id WHERE su.role_id = 2 AND pr.positive = 1 $time";
+        
+        //echo "query = $sql <br>";
+        $result = mysqli_query($conn, $sql);
+             if(!$result){
+                      $return = array("results"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                 
+                }else{
+            
+                 
+                    $posts = array(); 
+                    while($row = mysqli_fetch_assoc($result)){
+                        array_push($posts, $row);
+                    }
+                    $return = array("results"=>$posts);
+                }
+            
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+    
+}
+
 
 ?>
