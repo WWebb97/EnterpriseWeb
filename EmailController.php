@@ -68,7 +68,8 @@ function uploadNotification() {
             $return = array("sent"=>true,
                            "message"=>$message);
         }
-    echo json_encode($message);    
+    }
+     echo json_encode($message);   
 }
     
     
@@ -89,7 +90,6 @@ function uploadNotification() {
         }
     }*/
    
-}
 
 
 ?>
