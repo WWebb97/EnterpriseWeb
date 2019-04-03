@@ -175,62 +175,31 @@
                         data:data,
                         cache: false,
                         dataType: 'json',
-                        processData: false,
-                        contentType: false,
                         success: function(data, status, xhttp, errorMessage) {
                             alert("post successfully created with id of " + data.postId );
                             
-//                            if (data.created == true) {
-//                             $.ajax({
-//                                        type: "POST",
-//                                        url: "EmailController.php",
-//
-//                                        data: {
-//                                            method:"uploadNotification",
-//                                            postname:$("#name").val(),
-//                                            category:$("#categoryId").val()
-//                                            
-//                                        },
-//                                        cache: false,
-//                                        dataType: 'JSON',
-//                                        success: function(data, status, xhttp, errorMessage) {
-//                                            
-////                                            if (data.sent == true) { 
-////                                            var subject = "Post with "+data.postname+" name. Has been created.";
-////                                            var message = "It has been created in "+data.category+" category.";
-////                                            var from = "From: db1238b@gre.ac.uk";
-////                                            $.ajax({
-////                                                type: "POST",
-////                                                url: "EmailController.php",
-////
-////                                                data: {
-////                                                    method:"EmailSending",
-////                                                    subject: subject,
-////                                                    message: message,
-////                                                    Sendemail: emails,
-////                                                    from : from,
-////                                                },
-////                                                cache: false,
-////                                                dataType: 'JSON',
-////                                                success: function(data, status, xhttp, errorMessage) {
-////
-////                                                    
-////                                                    
-////                                                },
-////                                                error: function(result) {
-////                                                    alert('unsuccessfull upload, Please login to use the service');
-////                                                }
-////                                            });
-////                                            }
-//                                            
-//                                        },
-//                                        error: function(result) {
-//                                            alert('unsuccessfull upload, Please login to use the service');
-//                                        }
-//                                    });
-//                            }
-                        window.location.href = "index.html";
-                            
+                            if (data.created == true) {
+                             $.ajax({
+                                        type: "POST",
+                                        url: "EmailController.php",
+                                        data: {
+                                            method:"uploadNotification",
+                                            postName:$("#name").val(),
+                                            categoryId:$("#categoryId").val()
+                                            
+                                        },
+                                        cache: false,
+                                        dataType: 'JSON',
+                                        success: function(data, status, xhttp, errorMessage) {
+                                            //window.location.href = "index.html";
+                                            alert(data["message"]);
+                                        },
+                                        error: function(result) {
+                                            //window.location.href = "index.html";
+                                            alert(data["message"]);
+                                        }
+                                    });
+                            }
                         },
                         error: function(result) {
                             alert('unsuccessfull upload');

@@ -76,7 +76,7 @@ function getEmail (){
                     $return = array('emails' => $emails);
                 }
             }else{
-                $return = array('emails' => "error");
+                $return = array('emails' => false);
             }
         }
         mysqli_stmt_close($stmt);
@@ -137,25 +137,28 @@ function getCategories(){
 }
 function getCategoryName($category){
     $conn = getConnection();
+    $return = array();
     if(is_array($conn)){
-       $result = array('error' => false,
-                   'message'=> $conn['reason']);
-   }else{
+        $return = false;   
+    }else{
         $sql = "SELECT name FROM category WHERE category_id = $category";
         $result = mysqli_query($conn, $sql);
         if(!$result){
-          $return = false;
-            return $return;
-        }
-        $categories = array();
-      while($row = mysqli_fetch_assoc($result)){
+            $return = false;
+        }else{
+            $categories = array();
+            while($row = mysqli_fetch_assoc($result)){
                 array_push($categories, $row);
             }
+            if(count($categories) == 0){
+                $return = 0;
+            }else{
+                $return = $categories;
+            }
+        }
     }
     mysqli_close($conn);
-    return $categories;
-    
-    
+    return $return;
 }
 
 function getVerificationNo($username, $verificationCode){

@@ -125,9 +125,6 @@ function addPost(){
         }else{
               $return = array ("created"=>true,
                         "postId"=>$postId);
-            
-                
-                
         }
 
     }else{
@@ -192,8 +189,8 @@ function deletePost(){
     }
     $return = array();
     $delete = deletePostWithId($postId);
-    if($delte){
-        $fileDelte = 
+    if($delete){
+        //$fileDelte = 
     }else{
         $return = array("delete"=>false,
                        "message"=>"unable to delete post from the database");
