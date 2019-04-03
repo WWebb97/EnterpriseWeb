@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
-require "config.php";
+
 
 function paginateResults($items){
     $paginated = array();
@@ -68,13 +68,13 @@ function uploadFiles($postId, $files){
 }
 
 function sendMail($to, $subject, $message){
-    
-    $from = "From: ".$emailSender;
+    require "config.php";
+    $from = "From: ". $emailSender;
     
     if(mail($to, $subject, $message, $from)){
         return true;
     }else{
-        return false;
+        return error_get_last()["message"];
     }
 }
 

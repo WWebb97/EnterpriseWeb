@@ -146,14 +146,15 @@ function getCategoryName($category){
         if(!$result){
             $return = false;
         }else{
-            $categories = array();
-            while($row = mysqli_fetch_assoc($result)){
-                array_push($categories, $row);
-            }
-            if(count($categories) == 0){
-                $return = 0;
+            if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+                $categories = array(); 
+                while($row = mysqli_fetch_assoc($result)){
+                    array_push($categories, $row);
+                }
+                $return = $categories;  
             }else{
-                $return = $categories;
+                $return = 0;
             }
         }
     }
@@ -264,6 +265,46 @@ function getPostPoints($postId){
 }
 
 
+
+function getUserEmailFromPostId($postId){
+    $result = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array ("user"=>false,
+                        "message"=>$conn["reason"]);
+    }else{
+        $sql = "select u.email from site_user u join post p on p.user_id = u.user_id where p.post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+             if(mysqli_stmt_execute($stmt)){
+                    $users = array();
+                    mysqli_stmt_bind_result($stmt, $email);
+                    while(mysqli_stmt_fetch($stmt)){
+                        $user = array("email"=> $email);
+                        array_push($users, $user);
+                    }
+                  //  var_dump($users);
+                    if (count($users) === 0){
+                        $return = array("user"=>0);
+                    }else{
+                        $return = array("user"=>$users);
+                    }
+                }else{
+                    $return = array("user"=>false,
+                                "message"=>mysqli_error($conn)
+                            );
+                }
+            }
+            mysqli_stmt_close($stmt);
+         }
+    mysqli_close($conn);
+    return $return;
+    
+}
+
 function getSinglePost($postId){
     $result = null;
     $conn = getConnection();
@@ -315,7 +356,6 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
     if(is_array($conn)){
        $return = array('results' => $conn['error'],
                    'message'=> $conn['reason']);
-
    }else{
         if($category == 0){
             $cat = null;
@@ -325,50 +365,19 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
             }else{
                 $cat = "AND post.category_id = $category";
             }
-            
         }
         $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id $time $cat AND muted = 0 order by $sorting";//
-        //echo "query = $sql <br>";
-        //$result = mysqli_query($conn, htmlspecialchars($query));               
-       // mysqli_store_result($conn);
-/*            mysqli_stmt_bind_param($stmt, "iii", $userIdIn1, $userIdIn2, $userIdIn3);
-            $userIdIn1 = $userId;
-            $userIdIn2 = $userId;
-            $userIdIn3 = $userId;*/
-           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
-          //  var_dump($stmt);
         $result = mysqli_query($conn, $sql);
              if(!$result){
                       $return = array("results"=>false,
                                 "message"=>mysqli_error($conn)
                             );
-                 
                 }else{
-               /*  $posts = array();
-                    mysqli_stmt_bind_result($stmt, $postId, $postName, $postDescription, $postDate, $postUserId, $postPoints, $postCategoryname, $username, $postRatingId, $positive, $negative);
-                    while(mysqli_stmt_fetch($stmt)){
-                        $post = array("post_id"=> $postId,
-                                     "name"=>$postName,
-                                     "description"=> $postDescription,
-                                     "date"=>$postDate,
-                                     "user_id"=>$postUserId,
-                                      "points"=>$postPoints,
-                                     "category"=>$postCategoryname,
-                                     "username"=>$username);
-                        array_push($posts, $post);
-                    }*/
-                 
                     $posts = array(); 
                     while($row = mysqli_fetch_assoc($result)){
                         array_push($posts, $row);
                     }
                     $return = array("results"=>$posts);
-                  //  var_dump($users);
-                   /* if (sizeof($posts) === 0){
-                        $return = array("results"=>0);
-                    }else{
-                        $return = array("results"=>$posts);
-                    }*/
                 }
             
             mysqli_stmt_close($stmt);

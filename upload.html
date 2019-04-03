@@ -102,7 +102,7 @@
                                     url: "PostController.php",
 
                                     data: {
-                                        method:"categories",
+                                        method:"categories"
                                     },
                                     cache: false,
                                     dataType: 'json',
@@ -163,31 +163,36 @@
                     $.ajax({
                         type: "POST",
                         url: "PostController.php",
-                        data:data,
+                        data: data,
                         cache: false,
-                        dataType: 'json',
+                        dataType: 'JSON',
+                        processData: false,
+                        contentType: false,
                         success: function(data, status, xhttp, errorMessage) {
                             alert("post successfully created with id of " + data.postId );
-                            
+                            var name = $("#name").val();
+                            var cID = $("#categoryId").val();
+                            var postID = data.postId;
                             if (data.created == true) {
                              $.ajax({
                                         type: "POST",
                                         url: "EmailController.php",
                                         data: {
-                                            method:"uploadNotification",
-                                            postName:$("#name").val(),
-                                            categoryId:$("#categoryId").val()
+                                            method: "uploadNotification",
+                                            postName: name,
+                                            categoryId: cID,
+                                            postId: postID
                                             
                                         },
                                         cache: false,
                                         dataType: 'JSON',
                                         success: function(data, status, xhttp, errorMessage) {
-                                            //window.location.href = "index.html";
-                                            alert(data["message"]);
+                                            window.location.href = "index.html";
+                                            
                                         },
                                         error: function(result) {
-                                            //window.location.href = "index.html";
-                                            alert(data["message"]);
+                                            window.location.href = "index.html";
+                                            
                                         }
                                     });
                             }
