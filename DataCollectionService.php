@@ -324,7 +324,7 @@ function listPostsWithUserId($userId, $sorting, $time, $category){
             }
             
         }
-        $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id $time $cat order by $sorting";//
+        $sql = "SELECT post.post_id, post.name, post.description, post.post_date, post.user_id, post.points, category.name as 'category', IF(post.post_anon = 1, 'Anon', site_user.username) as 'username' FROM post JOIN site_user ON post.user_id = site_user.user_id JOIN category ON category.category_id = post.category_id $time $cat AND muted = 0 order by $sorting";//
         //echo "query = $sql <br>";
         //$result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
@@ -544,13 +544,13 @@ function getAllUsers(){
 
 
 function getFlaggedPosts(){
-     $return = "";
+    $return = "";
     $conn = getConnection();
     if(is_array($conn)){
        $return = array('results'=>false,
                        'message'=>$conn["reason"]);
    }else{
-        $query = "SELECT * FROM post where flagged = 1";
+        $query = "SELECT p.post_id, su.username, p.name as 'title', p.description, p.post_date, c.name as 'category' FROM post p JOIN site_user su ON su.user_id = p.user_id JOIN category c ON c.category_id = p.category_id where p.flagged = 1 and p.muted = 0";
         //echo "query = $query <br>";
         $result = mysqli_query($conn, htmlspecialchars($query));               
        // mysqli_store_result($conn);
