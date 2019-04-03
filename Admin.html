@@ -98,6 +98,30 @@
                         alert('error, please contact your Administrator');
                     }
                 });
+                $.ajax({
+                    type: "POST",
+                    url: "AdminController.php",
+
+                    data: {
+                        method:"flaggedPosts"
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+                      
+                        
+                        $.each(data.results, function(i ,val) {
+                            
+                            var timeStamp = new Date(val.post_date*1000);
+                            $('#posts').append('<tr><td>'+val.username+'</td> <td>'+val.title+'</td> <td>'+val.description+'</td><td>'+timeStamp+'</td> <td>'+val.category+'</td><td><button value="RemovePost" id='+val.post_id+'>Remove post</button></td></tr>');
+                            
+                        });
+                            
+                    },
+                    error: function(result) {
+                        alert('error, please contact your System Administrator');
+                    }
+                });
                 
 
             });
@@ -204,7 +228,25 @@
                                 cache: false,
                                 dataType: 'JSON',
                                 success: function(data, status, xhttp, errorMessage) {
-                                    location.reload();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "AdminController.php",
+                                        data: {
+                                            method:"mutingPosts",
+                                            userId:IDValue
+
+                                        },
+                                        cache: false,
+                                        dataType: 'JSON',
+                                        success: function(data, status, xhttp, errorMessage) {
+                                            location.reload();
+                                        },
+                                        error: function(result) {
+                                            alert('error, please contact your Administrator');
+                                        }
+                                    });
+                                    
+                                    
                                 },
                                 error: function(result) {
                                     alert('error, please contact your Administrator');
@@ -224,7 +266,30 @@
                                 cache: false,
                                 dataType: 'JSON',
                                 success: function(data, status, xhttp, errorMessage) {
-                                    location.reload();
+                                    if(buttonType == 'RevokeBan'){
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "AdminController.php",
+                                            data: {
+                                                method:"unmutingPosts",
+                                                userId:IDValue
+
+                                            },
+                                            cache: false,
+                                            dataType: 'JSON',
+                                            success: function(data, status, xhttp, errorMessage) {
+                                                location.reload();
+                                            },
+                                            error: function(result) {
+                                                alert('error, please contact your Administrator');
+                                            }
+                                        });
+                                    }else{
+                                     location.reload();    
+                                    }
+                                    
+                                    
+                                    
                                 },
                                 error: function(result) {
                                     alert('error, please contact your Administrator');
@@ -298,6 +363,46 @@
                     }
                     
                 });
+                
+                
+                $(document).on("click",".reports button", function() {
+                    var IDValue = $(this).attr("id");
+                    var buttonType = $(this).val();
+                    console.log(IDValue, buttonType);
+                    
+                    if(buttonType == 'RemovePost'){   
+                        var check =  confirm("Are you sure you want to remove this post?");
+                        if(check == true){
+                            $.ajax({
+                                type: "POST",
+                                url: "AdminController.php",
+                                data: {
+                                    method:"mutingSpecificPost",
+                                    postId: IDValue ,
+     
+                                    
+                                },
+                                cache: false,
+                                dataType: 'JSON',
+                                success: function(data, status, xhttp, errorMessage) {
+                                    location.reload();
+                                },
+                                error: function(result) {
+                                    alert('error, please contact your Administrator');
+                                }
+                            });    
+                        }else{
+                            console.log('Not removed');
+                        }
+                        
+                        
+                       
+                    }else{
+                        alert('Not hit');
+                    }
+                
+                });
+                
             
             });
             
@@ -379,13 +484,10 @@
                 
             </div>
             
-
-                        
-          
             <div class="jumbotron">
                 <h2>User Options</h2>
-                <label for='Search'>Search Users:&nbsp;</label>
-                <input type="text" id='Search'><button id=Search>Search</button>
+                <!--<label for='Search'>Search Users:&nbsp;</label>
+                <input type="text" id='Search'><button id=Search>Search</button>-->
                 
                 <div class=User>
                 <table class="table">
@@ -404,8 +506,24 @@
             
             <div class="jumbotron">  
                 <br/>    
-                <h2>Reports</h2>
+                <h2>Flagged Posts</h2>
                 <br/>  
+                <div class=reports>
+                    <table class="table">
+                        <thead>
+                            <th>Posted by</th>
+                            <th>Title</th>
+                            <th>Content</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Options</th>
+                        </thead>
+                        <tbody id=posts>
+                        
+                        </tbody>
+                    </table>
+                </div>
+                
 
             </div>
             

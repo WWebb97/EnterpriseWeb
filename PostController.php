@@ -46,6 +46,9 @@ switch($method){
     case "deletePost":
         deletePost();
         break;
+    case "flagAPost":
+        flagAPost();
+        break;
     
 }
 
@@ -517,30 +520,27 @@ function getFiles(){
     
 }
 
-
-
-/*
 function flagAPost(){
-    $postId = $_POST['postId'];
-    unset($_POST['postId']);
-    $return = array();
+    $postId = $_POST["postId"];
+    unset($_POST["postId"]);
+    
     if($postId == null){
         http_response_code(400);
-        echo json_encode(array("Flagging"=false,
+        echo json_encode(array("flagged"=> false,
                               "message"=>"A post id must be given"));
-        die();
     }
     
+    $return = array();
     $flagging = flagPost($postId);
-    if($flagging["updated"] == true){
-        $return = $flagging;
+    
+    if($flagging["flagged"] === true){
+        $return = array("flagged"=>true);
     }else{
-        http_response_code(400);
-        $return = $flagging;
-            
+        $return = array("flagged"=>false,
+                       "message"=> $flagging["message"]);
     }
     echo json_encode($return);
 }
-*/
+
 
 ?>

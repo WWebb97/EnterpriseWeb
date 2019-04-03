@@ -29,8 +29,17 @@ switch($method){
     case "createCategory":
         createCategory();
         break;
-    case "flagged":
+    case "flaggedPosts":
         flaggedPosts();
+        break;
+    case "mutingPosts":
+        mutingPosts();
+        break;
+    case "unmutingPosts":
+        unmutingPosts();
+        break;
+    case "mutingSpecificPost":
+        mutingSpecificPost();
         break;
 }
 
@@ -181,15 +190,79 @@ function createCategory(){
 function flaggedPosts(){
     $posts = getFlaggedPosts();
     $return = array();
-    if($posts["results"]== false){
+    if($posts["results"]=== false){
         http_response_code(500);
         $return = array("results"=>false,
                        "message"=>$post["message"]);
         
     }else{
-        $return = array("results"=>$post["results"]);
+        $return = $posts;
     }
     echo json_encode($return);
 }
+
+function mutingPosts(){
+    $userId = $_POST["userId"];  
+    unset($_POST["userId"]);
+
+    $return = array();
+    if($userId == null){
+        http_response_code(400);
+        echo json_encode(array("message"=>"The user id must be set."));
+        die();
+    }
+    $mutePost = mutePosts($userId);
+    if($mutePost["muted"] == true){
+        
+        $return = array("muted"=>true);
+    }else{
+        $return = array("muted"=> false,
+                       "message"=> $mutePost["message"]);
+    }
+    echo json_encode($return);
+}
+
+function unmutingPosts(){
+    $userId = $_POST["userId"];  
+    unset($_POST["userId"]);
+
+    $return = array();
+    if($userId == null){
+        http_response_code(400);
+        echo json_encode(array("message"=>"The user id must be set."));
+        die();
+    }
+    $mutePost = unmutePosts($userId);
+    if($mutePost["unmuted"] == true){
+        
+        $return = array("unmuted"=>true);
+    }else{
+        $return = array("unmuted"=> false,
+                       "message"=> $mutePost["message"]);
+    }
+    echo json_encode($return);
+}
+
+function mutingSpecificPost(){
+    $postId = $_POST["postId"];  
+    unset($_POST["postId"]);
+
+    $return = array();
+    if($postId == null){
+        http_response_code(400);
+        echo json_encode(array("message"=>"The post id must be set."));
+        die();
+    }
+    $mutePost = muteSpecificPosts($postId);
+    if($mutePost["muted"] == true){
+        
+        $return = array("muted"=>true);
+    }else{
+        $return = array("muted"=> false,
+                       "message"=> $mutePost["message"]);
+    }
+    echo json_encode($return);
+}
+
 
 ?>
