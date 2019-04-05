@@ -150,7 +150,7 @@
                  
             </form>
           </div>
-    <div class="jumbotron" id="filesJumbo">
+    <div class="jumbotron" id="files">
         <div class="container">
         <h2>Files</h2>
         <button type="button" class="refresh DeletePostBTN" id="deleteFile">Delete File</button>
@@ -280,7 +280,7 @@
                         if (data.deleted == true) {
                             $('#Alerts').append('<div class="alert alert-warning" role="alert">Your idea was deleted, this action cannot be undone!.</div>');
                             setTimeout(function() {
-                                         window.location.href = "index.html";
+//                                         window.location.href = "index.html";
                                     }, 2000);
                            
                         }
@@ -288,7 +288,7 @@
                     error: function(result) {
                         $('#Alerts').append('<div class="alert alert-warning" role="alert">Something went wrong deleting your idea</div>');
                         setTimeout(function() {
-                                        location.reload();
+//                                        location.reload();
                                     }, 2000);
                     }
                 });
@@ -339,11 +339,12 @@
                         success: function(data, status, xhttp, errorMessage) {
                             var files = data["files"];
                             if (files === false){
-                                $("#files").empty();
+                                $("#files").prop("style", "display: none");
+//                                $("#files").empty();
                             }
                             else {
                                 $.each(files, function(i, val){
-                                $("#filesJumbo").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
+                                $("#files").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
                                 var fileId = val.file_id;
                                 $.cookie("fileId", fileId);
                                 

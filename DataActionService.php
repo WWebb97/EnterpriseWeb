@@ -630,7 +630,7 @@ function deleteFileRecord($fileID){
     }
 }
 
-function deletePostWithId($postId){
+function deletePostWithId($postID){
     $return = null;
     $conn = getConnection();
     if(is_array($conn)){
