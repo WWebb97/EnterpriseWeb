@@ -10,8 +10,11 @@
     <title>Edit your Idea</title>
     <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
-    <script>
+     <script src="Report.js"></script>
+    <script>        
         $(document).ready(function(){
+           pageReporting("EditPost");
+            instanceReporting($.cookie("userid"));
             if(typeof $.cookie("username") === 'undefined') {
                window.location.href = "login.html";
 
