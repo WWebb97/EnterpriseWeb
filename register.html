@@ -11,6 +11,7 @@
     <meta name="Author" content="ad9047o@gre.ac.uk" />
     <link href="style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="checkpass.js"></script>
+    <script src="Report.js"></script>
 </head>
 
 <body class="reg">
@@ -96,7 +97,7 @@
             <!--                <p id="testingSpace">   </p>-->
             <script>
                 $(document).ready(function() {
-                    
+                     pageReporting("Index");
                     if ($.cookie("userid")) {
                         window.location.href = "index.html";
                     }

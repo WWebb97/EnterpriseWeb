@@ -795,65 +795,61 @@ function fetchSelectedPosts($time){
 
 
 function getPageReports(){
+    
     $return = "";
+    $cat = null;
     $conn = getConnection();
     if(is_array($conn)){
-       $return = array('reports'=>false,
-                       'message'=>$conn["reason"]);
-   }else{
-        $query = "SELECT page_name, view_count from page_reporting";
-        //echo "query = $query <br>";
-        $result = mysqli_query($conn, htmlspecialchars($query));               
-       // mysqli_store_result($conn);
-        if(!$result){
-           $return  = array("reports"=>false,
-                           "message"=>mysqli_error($conn));
-        }
-       if(mysqli_num_rows($result) > 0){
-            //var_dump($result);
-            $reports = array(); 
-            while($row = mysqli_fetch_assoc($result)){
-                array_push($reports, $row);
-            }
-            $return = array("reports"=>$reports);  
-        }else{
-            $return = array("reports"=>0);
-        }
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
     }
     
+    $sql = "SELECT page_name, view_count from page_reporting";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $info = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $info[]= array($row['page_name'], $row['view_count']);
+        }
+     $return = $info;
+    }
     mysqli_close($conn);
     return $return;
+    
 }
 
 function getInstanceReport(){
-        $return = "";
+    
+     $return = "";
+    $cat = null;
     $conn = getConnection();
     if(is_array($conn)){
-       $return = array('reports'=>false,
-                       'message'=>$conn["reason"]);
-   }else{
-        $query = "SELECT browser_name, view_time from page_reporting order by browser_name desc";
-        //echo "query = $query <br>";
-        $result = mysqli_query($conn, htmlspecialchars($query));               
-       // mysqli_store_result($conn);
-        if(!$result){
-           $return  = array("reports"=>false,
-                           "message"=>mysqli_error($conn));
-        }
-       if(mysqli_num_rows($result) > 0){
-            //var_dump($result);
-            $reports = array(); 
-            while($row = mysqli_fetch_assoc($result)){
-                array_push($reports, $row);
-            }
-            $return = array("reports"=>$reports);  
-        }else{
-            $return = array("reports"=>0);
-        }
+       $return = array('results' => $conn['error'],
+                   'message'=> $conn['reason']);
     }
     
+    $sql = "SELECT browser_name, count(browser_name) as frequency from reporting_instance group by browser_name order by frequency desc limit 10";
+    //echo "query = $sql <br>";
+    $result = mysqli_query($conn, $sql);
+    if(!$result){ 
+     $return = array("results"=>false,
+                "message"=>mysqli_error($conn)
+                );
+    }else{
+       $info = array(); 
+        while($row = mysqli_fetch_array($result)){
+           $info[]= array($row['browser_name'], $row['frequency']);
+        }
+     $return = $info;
+    }
     mysqli_close($conn);
     return $return;
+    
 }
 
 

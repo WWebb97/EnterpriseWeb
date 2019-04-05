@@ -30,8 +30,8 @@ switch($method){
     case "getPageReporting":
         getPageReporting();
         break;
-    case "getReportingInstace":
-        getReportingInstace();
+    case "getReportingInstance":
+        getReportingInstance();
         break;
 }
 
@@ -236,36 +236,34 @@ function logPageReporting(){
 }
 
 
-function getPageReporting(){
+function getPageReporting(){    
     $return = array();
-    $PageReports = getPageReports();
-    if($pageReports["reports"] === false){
+     $PageReports = getPageReports();
+    if($comments === 0){
+        $return = array("ideas"=>0);
+    }else if (isset($PageReports["view_count"])){
         http_response_code(500);
-        $return = array("reports"=>false,
-                       "message"=>"Unable to get Report data.");
-    }else if($pageReports["reports"]===0){
-        $return = array("reports"=>0,
-                       "message"=>"Unable to find any Reports");
+        $return = array("message"=>$PageReports["message"]);
     }else{
-        $return = array("reports"=>$pageReports["reports"]);
+        $return = $PageReports;
     }
-    echo json_encode($return);
+
+    echo json_encode($return, JSON_NUMERIC_CHECK);
 }
 
-function getReportingInstace(){
+function getReportingInstance(){
     $return = array();
-    $InstanceReports = getInstanceReports();
-    if($InstanceReports["reports"] === false){
+    $InstanceReports = getInstanceReport();
+    if($comments === 0){
+        $return = array("ideas"=>0);
+    }else if (isset($InstanceReports["frequency"])){
         http_response_code(500);
-        $return = array("reports"=>false,
-                       "message"=>"Unable to get Report data.");
-    }else if($InstanceReports["reports"] === 0){
-        $return = array("reports"=>0,
-                       "message"=>"Unable to find any Reports");
+        $return = array("message"=>$InstanceReports["message"]);
     }else{
-        $return = array("reports"=>$InstanceReports["reports"]);
+        $return = $InstanceReports;
     }
-    echo json_encode($return);
+
+    echo json_encode($return, JSON_NUMERIC_CHECK);
 }
 
 

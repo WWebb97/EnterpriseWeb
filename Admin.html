@@ -12,8 +12,11 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
         <link href="style.css" rel="stylesheet" type="text/css" />
-        <script>
-            $(document).ready(function(){
+         <script src="Report.js"></script>
+    <script>        
+        $(document).ready(function(){
+           pageReporting("Admin");
+            instanceReporting($.cookie("userid"));
                 
             if(typeof $.cookie("username") === 'undefined') {
                window.location.href = "login.html";

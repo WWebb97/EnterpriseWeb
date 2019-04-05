@@ -13,6 +13,8 @@
         <script src="jQuery_Cookie_Plugin_4.1/jquery.cookie.js"></script>
         <link href="style.css" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
+            <script src="Report.js"></script>
+
         <title>Verification</title>
     </head>
 
@@ -21,6 +23,7 @@
         <div id="Alerts"></div>
         <script type="text/javascript">
          $(document).ready(function(){
+             pageReporting("Verification");
              if(typeof $.cookie("username") === 'undefined') {
                window.location.href = "login.html";
 

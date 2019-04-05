@@ -12,8 +12,11 @@
 <script>tinymce.init({ selector:'textarea' });</script>
 <meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
-<script>
-    $(document).ready(function(){
+<script src="Report.js"></script>
+    <script>        
+        $(document).ready(function(){
+           pageReporting("Upload");
+            instanceReporting($.cookie("userid"));
         if(typeof $.cookie("username") === 'undefined') {
                window.location.href = "login.html";
 

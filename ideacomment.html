@@ -10,8 +10,11 @@
     <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
     <meta name="Author" content="ad9047o@gre.ac.uk"/>
     <link href="style.css" rel="stylesheet" type="text/css" />
-    <script>
-    $(document).ready(function(){
+     <script src="Report.js"></script>
+    <script>        
+        $(document).ready(function(){
+           pageReporting("IdeaComment");
+            instanceReporting($.cookie("userid"));
         if(typeof $.cookie("username") === 'undefined') {
                window.location.href = "login.html";
 
