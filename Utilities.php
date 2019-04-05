@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ERROR);
 
+
 function paginateResults($items){
     $paginated = array();
     $set=array();
@@ -64,8 +65,17 @@ function uploadFiles($postId, $files){
                        "message"=>"File not of a valid type");
     }
     return $return;
+}
 
-
+function sendMail($to, $subject, $message){
+    require "config.php";
+    $from = "From: ". $emailSender;
+    
+    if(mail($to, $subject, $message, $from)){
+        return true;
+    }else{
+        return error_get_last()["message"];
+    }
 }
 
 

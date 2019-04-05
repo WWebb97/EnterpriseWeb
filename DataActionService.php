@@ -629,7 +629,8 @@ function deleteFileRecord($fileID){
         return $return;
     }
 }
-function deletePostWithId($postID) {
+
+function deletePostWithId($postId){
     $return = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -659,4 +660,149 @@ function deletePostWithId($postID) {
     }
 }
 
+function flagPost($postId){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "UPDATE post SET flagged = 1 WHERE post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("flagged"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "flagged"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+function muteSpecificPosts($postId){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "UPDATE post SET muted = 1 WHERE post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("muted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "muted"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+function unmuteSpecificPosts($postId){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "UPDATE post SET muted = 0 WHERE post_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$postIdIn);
+            $postIdIn = $postId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("muted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "muted"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+
+function mutePosts($userId){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "UPDATE post SET muted = 1 WHERE user_id = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$userIdIn);
+            $userIdIn = $userId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("muted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "muted"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
+
+function unmutePosts($userId){
+    $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('deleted' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "UPDATE post SET muted = 0 WHERE user_id = ? and flagged = 0";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "i",$userIdIn);
+            $userIdIn = $userId;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("unmuted"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "unmuted"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+}
 ?>

@@ -35,22 +35,29 @@
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
-//            var postDate = $.cookie("Deadline");
-//            var endDate = $.cookie("Deadline2");
-//            var thisDate = $.now();
-//        
-//            if(postDate <= thisDate || endDate >= thisDate){
-//                $('#link3').addClass('disabled');
-//                $('#link3').attr('href', '#'); 
-//                window.location.replace("index.html");
-//
-//            }
-//             if($.cookie("Deadline") == 1){
-//                $('#link3').addClass('disabled');
-//                $('#link3').attr('href', '#');
-//                $('#link3').append('&#128274;');
-//                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-//            }
+            var postDate = $.cookie("Deadline");
+            var endDate = $.cookie("Deadline2");
+            var thisDate = $.now();
+        
+            if(postDate <= thisDate || endDate >= thisDate){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#'); 
+                window.location.replace("index.html");
+
+            }
+             if($.cookie("Deadline") == 1){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
+           
+             if($.cookie("Deadline") == 1){
+                $('#link3').addClass('disabled');
+                $('#link3').attr('href', '#');
+                $('#link3').append('&#128274;');
+                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+            }
         });
 </script>
 </head>
@@ -109,7 +116,7 @@
                                     url: "PostController.php",
 
                                     data: {
-                                        method:"categories",
+                                        method:"categories"
                                     },
                                     cache: false,
                                     dataType: 'json',
@@ -180,65 +187,39 @@
                     $.ajax({
                         type: "POST",
                         url: "PostController.php",
-                        data:data,
+                        data: data,
                         cache: false,
-                        dataType: 'json',
+                        dataType: 'JSON',
                         processData: false,
                         contentType: false,
                         success: function(data, status, xhttp, errorMessage) {
                             alert("post successfully created with id of " + data.postId );
-                            
-//                            if (data.created == true) {
-//                             $.ajax({
-//                                        type: "POST",
-//                                        url: "EmailController.php",
-//
-//                                        data: {
-//                                            method:"uploadNotification",
-//                                            postname:$("#name").val(),
-//                                            category:$("#categoryId").val()
-//                                            
-//                                        },
-//                                        cache: false,
-//                                        dataType: 'JSON',
-//                                        success: function(data, status, xhttp, errorMessage) {
-//                                            
-////                                            if (data.sent == true) { 
-////                                            var subject = "Post with "+data.postname+" name. Has been created.";
-////                                            var message = "It has been created in "+data.category+" category.";
-////                                            var from = "From: db1238b@gre.ac.uk";
-////                                            $.ajax({
-////                                                type: "POST",
-////                                                url: "EmailController.php",
-////
-////                                                data: {
-////                                                    method:"EmailSending",
-////                                                    subject: subject,
-////                                                    message: message,
-////                                                    Sendemail: emails,
-////                                                    from : from,
-////                                                },
-////                                                cache: false,
-////                                                dataType: 'JSON',
-////                                                success: function(data, status, xhttp, errorMessage) {
-////
-////                                                    
-////                                                    
-////                                                },
-////                                                error: function(result) {
-////                                                    alert('unsuccessfull upload, Please login to use the service');
-////                                                }
-////                                            });
-////                                            }
-//                                            
-//                                        },
-//                                        error: function(result) {
-//                                            alert('unsuccessfull upload, Please login to use the service');
-//                                        }
-//                                    });
-//                            }
-                        window.location.href = "index.html";
-                            
+                            var name = $("#name").val();
+                            var cID = $("#categoryId").val();
+                            var postID = data.postId;
+                            if (data.created == true) {
+                             $.ajax({
+                                        type: "POST",
+                                        url: "EmailController.php",
+                                        data: {
+                                            method: "uploadNotification",
+                                            postName: name,
+                                            categoryId: cID,
+                                            postId: postID
+                                            
+                                        },
+                                        cache: false,
+                                        dataType: 'JSON',
+                                        success: function(data, status, xhttp, errorMessage) {
+                                            window.location.href = "index.html";
+                                            
+                                        },
+                                        error: function(result) {
+                                            window.location.href = "index.html";
+                                            
+                                        }
+                                    });
+                            }
                         },
                         error: function(result) {
                             alert('unsuccessfull upload');

@@ -125,7 +125,7 @@
                         data: {
                             method:"addComment",
                             userId: $.cookie("userid"),
-                            postId:postId,
+                            postId: postId,
                             contents:contents
                         },
                         cache: false,
@@ -133,17 +133,32 @@
                         success: function(data, status, xhttp, errorMessage) {
                             
                              //$("#testingSpace").text("upload= "+data.created+"postid= "+data.postId+" errormessage = " +status.errorMessage);
-                            
-                            
-                                
+                              
                             if(data.added == true){   
                                 alert('Comment successfully uploaded'); 
-                                window.location.href = "ideacomment.html?postId="+postId;
+                                
+                                $.ajax({
+                                    type: "POST",
+                                    url: "EmailController.php",
+                                    data: {
+                                        method:"commentNotificaiton",
+                                        userId: $.cookie("userid"),
+                                        postId: postId,
+                                        username: $.cookie("username")
+                                    },
+                                    cache: false,
+                                    dataType: 'JSON',
+                                    success: function(data, status, xhttp, errorMessage) {
+                                    },
+                                    error: function(result) {}
+                                    
+                                });
+                                //window.location.href = "ideacomment.html?postId="+postId;
 
                             }
                         },
                         error: function(result) {
-                            alert('unsuccessfull upload, Please login to use the service');
+                            alert('unsuccessfull comment, Please login to use the service');
                         }
                     });
                 });

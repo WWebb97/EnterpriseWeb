@@ -98,7 +98,12 @@
                     </select>
                 </div>
             </div>
-            <div id="content"></div>
+            <div id="content">
+                <div>
+                    <button type="button" class="btn btn-default" id=ThumbsUp-+val.post_id+ name="ThumbsUp" style=float:left ><span class="fa fa-flag" name="ThumbsUp"></span></button>
+                </div>
+
+            </div>
             
             <div id="paginationControls"></div>
         </div>  
@@ -111,7 +116,7 @@
                 url: "PostController.php",
 
                 data: {
-                    method:"categories",
+                    method:"categories"
                 },
                 cache: false,
                 dataType: 'JSON',
@@ -368,7 +373,7 @@
                          
                      }else{
 
-                       $('#content').append('<div class="jumbotron"><div class="container"><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div>');
+                       $('#content').append('<div class="jumbotron"><div class="container"><button type="button" class="btn btn-default" id=flag-'+val.post_id+' name="Flag" style=float:right ><span class="fa fa-flag" name="ThumbsUp"></span></button><p>'+val.username+'</p><h1>'+val.name+'</h1><hr/><p>'+val.description+'</p><p>'+val.category+'</p>'+pointsBlock+"<div>"+thumbsUp+thumbsDown+'</div><br/><br/><div>'+edit+'</div><div>'+view+'</div><div>'+addcom+'</div></div></div>');
                     }
                  });
 
@@ -392,17 +397,23 @@
             
             $(document).on('click','#content :button',function(){
                 var Id = $(this).attr("id");
-                $(this).prop("disabled",true);
+                
+                
                 var result = Id.split("-");
                 var postId = result[1];
                 var vote = $(this).attr("name");
+                if(vote == "ThumbsUp" || vote == "ThumbsDown"){
+                    $(this).prop("disabled",true);
+                }
                 var voteVal = null;
                 if (vote == "ThumbsUp"){
                     voteVal = "positive";
                     $("#ThumbsDown-"+postId).prop("disabled", false);
-                }else{
+                }else if (vote == "ThumbsDown"){
                     voteVal = "negative";
                     $("#ThumbsUp-"+postId).prop("disabled", false);
+                }else{
+                    console.log('flagged' + vote);
                 }
                 var updated = true;
                  $.each(pages[currentPage -1], function(i,val) {
@@ -413,36 +424,60 @@
                             updated = "true";
                         }
                     }    
-                });  
-                 $.ajax({
-                    type: "POST",
-                    url: "CommentAndRatingController.php",
-                    data: {method:"vote", userId:$.cookie('userid'), postId:postId, vote:vote, update:updated},
-                    cache: false,
-                    dataType: 'JSON',
-                    success: function(data, status, xhttp, errorMessage) {
-                        /*     $("#ThumbsUp-"+postId).attr("disabled", true);
-                            $("#ThumbsDown-"+postId).attr("disabled", true);*/
-                        $.ajax({
-                           type:"POST",
-                            url:"CommentAndRatingController.php",
-                            data:{method:"points", postId:postId},
+                });
+                if(vote == "ThumbsUp" || vote == "ThumbsDown"){
+                     $.ajax({
+                        type: "POST",
+                        url: "CommentAndRatingController.php",
+                        data: {method:"vote", userId:$.cookie('userid'), postId:postId, vote:vote, update:updated},
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            /*     $("#ThumbsUp-"+postId).attr("disabled", true);
+                                $("#ThumbsDown-"+postId).attr("disabled", true);*/
+                            $.ajax({
+                               type:"POST",
+                                url:"CommentAndRatingController.php",
+                                data:{method:"points", postId:postId},
+                                cache:false,
+                                dataType: "JSON",
+                                success: function(data){
+                                    $("#points"+postId).text(data.score);
+                                    updateLocalPosts(postId, voteVal, data.score);
+                                    //what ever button is clicked need to enable the other one.
+                                },
+                                error: function(data){
+                                    alert("your vote has been counted but we are currently unable to display the new score. Please refresh the page.");
+                                }
+                            });
+                        },
+                        error: function(date){
+                               alert("Error voting on posts please try again later."); 
+                        }
+                     });
+                }else{
+                    
+                    var check = confirm("You are about to flag this post for misconduct. are you sure?");
+                    
+                    if(check == true){
+                         $.ajax({
+                            type:"POST",
+                            url:"PostController.php",
+                            data:{method:"flagAPost", postId:postId},
                             cache:false,
                             dataType: "JSON",
                             success: function(data){
-                                $("#points"+postId).text(data.score);
-                                updateLocalPosts(postId, voteVal, data.score);
-                                //what ever button is clicked need to enable the other one.
+                                alert("This post has been plagged");
                             },
                             error: function(data){
                                 alert("your vote has been counted but we are currently unable to display the new score. Please refresh the page.");
                             }
                         });
-                    },
-                    error: function(date){
-                           alert("Error voting on posts please try again later."); 
+       
+                    }else{
+                        console.log('not flagged')
                     }
-                 });
+                }
             }); 
         });
         
