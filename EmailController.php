@@ -10,7 +10,7 @@ $method = $_POST["method"];
 unset($_POST["method"]);
 switch($method){
     case "uploadNotification":
-        //uploadNotification();
+        uploadNotification();
         break;
     case "commentNotificaiton":
         commentNotificaiton();
@@ -19,7 +19,7 @@ switch($method){
     
 }
     
-/*function uploadNotification() {
+function uploadNotification() {
     $postName = $_POST["postName"];
     $categoryID = $_POST["categoryId"];
     $postId = $_POST["postId"];
@@ -85,7 +85,7 @@ switch($method){
         }
     }
      echo json_encode($return);   
-}*/
+}
     
     
 function commentNotificaiton(){
