@@ -35,22 +35,9 @@
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
         
-            if(postDate <= thisDate || endDate >= thisDate){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#'); 
-                window.location.replace("index.html");
-
-            }
-             if($.cookie("Deadline") == 1){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#');
-                $('#link3').append('&#128274;');
-                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }
+        
+            
            
              if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
@@ -58,55 +45,53 @@
                 $('#link3').append('&#128274;');
                 $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
             }
-           
-             if($.cookie("Deadline") == 1){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#');
-                $('#link3').append('&#128274;');
-                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }
->>>>>>> 979dbe671099efedbc516bb01737155a5fed5fc4
         });
 </script>
 </head>
     <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="index.html">
-                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" id="link1" href="register.html">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link2" href="login.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link4" href="settings.html">User Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
-                    </li>
-                </ul>                
-            </div>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link disabled" id="session"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
-                    </li>                    
-                </ul>
-        </nav>
+<div class="sticky-top">
+        
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+                <a class="navbar-brand" href="index.html">
+                    <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" id="link1" href="register.html">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link2" href="login.html">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                        </li>
+                    </ul>                
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link disabled" id="session"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link7" href="Logout.html">Logout</a>
+                        </li>                    
+                    </ul>
+                    </div>
+            </nav>
+            <div id="Alerts"></div>
+            <div id="LastLogin"></div>
+        </div>   
     <div class="container">
       <div class="jumbotron" id="PostUpJumbo">
             <h2>Submit an idea</h2>                
@@ -136,8 +121,10 @@
                                             });
                                             $('#category').append('   </select>');
                                     },
+                                     
                                     error: function(result) {
-                                        alert('unable to get category list');
+                                        $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                        //alert('unable to get category list');
                                         window.location.href = "index.html";
                                     }
                                 });
@@ -230,7 +217,8 @@
                             }
                         },
                         error: function(result) {
-                            alert('unsuccessfull upload');
+                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
                         }
                     });
                 });

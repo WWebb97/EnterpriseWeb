@@ -51,45 +51,49 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="index.html">
-                <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" id="link1" href="register.html">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link2" href="login.html">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link4" href="settings.html">User Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
-                    </li>
-                </ul>                
-            </div>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link disabled" id="session"></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="link7" href="Logout.html">Logout</a>
-                    </li>                    
-                </ul>
-        </nav>
+    <div class="sticky-top">
         
- <div id="Alerts"></div>
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+                <a class="navbar-brand" href="index.html">
+                    <img src="../EnterpriseWeb/images/favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" id="link1" href="register.html">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link2" href="login.html">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link3" href="upload.html">Suggest an Idea</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link4" href="settings.html">User Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link5" href="Admin.html">Admin Settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link6" href="ReportingandExporting.html">Reporting and Exporting</a>
+                        </li>
+                    </ul>                
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link disabled" id="session"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="link7" href="Logout.html">Logout</a>
+                        </li>                    
+                    </ul>
+                    </div>
+            </nav>
+            <div id="Alerts"></div>
+            <div id="LastLogin"></div>
+        </div>   
     <div class="container">
       <div class="jumbotron" id="PostJumbo">
         <h2>Edit an idea</h2>
@@ -121,7 +125,7 @@
                                 $('#category').append('   </select>');
                             },
                             error: function(result) {
-                                alert('unsuccessfull retrieval');
+                                 $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                             }
                         });
                     });
@@ -150,7 +154,7 @@
                  
             </form>
           </div>
-    <div class="jumbotron" id="files">
+    <div class="jumbotron" id="filesJumbo">
         <div class="container">
         <h2>Files</h2>
         <button type="button" class="refresh DeletePostBTN" id="deleteFile">Delete File</button>
@@ -216,7 +220,7 @@
                                
 
                             }else{
-                                alert('Something went wrong');
+                                $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                             }
                     }
                   
@@ -254,7 +258,7 @@
                         }
                     },
                     error: function(result) {
-                        alert('Something went wrong editing your idea');
+                         $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     }
                 });
             });
@@ -280,7 +284,7 @@
                         if (data.deleted == true) {
                             $('#Alerts').append('<div class="alert alert-warning" role="alert">Your idea was deleted, this action cannot be undone!.</div>');
                             setTimeout(function() {
-//                                         window.location.href = "index.html";
+                                         window.location.href = "index.html";
                                     }, 2000);
                            
                         }
@@ -288,7 +292,7 @@
                     error: function(result) {
                         $('#Alerts').append('<div class="alert alert-warning" role="alert">Something went wrong deleting your idea</div>');
                         setTimeout(function() {
-//                                        location.reload();
+                                        location.reload();
                                     }, 2000);
                     }
                 });
@@ -339,12 +343,11 @@
                         success: function(data, status, xhttp, errorMessage) {
                             var files = data["files"];
                             if (files === false){
-                                $("#files").prop("style", "display: none");
-//                                $("#files").empty();
+                                $("#files").empty();
                             }
                             else {
                                 $.each(files, function(i, val){
-                                $("#files").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
+                                $("#filesJumbo").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
                                 var fileId = val.file_id;
                                 $.cookie("fileId", fileId);
                                 
@@ -360,7 +363,7 @@
                                
 
                                     }else{
-                                            alert('Unable to get files for post');
+                                             $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error when fetching files; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                                     }
                             
                         }
