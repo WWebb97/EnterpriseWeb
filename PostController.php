@@ -21,8 +21,6 @@ switch($method){
     case "editPost":
         editPost();
         break;
-    case "deletPost":
-        break;
     case "getPost":
         getPost();
         break;
@@ -38,7 +36,7 @@ switch($method){
     case "deleteFile":
         deleteAttachement();
         break;
-    case "deleteFileRecord":
+    case "deleteFileRecordOnly":
         deleteFileRecordOnly();
         break;
     case "getFiles":
@@ -180,26 +178,51 @@ function editPost(){
 }
        
        
-function deletePost(){
+function deletePost(){ 
     $postID = $_POST["postId"];
     unset($_POST["postId"]);
+    $return = array();
     if($postID == null){
         http_response_code(400);
-        $return = array("delete"=>false,
+        $return = array("deleted"=>false,
                        "message"=>"postId must be given");
         echo json_encode($return);
         die();
     }
-    $return = array();
-    $delete = deletePostWithId($postId);
-    if($delte){
+    
+    $deleted = deletePostWithId($postID);
+    if($deleted == true){
+        $return = array("deleted"=>true,
+                       "message"=>"post delete from the database");
         //$fileDelte = 
     }else{
-        $return = array("delete"=>false,
+        $return = array("deleted"=>false,
                        "message"=>"unable to delete post from the database");
     } 
     
-    
+   echo json_encode($return); 
+}
+
+function deleteFileRecordOnly(){ 
+    $fileID = $_POST["fileId"];
+    unset ($_POST["fileId"]);
+    $return = array();
+    if($fileID == null){
+        http_response_code(400);
+        $return = array ("deleted"=> false,
+                        "message"=> "A file ID must be given.");
+        echo json_encode($return);
+        die();
+    }
+    $deletedFile = deleteFileRecord($fileID);
+    if($deletedFile["deleted"] === true){
+        $return = array("deleted"=>true);
+    }else{
+        $return = array("deleted"=>false,
+               "message"=> "record could not be deleted");
+        
+    }
+     echo json_encode($return);
 }
 /*
 function getPost(){
@@ -471,27 +494,7 @@ function deleteAttachement(){
     
 }
 
-function deleteFileRecordOnly(){
-    $fileId = $_POST["fileId"];
-    unset ($_POST["fileId"]);
-    $return = array();
-    if($fileId == null){
-        http_response_code(400);
-        $return = array ("deleted"=> false,
-                        "message"=> "A file ID must be given.");
-        echo json_encode($return);
-        die();
-    }
-    $deletedFile = deleteFileRecord($fileId);
-    if($deletedFile["deleted"] === true){
-        $return = array("deleted"=>true);
-    }else{
-        $return = array("deleted"=>false,
-               "message"=> "record could not be deleted");
-        
-    }
-     echo json_encode($return);
-}
+
 
 function getFiles(){
      $postId = $_POST["postId"];

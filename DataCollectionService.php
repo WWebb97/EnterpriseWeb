@@ -626,7 +626,7 @@ function getPostFiles($postId){
         $return = array ("files"=>false,
                         "message"=>$conn["reason"]);
     }else{
-        $sql = "select location, saved_name, actual_name from files where post_id = ?";
+        $sql = "select file_id, location, saved_name, actual_name from files where post_id = ?";
          if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, "i", $postIdIn);
             $postIdIn = $postId;
@@ -634,9 +634,10 @@ function getPostFiles($postId){
           //  var_dump($stmt);
              if(mysqli_stmt_execute($stmt)){
                     $files = array();
-                    mysqli_stmt_bind_result($stmt, $location, $saved_name, $actual_name);
+                    mysqli_stmt_bind_result($stmt, $fileIDOut, $location, $saved_name, $actual_name);
                     while(mysqli_stmt_fetch($stmt)){
-                        $file = array("location"=>$location,
+                        $file = array("file_id"=>$fileIDOut,
+                                      "location"=>$location,
                                      "saved_name"=>$saved_name,
                                      "actual_name"=>$actual_name);
                         array_push($files, $file);

@@ -88,12 +88,12 @@
                     </li>                    
                 </ul>
         </nav>
-
-    <div class="headerideas">
+        
+ <div id="Alerts"></div>
+    <div class="container">
+      <div class="jumbotron" id="PostJumbo">
         <h2>Edit an idea</h2>
-    </div>
     
-        <div class="contentideas">
             <form>
             <div class="input-group">
                 <label>Title</label>
@@ -130,11 +130,7 @@
             <div class="input-group">
                 <label>Select to post anonymously or not</label>
                 <select name="anonymously" id="anon" required>
-<!--
-                    <option>Select Option</option>
-                    <option value=1>Yes</option>
-                    <option value=0>No</option>                    
--->
+
              </select>
             </div>
             <div class="input-group">
@@ -142,18 +138,24 @@
                 <!--                <textarea id="description" cols="80" rows="5"></textarea>-->
                 <input id="description" cols="80" rows="5" />
             </div>
-            <div class="input-group">
+            <div>
                 <button type="button" id="submitIdea" class="refresh btneditpost">Edit your Idea</button>
-
+            </div>
+            <div>
+                <button type="button" class="refresh DeletePostBTN" id="deleteIdea">Delete Post</button>
+                
             </div>
           
-            <!--        <p id="testingSpace">   </p>-->
+<!--                    <p id="testingSpace">   </p>-->
+                 
             </form>
-            <button class="btn" class="DeletePostBTN" id="deletePost">Delete Post</button>
-        </div>
-
+          </div>
     <div class="jumbotron" id="filesJumbo">
-        <h2>Files</h2> 
+        <div class="container">
+        <h2>Files</h2>
+        <button type="button" class="refresh DeletePostBTN" id="deleteFile">Delete File</button>
+        </div>
+    </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -166,7 +168,6 @@
                 });
                 return vars;
             };
-                //e.preventDefault();
 
                 $.ajax({
                     type: "POST",
@@ -226,7 +227,6 @@
                 var description = $("#description").val();
                 var categoryId = $("#categoryId").val();
                 var anon = $('#anon').val();
-
                 e.preventDefault();
 
                 $.ajax({
@@ -259,9 +259,125 @@
                 });
             });
             
-            $("#deletePost").click(function(){
-                alert("does this button actually work");
+            $("#deleteIdea").click(function(e) {
+                var postID = getUrlVars()["postId"];
+                var postId = parseInt(postID);
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+
+                    data: {
+                        method: "deletePost",
+                        postId: postId
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+
+                        $("#testingSpace").text("delete idea= " + data.deleted + " errormessage = " + data.error);
+
+                        if (data.deleted == true) {
+                            $('#Alerts').append('<div class="alert alert-warning" role="alert">Your idea was deleted, this action cannot be undone!.</div>');
+                            setTimeout(function() {
+                                         window.location.href = "index.html";
+                                    }, 2000);
+                           
+                        }
+                    },
+                    error: function(result) {
+                        $('#Alerts').append('<div class="alert alert-warning" role="alert">Something went wrong deleting your idea</div>');
+                        setTimeout(function() {
+                                        location.reload();
+                                    }, 2000);
+                    }
+                });
             });
+            
+            $("#deleteFile").click(function() {
+                var FileId = $.cookie("fileId");
+                var fileId = parseInt(FileId);
+
+                $.ajax({
+                    type: "POST",
+                    url: "PostController.php",
+
+                    data: {
+                        method: "deleteFileRecordOnly",
+                        fileId: fileId
+                    },
+                    cache: false,
+                    dataType: 'JSON',
+                    success: function(data, status, xhttp, errorMessage) {
+
+                        $("#testingSpace").text("delete file= " + data.deleted + " errormessage = " + data.error);
+
+                        if (data.deleted == true) {
+                            $('#Alerts').append('<div class="alert alert-warning" role="alert">Your file was deleted, this action cannot be undone!.</div>');
+                            setTimeout(function() {
+                                        $.removeCookie("fileId");
+                                        location.reload();
+                                    }, 2000);
+                           
+                        }
+                    },
+                    error: function(result) {
+                        $('#Alerts').append('<div class="alert alert-warning" role="alert">Something went wrong deleting your file</div>');
+                        setTimeout(function() {
+                                        location.reload();
+                                    }, 2000);
+                    }
+                });
+            });
+            
+                        $.ajax({
+                        type: "POST",
+                        url: "PostController.php",
+                        data: {method:"getFiles", postId:postId},
+                        cache: false,
+                        dataType: 'JSON',
+                        success: function(data, status, xhttp, errorMessage) {
+                            var files = data["files"];
+                            if (files === false){
+                                $("#files").empty();
+                            }
+                            else {
+                                $.each(files, function(i, val){
+                                $("#filesJumbo").append("<a class='fileLink' href='#' name='"+val.location+val.saved_name+"'>"+val.actual_name+"</a><hr/>");
+                                var fileId = val.file_id;
+                                $.cookie("fileId", fileId);
+                                
+                             });
+                            }
+                       
+                            
+                                 
+                            
+                        },
+                        error: function(result) {
+                            if(typeof $.cookie("username") === 'undefined') {
+                               
+
+                                    }else{
+                                            alert('Unable to get files for post');
+                                    }
+                            
+                        }
+                    });
+                    $(".fileLink").on("click",function(e){
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = e.name;
+                    });      
+                   $('.fileLink').click(function(e) {
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = e.name;
+                    });
+                    $(document).on("click",".fileLink",function(e){
+                        e.preventDefault();  //stop the browser from following
+                        window.location.href = $(this).attr("name");
+                    });
+            
+
         });
     </script>
     <!--Bootstrap JS -->

@@ -601,7 +601,7 @@ function updateLoginTime($userId, $timestamp){
     }
 }
 
-function deleteFileRecord($fileId){
+function deleteFileRecord($fileID){
      $return = null;
     $conn = getConnection();
     if(is_array($conn)){
@@ -611,8 +611,8 @@ function deleteFileRecord($fileId){
     }else{
         $sql = "delete from files where file_id = ?";
          if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "i",$fileIdIn );
-            $fileIdIn = $fileId;
+            mysqli_stmt_bind_param($stmt, "i", $fileIdIn);
+            $fileIdIn = $fileID;
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){
@@ -629,18 +629,19 @@ function deleteFileRecord($fileId){
         return $return;
     }
 }
-function deletePostWithId($postId){
-     $return = null;
+function deletePostWithId($postID) {
+    $return = null;
     $conn = getConnection();
     if(is_array($conn)){
         $return = array('deleted' => false,
                        'message' => $conn['reason']);
         return $return;
     }else{
-        $sql = "delete from post where postId = ?";
-         if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, "i",$postIdIn);
-            $postIdIn = $postId;
+        $sql = "DELETE FROM post WHERE post_id= ?";
+         if($stmt = mysqli_prepare($conn, $sql)){            
+            mysqli_stmt_bind_param($stmt, "i", $postIdIn);
+            $postIdIn = $postID;
+            
            // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
           //  var_dump($stmt);
             if(mysqli_stmt_execute($stmt)){

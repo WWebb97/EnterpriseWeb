@@ -35,22 +35,22 @@
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
              
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
-        
-            if(postDate <= thisDate || endDate >= thisDate){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#'); 
-                window.location.replace("index.html");
-
-            }
-             if($.cookie("Deadline") == 1){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#');
-                $('#link3').append('&#128274;');
-                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }
+//            var postDate = $.cookie("Deadline");
+//            var endDate = $.cookie("Deadline2");
+//            var thisDate = $.now();
+//        
+//            if(postDate <= thisDate || endDate >= thisDate){
+//                $('#link3').addClass('disabled');
+//                $('#link3').attr('href', '#'); 
+//                window.location.replace("index.html");
+//
+//            }
+//             if($.cookie("Deadline") == 1){
+//                $('#link3').addClass('disabled');
+//                $('#link3').attr('href', '#');
+//                $('#link3').append('&#128274;');
+//                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
+//            }
         });
 </script>
 </head>
@@ -92,12 +92,10 @@
                     </li>                    
                 </ul>
         </nav>
-        
-        <div class="headerideas">
+    <div class="container">
+      <div class="jumbotron" id="PostUpJumbo">
             <h2>Submit an idea</h2>                
-        </div>
         <form>
-            <div class="contentideas">
                 <div class="input-group">
                     <label>Title</label>
                     <input type="text" id="name" name="name" required>
@@ -146,15 +144,25 @@
 <!--                    <textarea id="description" cols="80" rows="5"></textarea>-->
                     <input id="description" cols="80" rows="5" name="description"/>
                 </div>
-                <div>
-                <input type="file" class="formInput" name="files[]" id="filesIn"/>
-                </div>
-                <div class="input-group">
+                
+                
+        </form>
+        </div>
+        <div class="jumbotron" id="filesUpJumbo">
+        <div class="container">
+        <h2>Files</h2>
+            <div>
+                <input type="file" class="formInput" name="files[]" id="filesIn" />
+            </div><br/>
+            <div>
                     <button type="button"  id="submitIdea" class="refresh btnupload">Submit Idea</button>                
 
-                </div>
             </div>
-        </form>
+        </div>
+    </div>
+    </div>
+
+
         <script type="text/javascript">
          $(document).ready(function(){   
             $("#submitIdea").click(function(e) {

@@ -85,13 +85,11 @@
                 </ul>
 <!--             </div>-->
         </nav>
-        
-        <div class="headersettings">
+    <div class="container">
+      <div class="jumbotron" id="USettingJumbo">
             <h2>Settings</h2>                
-        </div>
         <form>
         
-        <div class="contentsettings">
 
             <div class="input-group">
   		        <label>Change your password</label>
@@ -111,14 +109,15 @@
                     <span id="confirmMessage" class="confirmMessage"></span>
                 </div>
             </div>
-            <div class="input-group">
+            <div>
   		        <button type="button"  id="submitButton" class="refresh btnsettings">Submit changes</button>                
 
-            </div>
 <!--        <p id="testingSpace">   </p>-->
             <div id="Alerts"></div>
         </div>
         </form>
+        </div>
+        </div>
         <script type="text/javascript">
          $(document).ready(function(){   
             $("#submitButton").click(function(e) {
