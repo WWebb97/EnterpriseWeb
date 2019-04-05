@@ -70,6 +70,7 @@
                                     $.cookie("username", username);
                                     $.cookie("role", output.role_id);
                                     $.cookie("timeStamp", output.last_login);
+                                    instanceReporting(output.user_id);
                                     
                                     
                                     if(output.verified == false){
