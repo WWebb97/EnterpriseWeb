@@ -794,4 +794,68 @@ function fetchSelectedPosts($time){
 }
 
 
+function getPageReports(){
+    $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('reports'=>false,
+                       'message'=>$conn["reason"]);
+   }else{
+        $query = "SELECT page_name, view_count from page_reporting";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = array("reports"=>false,
+                           "message"=>mysqli_error($conn));
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $reports = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($reports, $row);
+            }
+            $return = array("reports"=>$reports);  
+        }else{
+            $return = array("reports"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+}
+
+function getInstanceReport(){
+        $return = "";
+    $conn = getConnection();
+    if(is_array($conn)){
+       $return = array('reports'=>false,
+                       'message'=>$conn["reason"]);
+   }else{
+        $query = "SELECT browser_name, view_time from page_reporting order by browser_name desc";
+        //echo "query = $query <br>";
+        $result = mysqli_query($conn, htmlspecialchars($query));               
+       // mysqli_store_result($conn);
+        if(!$result){
+           $return  = array("reports"=>false,
+                           "message"=>mysqli_error($conn));
+        }
+       if(mysqli_num_rows($result) > 0){
+            //var_dump($result);
+            $reports = array(); 
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($reports, $row);
+            }
+            $return = array("reports"=>$reports);  
+        }else{
+            $return = array("reports"=>0);
+        }
+    }
+    
+    mysqli_close($conn);
+    return $return;
+}
+
+
+
 ?>

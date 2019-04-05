@@ -21,6 +21,18 @@ switch($method){
     case "exportValues":
         exportValues();
         break;
+   case "logReportingInstance":
+        logReportingInstance();
+        break;
+    case "logPageReporting":
+        logPageReporting();
+        break;
+    case "getPageReporting":
+        getPageReporting();
+        break;
+    case "getReportingInstace":
+        getReportingInstace();
+        break;
 }
 
 function ideasNo(){
@@ -175,5 +187,86 @@ function exportValues(){
 
     echo json_encode($return);
 }
+
+function logReportingInstance(){
+    $browserName = $_POST["browser"];
+    $userId = $_POST["userId"];
+    unset($_POST["browser"]);
+    unset($_POST["userId"]);
+    if($browserName == null || $userId == null){
+        http_response_code(400);
+        $return = array("logged"=>false,
+                       "message"=>"Browser name and user id must be set");
+        echo json_encode($return);
+        die();
+    }
+    $return = array();
+    $view_time = time();
+    $logged = addReportingInstance($userId, $browserName, $view_time);
+    if($logged["logged"] === true){
+        $return = array("logged"=>true);
+    }else{
+        $return = array("logged"=>false,
+                       "message"=>"Unable to log record in the database");
+        
+    }
+    echo json_encode($return);
+}
+
+function logPageReporting(){
+     $pageName = $_POST["pageName"];
+    unset($_POST["pageName"]);
+    if($pageName == null){
+        http_response_code(400);
+        $return = array("logged"=>false,
+                       "message"=>"Page Name must be given");
+        echo json_encode($return);
+        die();
+    }
+    $return = array();
+    $logged = addPageReporting($pageName);
+    if($logged["logged"] === true){
+        $return = array("logged"=>true);
+    }else{
+        $return = array("logged"=>false,
+                       "message"=>"Unable to log record in the database");
+        
+    }
+    echo json_encode($return);
+}
+
+
+function getPageReporting(){
+    $return = array();
+    $PageReports = getPageReports();
+    if($pageReports["reports"] === false){
+        http_response_code(500);
+        $return = array("reports"=>false,
+                       "message"=>"Unable to get Report data.");
+    }else if($pageReports["reports"]===0){
+        $return = array("reports"=>0,
+                       "message"=>"Unable to find any Reports");
+    }else{
+        $return = array("reports"=>$pageReports["reports"]);
+    }
+    echo json_encode($return);
+}
+
+function getReportingInstace(){
+    $return = array();
+    $InstanceReports = getInstanceReports();
+    if($InstanceReports["reports"] === false){
+        http_response_code(500);
+        $return = array("reports"=>false,
+                       "message"=>"Unable to get Report data.");
+    }else if($InstanceReports["reports"] === 0){
+        $return = array("reports"=>0,
+                       "message"=>"Unable to find any Reports");
+    }else{
+        $return = array("reports"=>$InstanceReports["reports"]);
+    }
+    echo json_encode($return);
+}
+
 
 ?>

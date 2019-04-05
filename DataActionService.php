@@ -752,7 +752,7 @@ function mutePosts($userId){
     $return = null;
     $conn = getConnection();
     if(is_array($conn)){
-        $return = array('deleted' => false,
+        $return = array('muted' => false,
                        'message' => $conn['reason']);
         return $return;
     }else{
@@ -804,5 +804,66 @@ function unmutePosts($userId){
         mysqli_close($conn);
         return $return;
     }
+}
+
+function addReportingInstance($userId, $browser, $viewTime){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('logged' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "insert into reporting_instance(browser_name, user_id, view_time) values(?,?,?)";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "sii",$browserIn,$userIdIn, $time);
+            $userIdIn = $userId;
+            $browserIn = $browser;
+             $time = $viewTime;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("logged"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "logged"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
+}
+function addPageReporting($pageName){
+     $return = null;
+    $conn = getConnection();
+    if(is_array($conn)){
+        $return = array('logged' => false,
+                       'message' => $conn['reason']);
+        return $return;
+    }else{
+        $sql = "update page_reporting set view_count = view_count + 1 where page_name = ?";
+         if($stmt = mysqli_prepare($conn, $sql)){
+            mysqli_stmt_bind_param($stmt, "s",$pageNameIn);
+            $pageNameIn = $pageName;
+           // echo "name = $nameIn, description = $descriptionIn, postAnon = $postAnon, category = $cat, user = $user, postDate = $pd";
+          //  var_dump($stmt);
+            if(mysqli_stmt_execute($stmt)){
+                $return = array("logged"=> true);
+            }else{
+             //   echo mysqli_errno($conn);
+                $return = array(
+                    "logged"=>false,
+                    "message"=>mysqli_error($conn));
+            }
+             mysqli_stmt_close($stmt);
+        }
+        mysqli_close($conn);
+        return $return;
+    }
+    
 }
 ?>
