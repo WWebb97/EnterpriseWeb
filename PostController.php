@@ -193,10 +193,7 @@ function deletePost(){
     if($deleted == true){
         $return = array("deleted"=>true,
                        "message"=>"post delete from the database");
-    $return = array();
-    $delete = deletePostWithId($postId);
-    if($delete){
-        //$fileDelte = 
+
     }else{
         $return = array("deleted"=>false,
                        "message"=>"unable to delete post from the database");
