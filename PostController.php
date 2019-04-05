@@ -188,7 +188,6 @@ function deletePost(){
         echo json_encode($return);
         die();
     }
-    
     $deleted = deletePostWithId($postID);
     if($deleted == true){
         $return = array("deleted"=>true,

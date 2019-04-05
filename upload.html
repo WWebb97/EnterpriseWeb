@@ -34,23 +34,6 @@
             }
                 var username = $.cookie("username");
                 $("#session").text(username +" on session");
-             
-            var postDate = $.cookie("Deadline");
-            var endDate = $.cookie("Deadline2");
-            var thisDate = $.now();
-        
-            if(postDate <= thisDate || endDate >= thisDate){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#'); 
-                window.location.replace("index.html");
-
-            }
-             if($.cookie("Deadline") == 1){
-                $('#link3').addClass('disabled');
-                $('#link3').attr('href', '#');
-                $('#link3').append('&#128274;');
-                $('#Alerts').append('<div class="alert alert-warning" role="alert">Its the end of the month! All this months submissions are being reviewed by your QA manager. No ideas can be submitted at this time.</div>');
-            }
            
              if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
