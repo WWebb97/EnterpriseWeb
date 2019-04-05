@@ -54,6 +54,9 @@
                                     //alert('You have been banned from the site');         
                    
                                  $('#Alerts').append('<div class="alert alert-warning" role="alert">Your account have been banned and its been reviewed by your QA manager.</div>');
+                                 setTimeout(function() {
+                                        location.reload();
+                                    }, 3000);
                                 
                             }else{
                                 
