@@ -32,9 +32,14 @@
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
              }
-            if (role == 1){
+            if (role == 1 || role == 4){
                 $('#link5').prop("style", "display: none");
                 $('#link6').prop("style", "display: none");
+            }
+            if(role ==4 ){
+                 $('#link3').addClass('disabled');
+                 $('#link3').attr('href', '#');
+                 $('#link3').append('&#128274;');
             }
                 var username = $.cookie("username");
                 $("#session").text("Logged in as "+ username);
