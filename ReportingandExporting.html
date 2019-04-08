@@ -28,6 +28,13 @@
                window.location.href = "login.html";
 
             }
+            
+            if($.cookie('role') == 2){
+
+            }else{
+                window.location.href=('index.html');
+            }
+            
             console.log($.now());
              $.ajax({
                 type: "POST",
