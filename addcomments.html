@@ -21,7 +21,10 @@
                window.location.href = "login.html";
 
             }
-        var role = $.cookie("role");
+        var role = $.cookie("role");        
+        if(role == 4){
+            window.location.href="index.html";
+        }    
         
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
@@ -37,7 +40,7 @@
                 $('#link6').prop("style", "display: none");
             }
                 var username = $.cookie("username");
-                $("#session").text(username +" on session");
+                $("#session").text("Logged in as "+ username);
              if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');

@@ -28,12 +28,10 @@
                window.location.href = "login.html";
 
             }
-            
-            if($.cookie('role') == 2){
-
-            }else{
-                window.location.href=('index.html');
-            }
+            var role = $.cookie("role");
+            if(role != 2){
+                window.location.href="index.html";
+            }  
             
             console.log($.now());
              $.ajax({
@@ -538,7 +536,7 @@
  
            }
 
-            $("#session").text(username +" on session");
+           $("#session").text("Logged in as "+ username);
             
             if($.cookie("Deadline") == 1){
                 $('#link3').addClass('disabled');

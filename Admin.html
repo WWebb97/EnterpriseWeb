@@ -22,12 +22,10 @@
                window.location.href = "login.html";
 
             }
-                
-                if($.cookie('role') == 2){
-                    
-                }else{
-                    window.location.href=('index.html');
-                }
+                var role = $.cookie("role");
+                if(role != 2){
+                    window.location.href="index.html";
+                }  
                 
                 
                  $.ajax({
@@ -460,7 +458,7 @@
         <script>
              $(document).ready(function(){                 
                  var username = $.cookie("username");
-                 $("#session").text(username +" on session");
+                 $("#session").text("Logged in as "+ username);
              if($.cookie("username")){
                 $('#link1').prop("style", "display: none");
                 $('#link2').prop("style", "display: none");

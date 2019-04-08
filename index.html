@@ -507,6 +507,8 @@
             $('#link1').prop("style", "display: none");
             $('#link2').prop("style", "display: none");
             $('#link3').addClass('disabled');
+            $('#link3').attr('href', '#');
+            $('#link3').append('&#128274;');
             $('#link4').prop("style", "display: none");
             $('#link5').prop("style", "display: none");
             $('#link6').prop("style", "display: none");
@@ -589,10 +591,9 @@
               
           }
 
-            $("#session").text(username +" on session");
+            $("#session").text("Logged in as "+ username);
             
-            
-            
+        
             
             
             if($.cookie("Deadline") == 1){
