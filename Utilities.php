@@ -24,7 +24,7 @@ function uploadFiles($postId, $files){
 //start the image upload code
     $return=array();
     $extension=array("docx", "pdf");
-    $allowedSize = 500000;
+    $allowedSize = 40000000;
     $file_name=$files["name"];
     $file_tmp=$files["tmp_name"];
     $savedName = "";

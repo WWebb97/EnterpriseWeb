@@ -10,7 +10,6 @@
 <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
 <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
 <script>tinymce.init({ selector:'textarea' });</script>
-<meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
  <script src="Report.js"></script>
     <script>        
@@ -165,13 +164,17 @@
                                     error: function(result) {}
                                     
                                 });
-                                //window.location.href = "ideacomment.html?postId="+postId;
+                                window.location.href = "ideacomment.html?postId="+postId;
 
                             }
                         },
                         error: function(result) {
-                             $('#Alerts').append('<div class="alert alert-Danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            
+                             
+                            if(result.responseText == '{"message":"Must provide a post Id, user id and contents"}'){
+                                $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Please ensure you have entered your comment<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }else{
+                                $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }
                             //alert('unsuccessfull comment, Please login to use the service');
                         }
                     });

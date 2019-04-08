@@ -8,9 +8,6 @@
 
 <title>Index</title>
 <link rel="shortcut icon" href="../EnterpriseWeb/images/favicon.ico">
-<script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=mgvk1bzzmei1kpg5zqv30qi3z8ci1pz4488fdehxo5jwr6si"></script>
-<script>tinymce.init({ selector:'textarea' });</script>
-<meta name="Author" content="ad9047o@gre.ac.uk"/>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script src="Report.js"></script>
     <script>        
@@ -45,6 +42,7 @@
             
            
              if($.cookie("Deadline") == 1){
+                 window.location.href = "index.html";
                 $('#link3').addClass('disabled');
                 $('#link3').attr('href', '#');
                 $('#link3').append('&#128274;');
@@ -98,9 +96,10 @@
             <div id="LastLogin"></div>
         </div>   
     <div class="container">
+        <form>
       <div class="jumbotron" id="PostUpJumbo">
             <h2>Submit an idea</h2>                
-        <form>
+        
                 <div class="input-group">
                     <label>Title</label>
                     <input type="text" id="name" name="name" required>
@@ -149,11 +148,11 @@
                 <div class="input-group">
                     <label>Write your idea here</label>
 <!--                    <textarea id="description" cols="80" rows="5"></textarea>-->
-                    <input id="description" cols="80" rows="5" name="description"/>
+                    <input id="description" cols="80" rows="5" name="description" required/>
                 </div>
                 
                 
-        </form>
+        
         </div>
         <div class="jumbotron" id="filesUpJumbo">
         <div class="container">
@@ -162,11 +161,12 @@
                 <input type="file" class="formInput" name="files[]" id="filesIn" />
             </div><br/>
             <div>
-                    <button type="button"  id="submitIdea" class="refresh btnupload">Submit Idea</button>                
+                    <button type="submit"  id="submitIdea" class="refresh btnupload">Submit Idea</button>                
 
             </div>
         </div>
     </div>
+          </form>
     </div>
 
 

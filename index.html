@@ -105,9 +105,7 @@
                 </div>
             </div>
             <div id="content">
-                <div>
-                    <button type="button" class="btn btn-default" id=ThumbsUp-+val.post_id+ name="ThumbsUp" style=float:left ><span class="fa fa-flag" name="ThumbsUp"></span></button>
-                </div>
+                
 
             </div>
             
@@ -145,7 +143,7 @@
     </script>
     <script>
         $(document).ready(function(){
-            
+            var currentPage = 1;
             var sorting = null;
             var timing = null;
             var category = null;
@@ -187,7 +185,7 @@
                     cache: false,
                     dataType: 'JSON',
                     success: function(data, status, xhttp, errorMessage) {
-                        
+                        currentPage = 1;
                         $("#paginationControls").empty();
                         checkButtons();
                         loadPosts(data.results[currentPage -1 ]);    
@@ -228,8 +226,9 @@
                     cache: false,
                     dataType: 'JSON',
                     success: function(data, status, xhttp, errorMessage) {
-                        
+                       currentPage = 1;
                         $("#paginationControls").empty();
+                        
                         checkButtons();
                         loadPosts(data.results[currentPage -1 ]);    
                         pages = data.results;
@@ -254,7 +253,7 @@
                 });
             });
             
-            var currentPage = 1;
+          
             var userId = $.cookie('userid');
             var pageNum = 0;
             var pages = null;
