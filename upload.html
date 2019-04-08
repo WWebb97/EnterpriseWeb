@@ -96,10 +96,10 @@
             <div id="LastLogin"></div>
         </div>   
     <div class="container">
-        <form>
       <div class="jumbotron" id="PostUpJumbo">
             <h2>Submit an idea</h2>                
-        
+                <form>
+
                 <div class="input-group">
                     <label>Title</label>
                     <input type="text" id="name" name="name" required>
@@ -127,10 +127,11 @@
                                     },
                                      
                                     error: function(result) {
-                                        $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                        //alert('unable to get category list');
-                                        window.location.href = "index.html";
-                                    }
+                                        
+                                        
+                                        }
+                                 
+                                    
                                 });
                            });
 
@@ -151,7 +152,7 @@
                     <input id="description" cols="80" rows="5" name="description" required/>
                 </div>
                 
-                
+              </form>  
         
         </div>
         <div class="jumbotron" id="filesUpJumbo">
@@ -166,7 +167,7 @@
             </div>
         </div>
     </div>
-          </form>
+          
     </div>
 
 
@@ -222,8 +223,12 @@
                             }
                         },
                         error: function(result) {
-                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            //$('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            
+                            if(result.responseText == '{"created":false,"message":"the properties of name, description, anon, categoryId and userId must be set to add a post"}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Please ensure you have entered all information<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
+                            }
                         }
                     });
                 });

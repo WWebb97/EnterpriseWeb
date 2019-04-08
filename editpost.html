@@ -52,7 +52,7 @@
             selector: 'textarea'
         });
     </script>
-    <meta name="Author" content="ad9047o@gre.ac.uk" />
+
     <link href="style.css" rel="stylesheet" type="text/css" />
 
 </head>
@@ -265,7 +265,10 @@
                         }
                     },
                     error: function(result) {
-                         $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        if(result.responseText == '{"errorCode":400,"errorMessage":"the properties of name, description, anon, categoryId and postId must be set to add a post"}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Please ensure you have entered all information<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                            }
                     }
                 });
             });

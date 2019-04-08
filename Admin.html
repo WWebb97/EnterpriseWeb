@@ -42,13 +42,18 @@
                         $.each(data, function(i ,val) {
 
 
-                            $('.CategoriesDiv').append('<input type="text" value= '+val.name+' id=Cat'+val.category_id+'><button id ='+val.category_id+' value=Update>Update</button><button id ='+val.category_id+' value=Delete>Delete</button>&nbsp;&nbsp;&nbsp;');
+                            $('.CategoriesDiv').append('<input type="text" value="'+val.name+'" id=Cat'+val.category_id+'><button id ='+val.category_id+' value=Update>Update</button><button id ='+val.category_id+' value=Delete>Delete</button>&nbsp;&nbsp;&nbsp;');
                         });
                             $('.CategoriesDiv').append('<br /> <br />');
                         $('.CategoriesDiv').append('<label for="NewCat">New category to add:&nbsp;</label><input type="text" id="NewCat"><button value=Add id="New">Add</button>');
                     },
                     error: function(result) {
-                        $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please contact your system administrator<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        console.log(result);
+                        
+                        
+                       
+                        
+                       
                     }
                 });
               
@@ -155,7 +160,12 @@
                             location.reload();  
                             },
                             error: function(result) {
-                                $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please try again later<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                if(result.responseText == '{"message":"The name of the category must be set."}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Please ensure you have entered a new category<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+                            }else{
+                                 $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Error; please contact your system administrator<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }
                             }    
                         });
                         
