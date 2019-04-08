@@ -30,6 +30,13 @@ unset($_POST['captchabox']);
 if ($captchabox == $_SESSION['random_code']){
     $result = registerUser($email, $first_name, $last_name, $departmentID, $password, $username);
     $return = null;
+    if($email==null|| $first_name==null|| $last_name==null|| $departmentID==null|| $password==null|| $username==null){
+        http_response_code(400);
+        $return = array("errorCode" => 400,
+                       "errorMessage" => "Incorrect information");
+        echo json_encode($return);
+        die();
+    }
     if($result === 1062){
         //https response code actually needs to be set see how i have done it in the login controller
         http_response_code(400);
