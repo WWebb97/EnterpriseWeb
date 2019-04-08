@@ -420,21 +420,31 @@ function listPosts(){
 function postDeadlineDate(){
     $LastOfMonth = date(strtotime("last day of this month midnight"));
     $FirstOfMonth = date(strtotime("first day of this month midnight"));
-    $Lockdown = date(strtotime('-7 days midnight', $LastOfMonth));
+    $EditLockdown = date(strtotime('-7 days midnight', $LastOfMonth));
     
     echo time();
    //setCookie('CommentLockdown', $Lockdown);
-    setCookie('EditLockdown', $FirstOfMonth);
+    setCookie('CommentEditLockdown', $FirstOfMonth);
     
 
-    if($Lockdown <= time() && $LastOfMonth >= time()){
+    
+    if($EditLockdown <= time() && $LastOfMonth >= time()){
         setCookie('Deadline', 1);
-        setCookie('CommentLockdown', $Lockdown);
+        setCookie('EditLockdown', $EditLockdown);
        
     }else{
         setCookie('Deadline', 0);
     }
     
+    //change back for viewing in normal format
+    /*if(1553817600 <= time() && 1563667200 >= time()){
+        setCookie('Deadline', 1);
+        setCookie('EditLockdown', 1553817600);
+       
+    }else{
+        setCookie('Deadline', 0);
+    }
+    */
     
     //1553817600, 1554854466
 }

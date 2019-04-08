@@ -349,27 +349,29 @@
                          var pointsBlock = '<div><p id="points'+val.post_id+'">'+val.points+'</p></div>';
 
                         
-                            if($.cookie("CommentLockdown") != null){
+                            if(parseInt(val.post_date) >= parseInt($.cookie("EditLockdown"))){
+                                edit = "This post has been locked for editing &#128274;";
+                                //alert(1);
+                            }else if(parseInt(val.post_date) <= parseInt($.cookie("CommentEditLockdown"))){
+                                //alert(2);
                                 if(userId == val.user_id){
-                                    edit = "This post has been locked for editing &#128274;";    
+                                    edit = "This post has been locked &#128274;";
+                                    addcom = "";
                                 }else{
                                     edit = '';
+                                    addcom = "";
                                 }
-                                
-                                
-                            }else if(val.post_date <= $.cookie("EditLockdown")){
-                                edit = "This post has been locked &#128274;";
-                                addcom = "";
-                                
+
                             }else{
+                                //alert(3);
                                 if(userId == val.user_id){
                                     edit = '<a href="editpost.html?postId='+val.post_id+'">Edit Post</a>';       
                                 }else{
                                     edit = '';
                                 }
-                                
-                                
                             }
+  
+
 
                        
                             
