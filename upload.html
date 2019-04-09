@@ -194,7 +194,7 @@
                         processData: false,
                         contentType: false,
                         success: function(data, status, xhttp, errorMessage) {
-                            alert("post successfully created with id of " + data.postId );
+                           $('#Alerts').append('<div class="alert alert-success alert-dismissible fade show" role="alert">Post successfully created<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                             var name = $("#name").val();
                             var cID = $("#categoryId").val();
                             var postID = data.postId;
@@ -228,6 +228,16 @@
                             if(result.responseText == '{"created":false,"message":"the properties of name, description, anon, categoryId and userId must be set to add a post"}'){
                                             $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">Please ensure you have entered all information<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 
+                            }else if (result.responseText =='{"created":false,"message":"File size too large"}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">File size too large files must be less than 5MB<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }
+                            else if (result.responseText == '{"created":false,"message":"File already exists"}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">That file has already been uploaded for this post please try another file<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }
+                            else if (result.responseText == '{"created":false,"message":"File not of a valid type"}'){
+                                            $('#Alerts').append('<div class="alert alert-danger alert-dismissible fade show" role="alert">The given file type is invalid accepted file tpyes are: DOCX and PDF<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            }else{
+                                //do nothing
                             }
                         }
                     });

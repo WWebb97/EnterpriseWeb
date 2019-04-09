@@ -260,7 +260,7 @@
                         $("#testingSpace").text("edit idea= " + data.postupdated + " errormessage = " + status.errorMessage);
 
                         if (data.postupdated == true) {
-                            alert('Idea edited successfully');
+                            $('#Alerts').append('<div class="alert alert-success alert-dismissible fade show" role="alert">Post successfully edited<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                             window.location.href = "index.html";
                         }
                     },
